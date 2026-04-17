@@ -32,7 +32,9 @@ function GiftCard() {
   const getImageUrl = (imagePath) => {
     if (!imagePath) return null;
     if (imagePath.startsWith('http')) return imagePath;
-    return `http://localhost:8001${imagePath}`;
+    const cloudName = 'dmwmkfv6w';
+    const path = imagePath.startsWith('/media/') ? imagePath.replace('/media/', '') : imagePath;
+    return `https://res.cloudinary.com/${cloudName}/image/upload/${path}`;
   };
 
   const handleOrder = () => {

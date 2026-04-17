@@ -29,8 +29,9 @@ export default function GiftBox() {
   const getImageUrl = (imagePath) => {
     if (!imagePath) return null;
     if (imagePath.startsWith('http')) return imagePath;
-    if (imagePath.startsWith('/media/')) return `http://127.0.0.1:8001${imagePath}`;
-    return `http://127.0.0.1:8001/media/${imagePath}`;
+    const cloudName = 'dmwmkfv6w';
+    const path = imagePath.startsWith('/media/') ? imagePath.replace('/media/', '') : imagePath;
+    return `https://res.cloudinary.com/${cloudName}/image/upload/${path}`;
   };
 
   if (loading) {
