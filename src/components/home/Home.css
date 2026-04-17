@@ -1,0 +1,228 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+.hero-section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.hero-picture {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1;
+}
+
+.hero-picture-darkening {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-overlay);
+  z-index: 2;
+  transition: background-color var(--tr-duration-in) var(--tr-timing-in);
+}
+
+.hero-section-menu {
+  position: absolute;
+  bottom: var(--spacing-10);
+  left: var(--spacing-10);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-04);
+}
+
+.hero-section-menu a {
+  color: var(--color-surface);
+  font-size: 0.8125rem;
+  font-weight: var(--font-weight-regular);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  transition: opacity var(--tr-duration-out) var(--tr-timing-out);
+}
+
+.hero-section-menu a:hover {
+  opacity: 0.7;
+}
+
+.hero-content-overlay,
+.hero-content-overlay-darkening {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 3;
+  pointer-events: none;
+  transition: opacity var(--tr-duration-in) var(--tr-timing-in), 
+              visibility var(--tr-duration-in) var(--tr-timing-in);
+}
+
+.hero-content-overlay {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.hero-placeholder {
+  display: none;
+}
+
+.collections-container {
+  width: 100%;
+  height: 150vh;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+.collection-section {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+  transition: opacity var(--tr-duration-out) var(--tr-timing-out);
+}
+
+.collection-section:hover {
+  opacity: 0.95;
+}
+
+.collection-image-full {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.collection-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 60%);
+  transition: background var(--tr-duration-in) var(--tr-timing-in);
+}
+
+.collection-image-full:hover .collection-overlay {
+  background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 60%);
+}
+
+.collection-cta {
+  position: absolute;
+  bottom: var(--spacing-10);
+  left: var(--spacing-10);
+  font-size: 0.8125rem;
+  font-weight: var(--font-weight-regular);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-surface);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.collection-section:hover .collection-cta {
+  opacity: 0.9;
+}
+
+#navbar-home {
+  z-index: 4;
+  position: fixed;
+  top: 0;
+  display: flex;
+  height: 70px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.50);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  transition: top var(--tr-duration-out) var(--tr-timing-out);
+  padding-right: var(--spacing-08);
+}
+
+.menu-icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  margin-top: 34px;
+  margin-left: 27px;
+}
+
+.menu-icon span {
+  display: block;
+  height: 1.5px;
+  width: 16px;
+  background-color: #fff;
+  border-radius: 2px;
+  margin-bottom: 8px;
+}
+
+.icon {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon img {
+  height: 43.75px;
+}
+
+.icon-1 {
+  height: 24px;
+  padding-top: 26px;
+  padding-right: 6px;
+}
+
+@media (max-width: 768px) {
+  .collections-container {
+    height: auto;
+    flex-direction: column;
+  }
+  
+  .collection-section {
+    height: auto;
+  }
+  
+  .collection-image-full {
+    height: 70vh;
+  }
+  
+  .collection-cta {
+    font-size: 0.8125rem;
+    bottom: var(--spacing-06);
+    left: var(--spacing-06);
+  }
+
+  .hero-section-menu {
+    bottom: var(--spacing-06);
+    left: var(--spacing-06);
+  }
+
+  .hero-section-menu a {
+    font-size: 0.8125rem;
+  }
+}

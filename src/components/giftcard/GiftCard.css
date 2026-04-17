@@ -1,0 +1,237 @@
+.giftcard-container {
+  width: 100%;
+  min-height: 100vh;
+  padding-top: 70px;
+  background-color: #ffffff;
+}
+
+.giftcard-loading,
+.giftcard-empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 0.8125rem;
+  color: var(--color-secondary);
+}
+
+/* Двухколоночный layout */
+.giftcard-content {
+  display: flex;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--spacing-20);
+  gap: var(--spacing-20);
+}
+
+/* Левая колонка - три фото */
+.giftcard-images-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-06);
+}
+
+.giftcard-image-item {
+  width: 100%;
+  overflow: hidden;
+}
+
+.giftcard-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+/* Правая колонка - форма */
+.giftcard-form-column {
+  flex: 1;
+  padding: var(--spacing-10) var(--spacing-20);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-10);
+}
+
+.giftcard-title {
+  font-size: 0.8125rem;
+  font-weight: var(--font-weight-regular);
+  color: var(--color-navy);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
+.giftcard-description {
+  font-size: 0.8125rem;
+  font-weight: 100;
+  color: #000;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* Секции формы */
+.card-type-section,
+.amount-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-04);
+}
+
+.section-label {
+  font-size: 0.8125rem;
+  font-weight: var(--font-weight-regular);
+  color: var(--color-navy);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
+/* Выбор типа карты */
+.card-type-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-02);
+}
+
+.card-type-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: var(--spacing-05);
+  border: 1px solid var(--color-outline);
+  border-radius: 0;
+  background-color: var(--color-surface);
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transition: border-color var(--tr-duration-out) var(--tr-timing-out);
+}
+
+.card-type-btn:hover {
+  border-color: var(--color-navy);
+}
+
+.card-type-btn.active {
+  border-color: var(--color-navy);
+  background-color: var(--color-background-light);
+}
+
+.type-name {
+  font-size: 0.8125rem;
+  font-weight: var(--font-weight-regular);
+  color: var(--color-navy);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin-bottom: var(--spacing-01);
+}
+
+.type-desc {
+  font-size: 0.8125rem;
+  font-weight: 100;
+  color: #000;
+  line-height: 1.5;
+}
+
+/* Выбор суммы */
+.amount-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-02);
+}
+
+.amount-btn {
+  padding: var(--spacing-04);
+  border: 1px solid var(--color-outline);
+  border-radius: 0;
+  background-color: var(--color-surface);
+  font-size: 0.8125rem;
+  font-weight: var(--font-weight-regular);
+  color: var(--color-navy);
+  cursor: pointer;
+  font-family: inherit;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  transition: border-color var(--tr-duration-out) var(--tr-timing-out),
+              background var(--tr-duration-out) var(--tr-timing-out);
+}
+
+.amount-btn:hover {
+  border-color: var(--color-navy);
+}
+
+.amount-btn.active {
+  border-color: var(--color-navy);
+  background-color: var(--color-navy);
+  color: var(--color-surface);
+}
+
+.custom-amount-input {
+  width: 100%;
+  margin-top: var(--spacing-02);
+  padding: var(--spacing-04);
+  border: 1px solid var(--color-outline);
+  border-radius: 0;
+  font-size: 0.8125rem;
+  font-family: inherit;
+  color: var(--color-navy);
+  outline: none;
+}
+
+.custom-amount-input:focus {
+  border-color: var(--color-navy);
+}
+
+/* Кнопка в корзину */
+.add-to-bag-btn {
+  width: 100%;
+  padding: var(--spacing-04) var(--spacing-08);
+  background-color: var(--color-navy);
+  color: var(--color-surface);
+  border: none;
+  border-radius: 0;
+  font-size: 0.8125rem;
+  font-weight: var(--font-weight-regular);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background var(--tr-duration-out) var(--tr-timing-out);
+}
+
+.add-to-bag-btn:hover {
+  background-color: #0d2a4a;
+}
+
+/* Ссылка на условия */
+.terms-link {
+  text-align: center;
+}
+
+.terms-link a {
+  font-size: 0.8125rem;
+  font-weight: 100;
+  color: var(--color-secondary);
+  text-decoration: underline;
+  transition: color var(--tr-duration-out) var(--tr-timing-out);
+}
+
+.terms-link a:hover {
+  color: var(--color-navy);
+}
+
+/* Мобильная версия */
+@media (max-width: 768px) {
+  .giftcard-content {
+    flex-direction: column;
+    padding: var(--spacing-10);
+  }
+
+  .giftcard-form-column {
+    padding: var(--spacing-06) 0;
+  }
+
+  .amount-options {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

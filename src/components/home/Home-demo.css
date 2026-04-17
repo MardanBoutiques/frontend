@@ -1,0 +1,69 @@
+.background-container {
+  position: fixed; /* Ensures it stays fixed and covers the viewport */
+  top: 0;
+  left: 0;
+  width: 100vw; /* Full viewport width */
+  height: 100vh; /* Full viewport height */
+  background-image: url("home-background.png"); /* Replace with your background image */
+  background-size: cover; /* Ensures the image covers the container */
+  background-position: center; /* Centers the background image */
+  background-repeat: no-repeat; /* Avoids tiling */
+  overflow: hidden; /* Prevents scrollbars from appearing due to children */
+  z-index: -2;
+  background-repeat: no-repeat;
+  animation: darkenBackground 2s ease-in-out forwards; /* Animation to darken */
+}
+
+.home-menu {
+  position: absolute;
+  bottom: 0; /* Aligns to the bottom */
+  left: 0; /* Aligns to the left */
+  margin: 10px; /* Optional: Adds some spacing from edges */
+  padding: 10px;
+  animation: popUpText 3s ease-in-out forwards;
+}
+
+.home-menu a {
+  color: aliceblue;
+}
+
+.background-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: black; /* Dark overlay */
+  opacity: 0; /* Initial state */
+  transition: opacity 0.5s ease-in-out;
+  z-index: 1;
+}
+
+/* Keyframe animation to darken the background */
+@keyframes darkenBackground {
+  0% {
+    filter: brightness(1); /* Fully bright */
+  }
+  50% {
+    filter: brightness(1); /* Stay bright for the first second */
+  }
+  100% {
+    filter: brightness(0.7); /* Gradually darken */
+  }
+}
+
+@keyframes popUpText {
+  0% {
+    opacity: 0; /* Text invisible */
+    transform: translate(0, 20px); /* Start below its normal position */
+  }
+  40% {
+    opacity: 0; /* Keep text invisible for the first second */
+    transform: translate(0, 20px); /* Still below its final position */
+  }
+  100% {
+    opacity: 1; /* Text becomes visible */
+    transform: translate(0, 0); /* Move to its final position */
+  }
+}

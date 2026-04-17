@@ -1,0 +1,340 @@
+/* ── Page ── */
+.stores-page {
+  margin-top: 70px;
+  padding: 48px 40px 80px;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.stores-title {
+  font-size: 0.8125rem;
+  font-weight: var(--font-weight-regular);
+  color: var(--color-navy);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0 0 40px 0;
+}
+
+/* ── Desktop grid ── */
+.stores-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2px;
+}
+
+/* ── Card (overlay style like home collection blocks) ── */
+.store-card {
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  display: block;
+}
+
+.store-card:hover .store-card-photo img {
+  transform: scale(1.05);
+}
+
+.store-card-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.store-card-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+/* gradient overlay */
+.store-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.15) 50%, transparent 100%);
+  pointer-events: none;
+}
+
+.store-card-info {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 28px 32px;
+  z-index: 1;
+  text-align: center;
+}
+
+.store-card-info h2 {
+  font-size: 0.8125rem;
+  font-weight: var(--font-weight-regular);
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0 0 2px 0;
+}
+
+.store-card-brand {
+  font-size: 0.8125rem;
+  font-weight: 100;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0 0 2px 0;
+  line-height: 1.4;
+}
+
+.store-card-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.8125rem;
+  font-weight: 100;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 20px;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4ade80;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.status-closed .status-dot {
+  background: #f87171;
+}
+
+.store-card-book {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-regular);
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  font-family: inherit;
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: opacity 0.2s;
+}
+
+.store-card-book:hover {
+  opacity: 0.6;
+}
+
+/* ── Detail view ── */
+.store-detail {
+  max-width: 680px;
+  margin: 70px auto 0;
+  padding: 32px 20px 80px;
+}
+
+.store-back {
+  background: none;
+  border: none;
+  font-size: 0.8125rem;
+  color: var(--color-secondary);
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 32px;
+  font-family: inherit;
+  transition: color 0.2s;
+  display: block;
+}
+
+.store-back:hover {
+  color: var(--color-primary);
+}
+
+.store-detail-photo {
+  width: 100%;
+  height: 340px;
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+
+.store-detail-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.store-detail-header {
+  margin-bottom: 40px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--color-outline);
+}
+
+.store-detail-brand {
+  font-size: 0.8125rem;
+  font-weight: 100;
+  color: var(--color-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0 0 8px 0;
+}
+
+.store-detail-city {
+  font-size: 0.8125rem;
+  font-weight: var(--font-weight-regular);
+  color: var(--color-navy);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0 0 10px 0;
+}
+
+.store-detail-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8125rem;
+  font-weight: 100;
+  color: var(--color-secondary);
+  margin: 0;
+}
+
+.store-detail-body {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.store-detail-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.store-detail-section h3 {
+  font-size: 0.8125rem;
+  font-weight: var(--font-weight-regular);
+  color: var(--color-navy);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
+.store-detail-section p {
+  font-size: 0.8125rem;
+  font-weight: 100;
+  color: #000;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.store-detail-section a {
+  color: var(--color-navy);
+  text-decoration: none;
+  font-size: 0.8125rem;
+  font-weight: 100;
+}
+
+.store-detail-section a:hover {
+  text-decoration: underline;
+}
+
+.store-map-link {
+  font-size: 0.8125rem !important;
+  color: var(--color-navy) !important;
+}
+
+/* ── Hours ── */
+.store-hours-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.store-hours-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-outline);
+  font-size: 0.8125rem;
+  font-weight: 100;
+  color: #000;
+}
+
+.store-hours-row.today {
+  color: var(--color-navy);
+  font-weight: var(--font-weight-regular);
+}
+
+.store-hours-day { flex: 1; }
+.store-hours-time { text-align: right; }
+
+/* ── Book button ── */
+.store-booking-btn {
+  width: 100%;
+  padding: var(--spacing-04);
+  background: var(--color-navy);
+  color: #fff;
+  border: none;
+  border-radius: 0;
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-regular);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s;
+  margin-top: 8px;
+}
+
+.store-booking-btn:hover {
+  background: #0d2a4a;
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  .stores-page {
+    margin-top: 60px;
+    padding: 0;
+  }
+
+  .stores-title {
+    font-size: 1.375rem;
+    margin-bottom: 24px;
+    padding: 32px 16px 0;
+  }
+
+  .stores-grid {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+
+  .store-card {
+    aspect-ratio: 3 / 4;
+  }
+
+  .store-card-info {
+    padding: 24px 20px;
+  }
+
+  .store-card-info h2 {
+    font-size: 1.25rem;
+  }
+
+  .store-detail {
+    margin-top: 60px;
+    padding: 20px 16px 60px;
+  }
+
+  .store-detail-photo {
+    height: 220px;
+  }
+
+  .store-detail-city {
+    font-size: 1.5rem;
+  }
+}

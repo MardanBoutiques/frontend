@@ -1,0 +1,168 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from '../../api/axios';
+import NavBar from '../navbar/NavBar';
+import './GiftCard.css';
+
+function GiftCard() {
+  const [giftcard, setGiftCard] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [cardType, setCardType] = useState('physical'); // 'physical' или 'digital'
+  const [amount, setAmount] = useState('300');
+  const [customAmount, setCustomAmount] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchGiftCard = async () => {
+      try {
+        const response = await axios.get('/api/giftcards/');
+        if (response.data && response.data.length > 0) {
+          setGiftCard(response.data[0]); // Берем первую активную карту
+        }
+      } catch (error) {
+        console.error('Error fetching gift card:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchGiftCard();
+  }, []);
+
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return null;
+    if (imagePath.startsWith('http')) return imagePath;
+    return `http://localhost:8001${imagePath}`;
+  };
+
+  const handleOrder = () => {
+    navigate('/checkout', { state: { giftcard } });
+  };
+
+  if (loading) {
+    return <div className="giftcard-loading">Загрузка...</div>;
+  }
+
+  if (!giftcard) {
+    return <div className="giftcard-empty">Подарочная карта не найдена</div>;
+  }
+
+  return (
+    <>
+      <NavBar />
+      <div className="giftcard-container">
+        {/* Двухколоночный layout */}
+        <div className="giftcard-content">
+        {/* Левая колонка - три фото вертикально */}
+        <div className="giftcard-images-column">
+          {giftcard.image1 && (
+            <div className="giftcard-image-item">
+              <img 
+                src={getImageUrl(giftcard.image1)} 
+                alt="Gift Card 1" 
+                className="giftcard-image"
+              />
+            </div>
+          )}
+          {giftcard.image2 && (
+            <div className="giftcard-image-item">
+              <img 
+                src={getImageUrl(giftcard.image2)} 
+                alt="Gift Card 2" 
+                className="giftcard-image"
+              />
+            </div>
+          )}
+          {giftcard.image3 && (
+            <div className="giftcard-image-item">
+              <img 
+                src={getImageUrl(giftcard.image3)} 
+                alt="Gift Card 3" 
+                className="giftcard-image"
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Правая колонка - форма выбора */}
+        <div className="giftcard-form-column">
+          <h1 className="giftcard-title">{giftcard.title}</h1>
+          
+          {giftcard.full_description && (
+            <p className="giftcard-description">{giftcard.full_description}</p>
+          )}
+
+          {/* Выбор типа карты */}
+          <div className="card-type-section">
+            <h3 className="section-label">Выберите тип подарочной карты</h3>
+            <div className="card-type-options">
+              <button 
+                className={`card-type-btn ${cardType === 'physical' ? 'active' : ''}`}
+                onClick={() => setCardType('physical')}
+              >
+                <span className="type-name">Физическая</span>
+                <span className="type-desc">Доставка в течение 5 дней в специальной упаковке</span>
+              </button>
+              <button 
+                className={`card-type-btn ${cardType === 'digital' ? 'active' : ''}`}
+                onClick={() => setCardType('digital')}
+              >
+                <span className="type-name">Цифровая</span>
+                <span className="type-desc">Доставка по электронной почте в течение одного дня</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Выбор суммы */}
+          <div className="amount-section">
+            <h3 className="section-label">Выберите сумму</h3>
+            <div className="amount-options">
+              {['100', '200', '300', '500', '1000'].map((value) => (
+                <button 
+                  key={value}
+                  className={`amount-btn ${amount === value ? 'active' : ''}`}
+                  onClick={() => { setAmount(value); setCustomAmount(''); }}
+                >
+                  {value}
+                </button>
+              ))}
+              <button 
+                className={`amount-btn ${amount === 'custom' ? 'active' : ''}`}
+                onClick={() => setAmount('custom')}
+              >
+                Другая сумма
+              </button>
+            </div>
+            {amount === 'custom' && (
+              <input 
+                type="number" 
+                className="custom-amount-input"
+                placeholder="Введите сумму"
+                value={customAmount}
+                onChange={(e) => setCustomAmount(e.target.value)}
+              />
+            )}
+          </div>
+
+          {/* Кнопка добавления в корзину */}
+          <button 
+            className="add-to-bag-btn"
+            onClick={handleOrder}
+          >
+            Добавить в корзину
+          </button>
+
+          {/* Условия использования */}
+          {giftcard.terms && (
+            <div className="terms-link">
+              <a href="#terms">Условия использования</a>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+    </>
+  );
+}
+
+export default GiftCard;

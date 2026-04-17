@@ -1,0 +1,186 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+}
+
+:root {
+  /* Цветовая палитра Mardan Boutique */
+  --color-primary: #333333;        /* Dark Grey */
+  --color-secondary: #666666;      /* Ironside Grey */
+  --color-secondary-variation: #cccccc; /* Pastel Grey */
+  --color-outline: #e0e0e0;
+  --color-background: #ffffff;
+  --color-background-light: #ffffff;
+  --color-surface: #ffffff;        /* White */
+  --color-alert: #b09985;          /* Gold */
+  --color-error: #c33333;
+  --color-overlay: rgba(0, 0, 0, 0.3);
+  --color-success: #60a42a;
+  --color-brand: #123055;          /* Navy Blue */
+  --color-gold: #b09985;           /* Gold */
+  --color-navy: #123055;           /* Navy Blue */
+  --color-black: #000000;
+  
+  /* Система spacing (базовая единица 4px) */
+  --spacing-base: 4px;
+  --spacing-01: calc(4px * 1);
+  --spacing-02: calc(4px * 2);
+  --spacing-03: calc(4px * 3);
+  --spacing-04: calc(4px * 4);
+  --spacing-05: calc(4px * 5);
+  --spacing-06: calc(4px * 6);
+  --spacing-07: calc(4px * 7);
+  --spacing-08: calc(4px * 8);
+  --spacing-10: calc(4px * 10);
+  --spacing-12: calc(4px * 12);
+  --spacing-20: calc(4px * 20);
+  --spacing-30: calc(4px * 30);
+  --spacing-40: calc(4px * 40);
+  --spacing-50: calc(4px * 50);
+  
+  /* Transitions */
+  --tr-duration-in: 0.4s;
+  --tr-duration-out: 0.2s;
+  --tr-timing-in: cubic-bezier(0.4, 0.4, 0, 1);
+  --tr-timing-out: cubic-bezier(0.6, 0, 0.2, 1);
+  
+  /* Typography */
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --sys-font-size: 1rem;
+  --sys-line-height: 1.5rem;
+  --sys-letter-spacing: 0;
+  
+  font-family: "Halvar Breitschrift", Arial, sans-serif;
+  line-height: var(--sys-line-height);
+  font-weight: var(--font-weight-light);
+  font-size: 16px;
+
+  /* Liquid Glass */
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-bg-strong: rgba(255, 255, 255, 0.82);
+  --glass-blur: blur(24px) saturate(180%);
+  --glass-blur-light: blur(12px) saturate(140%);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.55);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.07), 0 1.5px 6px rgba(0,0,0,0.04);
+
+  color-scheme: light;
+  color: var(--color-primary);
+  background-color: #ffffff;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ── Global smooth transitions ── */
+a, button,
+input, textarea, select,
+.product-card,
+.icon, .icon-1,
+.burger-menu,
+.filter-btn,
+.radio-option,
+.store-card,
+.store-card-book,
+.summary-item,
+.cart-item,
+.sidebar-nav a,
+.footer-col a,
+.footer-social a,
+[role="button"] {
+  transition:
+    opacity 0.25s ease,
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+/* Product card lift on hover */
+.product-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(18, 48, 85, 0.08);
+}
+
+/* Nav icons fade */
+.icon:hover,
+.icon-1:hover,
+.burger-menu:hover {
+  opacity: 0.6;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  width: 100vw;
+  max-width: 100%;
+  height: 100vh;
+  min-width: 320px;
+  font-size: 16px;
+  font-weight: var(--font-weight-light);
+  word-break: keep-all;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #ffffff;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Halvar Breitschrift", Arial, sans-serif;
+  font-weight: 700;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
