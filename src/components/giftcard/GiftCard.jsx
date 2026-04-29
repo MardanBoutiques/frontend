@@ -7,8 +7,8 @@ import './GiftCard.css';
 function GiftCard() {
   const [giftcard, setGiftCard] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [cardType, setCardType] = useState('physical'); // 'physical' или 'digital'
-  const [amount, setAmount] = useState('300');
+  const [cardType, setCardType] = useState('physical');
+  const [amount, setAmount] = useState('20000');
   const [customAmount, setCustomAmount] = useState('');
   const navigate = useNavigate();
 
@@ -98,18 +98,18 @@ function GiftCard() {
           <div className="card-type-section">
             <h3 className="section-label">Выберите тип подарочной карты</h3>
             <div className="card-type-options">
-              <button 
+              <button
                 className={`card-type-btn ${cardType === 'physical' ? 'active' : ''}`}
                 onClick={() => setCardType('physical')}
               >
                 <span className="type-name">Физическая</span>
-                <span className="type-desc">Доставка в течение 5 дней в специальной упаковке</span>
+                <span className="type-desc">Доступно для г.Алматы и Астана</span>
               </button>
-              <button 
+              <button
                 className={`card-type-btn ${cardType === 'digital' ? 'active' : ''}`}
                 onClick={() => setCardType('digital')}
               >
-                <span className="type-name">Цифровая</span>
+                <span className="type-name">Онлайн</span>
                 <span className="type-desc">Доставка по электронной почте в течение одного дня</span>
               </button>
             </div>
@@ -119,16 +119,16 @@ function GiftCard() {
           <div className="amount-section">
             <h3 className="section-label">Выберите сумму</h3>
             <div className="amount-options">
-              {['100', '200', '300', '500', '1000'].map((value) => (
-                <button 
+              {['20000', '100000', '150000', '200000', '300000'].map((value) => (
+                <button
                   key={value}
                   className={`amount-btn ${amount === value ? 'active' : ''}`}
                   onClick={() => { setAmount(value); setCustomAmount(''); }}
                 >
-                  {value}
+                  {Number(value).toLocaleString('ru-RU')} KZT
                 </button>
               ))}
-              <button 
+              <button
                 className={`amount-btn ${amount === 'custom' ? 'active' : ''}`}
                 onClick={() => setAmount('custom')}
               >

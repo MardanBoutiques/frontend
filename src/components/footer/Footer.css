@@ -45,6 +45,10 @@
   opacity: 0.6;
 }
 
+.footer-phone-link {
+  cursor: pointer;
+}
+
 .footer-social {
   display: flex;
   flex-direction: row;

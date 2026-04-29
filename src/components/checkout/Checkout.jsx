@@ -15,11 +15,11 @@ const Checkout = () => {
     customerName: '',
     customerPhone: '',
     customerEmail: '',
+    instagram: '',
     city: '',
     address: '',
     deliveryMethod: 'courier',
     paymentMethod: 'cash',
-    comment: ''
   });
   const [errors, setErrors] = useState({});
 
@@ -86,11 +86,11 @@ const Checkout = () => {
       customer_name: formData.customerName,
       customer_phone: formData.customerPhone,
       customer_email: formData.customerEmail,
+      instagram: formData.instagram,
       city: formData.city,
       address: formData.address,
       delivery_method: formData.deliveryMethod,
       payment_method: formData.paymentMethod,
-      comment: formData.comment,
       items: cartItems.map(item => ({
         product_id: item.id,
         product_name: item.name,
@@ -209,6 +209,18 @@ const Checkout = () => {
                   />
                   {errors.customerEmail && <span className="error-message">{errors.customerEmail}</span>}
                   <small>Для получения подтверждения заказа</small>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="instagram">Instagram</label>
+                  <input
+                    type="text"
+                    id="instagram"
+                    name="instagram"
+                    value={formData.instagram}
+                    onChange={handleChange}
+                    placeholder="@username"
+                  />
                 </div>
               </div>
 
@@ -337,21 +349,6 @@ const Checkout = () => {
                       <span className="radio-desc">Скоро</span>
                     </div>
                   </label>
-                </div>
-              </div>
-
-              {/* Комментарий */}
-              <div className="form-section">
-                <div className="form-group">
-                  <label htmlFor="comment">Комментарий к заказу</label>
-                  <textarea
-                    id="comment"
-                    name="comment"
-                    value={formData.comment}
-                    onChange={handleChange}
-                    placeholder="Дополнительная информация"
-                    rows="3"
-                  ></textarea>
                 </div>
               </div>
 

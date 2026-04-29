@@ -63,6 +63,7 @@ const ProductView = () => {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     setLoading(true);
     setSelectedSize('');
     setSelectedImageIndex(0);
