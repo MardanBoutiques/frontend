@@ -8,7 +8,7 @@ const STORES = [
     id: "almaty",
     city: "г. Алматы",
     address: "Улица Жёлтоқсан, 114",
-    fullAddress: "г. Алматы, Улица Жёлтоқсан, 114",
+    fullAddress: "г. Алматы, Улица Желтоқсан, 114",
     phone: "+7 707 165 18 62",
     waPhone: "77071651862",
     photo: "/photos/almaty_boutique.png",
@@ -63,7 +63,7 @@ const getStoreStatus = (hours) => {
   const dayName = getTodayName();
   const todayHours = hours.find(h => h.day === dayName);
 
-  if (!todayHours) return { open: false, label: "Откроется завтра в 11:00" };
+  if (!todayHours) return { open: false, label: "Откроется в 11:00" };
 
   const [openStr, closeStr] = todayHours.time.split(" – ");
   const [openH, openM] = openStr.split(":").map(Number);
@@ -76,7 +76,7 @@ const getStoreStatus = (hours) => {
   if (nowMinutes >= openMinutes && nowMinutes < closeMinutes) {
     return { open: true, label: `Открыто до ${closeStr}` };
   }
-  return { open: false, label: "Откроется завтра в 11:00" };
+  return { open: false, label: "Откроется в 11:00" };
 };
 
 export default function Stores() {
