@@ -246,14 +246,12 @@
 
 .store-map-embed {
   width: 100%;
-  border-radius: 8px;
   overflow: hidden;
   margin: 12px 0 10px;
 }
 
 .store-map-embed iframe {
   display: block;
-  border-radius: 8px;
 }
 
 .store-map-link {
