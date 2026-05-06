@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import NavBar from "../navbar/NavBar";
 import api from "../../api/axios";
 import { useCart } from "../../context/CartContext";
+import { getImageUrl } from "../../utils/imageUrl";
 import "./ProductView.css";
 
 const Accordion = ({ title, children, open, onToggle }) => {
@@ -82,13 +83,7 @@ const ProductView = () => {
       .catch(() => setVariants([]));
   }, [id]);
 
-  const getImageUrl = (imagePath) => {
-    if (!imagePath) return null;
-    if (imagePath.startsWith('http')) return imagePath;
-    const cloudName = 'dmwmkfv6w';
-    const path = imagePath.startsWith('/media/') ? imagePath.replace('/media/', '') : imagePath;
-    return `https://res.cloudinary.com/${cloudName}/image/upload/${path}`;
-  };
+
 
   if (loading) {
     return (

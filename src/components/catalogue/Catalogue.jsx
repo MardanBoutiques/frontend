@@ -4,6 +4,7 @@ import NavBar from "../navbar/NavBar";
 import "./Catalogue.css";
 import api from "../../api/axios";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { getImageUrl } from "../../utils/imageUrl";
 
 const Grid = ({ children, onClick, className }) => {
   return (
@@ -16,14 +17,6 @@ const Grid = ({ children, onClick, className }) => {
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
   
-  const getImageUrl = (imagePath) => {
-    if (!imagePath) return null;
-    if (imagePath.startsWith('http')) return imagePath;
-    const cloudName = 'dmwmkfv6w';
-    const path = imagePath.startsWith('/media/') ? imagePath.replace('/media/', '') : imagePath;
-    return `https://res.cloudinary.com/${cloudName}/image/upload/${path}`;
-  };
-
   const handleCardClick = () => {
     navigate(`/product/${product.id}`);
   };

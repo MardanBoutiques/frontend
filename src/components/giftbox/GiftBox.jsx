@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./GiftBox.css";
 import NavBar from "../navbar/NavBar";
 import openAxios from "../../api/openAxios";
+import { getImageUrl } from "../../utils/imageUrl";
 
 export default function GiftBox() {
   const [giftboxes, setGiftboxes] = useState([]);
@@ -13,7 +14,6 @@ export default function GiftBox() {
     const fetchGiftBoxes = async () => {
       try {
         const response = await openAxios.get('/api/giftboxes/');
-        console.log('Loaded giftboxes:', response.data);
         setGiftboxes(response.data);
       } catch (error) {
         console.error('Ошибка загрузки подарочных боксов:', error);
@@ -24,15 +24,6 @@ export default function GiftBox() {
 
     fetchGiftBoxes();
   }, []);
-
-  // Функция для получения полного URL изображения
-  const getImageUrl = (imagePath) => {
-    if (!imagePath) return null;
-    if (imagePath.startsWith('http')) return imagePath;
-    const cloudName = 'dmwmkfv6w';
-    const path = imagePath.startsWith('/media/') ? imagePath.replace('/media/', '') : imagePath;
-    return `https://res.cloudinary.com/${cloudName}/image/upload/${path}`;
-  };
 
   if (loading) {
     return (

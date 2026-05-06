@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from '../../api/axios';
 import NavBar from '../navbar/NavBar';
+import { getImageUrl } from '../../utils/imageUrl';
 import './GiftCard.css';
 
 function GiftCard() {
@@ -28,14 +29,6 @@ function GiftCard() {
 
     fetchGiftCard();
   }, []);
-
-  const getImageUrl = (imagePath) => {
-    if (!imagePath) return null;
-    if (imagePath.startsWith('http')) return imagePath;
-    const cloudName = 'dmwmkfv6w';
-    const path = imagePath.startsWith('/media/') ? imagePath.replace('/media/', '') : imagePath;
-    return `https://res.cloudinary.com/${cloudName}/image/upload/${path}`;
-  };
 
   const handleOrder = () => {
     navigate('/checkout', { state: { giftcard } });

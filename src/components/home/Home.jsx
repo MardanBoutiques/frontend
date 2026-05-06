@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import "./Home.css";
 import NavBar from "../navbar/NavBar";
 import openAxios from "../../api/openAxios";
+import { getImageUrl } from "../../utils/imageUrl";
 // eslint-disable-next-line react/prop-types
 // function Surrounding({ element }) {
 //   return <div className="background-container">{element}</div>;
@@ -110,15 +111,6 @@ const HeroSection = ({ children, heroImage }) => {
 };
 
 const HeroPictures = ({ images }) => {
-  // Функция для получения полного URL изображения
-  const getImageUrl = (imagePath) => {
-    if (!imagePath) return null;
-    if (imagePath.startsWith('http')) return imagePath;
-    const cloudName = 'dmwmkfv6w';
-    const path = imagePath.startsWith('/media/') ? imagePath.replace('/media/', '') : imagePath;
-    return `https://res.cloudinary.com/${cloudName}/image/upload/${path}`;
-  };
-
   const getImageByType = (imageType) => {
     const image = images.find(img => img.image_type === imageType);
     return image ? getImageUrl(image.image) : null;
@@ -179,15 +171,6 @@ const HeroPictures = ({ images }) => {
 
 export default function Home() {
   const [images, setImages] = useState([]);
-
-  // Функция для получения полного URL изображения
-  const getImageUrl = (imagePath) => {
-    if (!imagePath) return null;
-    if (imagePath.startsWith('http')) return imagePath;
-    const cloudName = 'dmwmkfv6w';
-    const path = imagePath.startsWith('/media/') ? imagePath.replace('/media/', '') : imagePath;
-    return `https://res.cloudinary.com/${cloudName}/image/upload/${path}`;
-  };
 
   const getHeroImage = () => {
     const heroImg = images.find(img => img.image_type === 'hero');
