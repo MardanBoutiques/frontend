@@ -103,6 +103,10 @@ const Catalogue = () => {
   const category = searchParams.get("category");
 
   useEffect(() => {
+    if (category) sessionStorage.setItem('lastCatalogueCategory', category);
+  }, [category]);
+
+  useEffect(() => {
     api
       .get("/")
       .then((response) => {
@@ -167,7 +171,7 @@ const Catalogue = () => {
       'giftbox': 'Подарочный бокс и карта'
     };
 
-    return category ? categoryTitles[category] || 'Все товары' : 'Все товары';
+    return categoryTitles[category] || '';
   };
 
   const getCategoryDescription = () => {
@@ -185,7 +189,7 @@ const Catalogue = () => {
 
     return category
       ? categoryDescriptions[category] || 'Откройте для себя нашу коллекцию премиум одежды и аксессуаров для истинного джентльмена.'
-      : 'Откройте для себя нашу коллекцию премиум одежды и аксессуаров для истинного джентльмена.';
+      : '';
   };
 
   return (

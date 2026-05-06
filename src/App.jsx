@@ -1,9 +1,8 @@
 import React from "react";
 import "./App.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate, useSearchParams } from "react-router-dom";
 import { CartProvider } from "./context/CartContext";
 
-import Products from "./components/products/Products";
 import Home from "./components/home/Home";
 import Wishlist from "./components/wishlist/Wishlist";
 import Catalogue from "./components/catalogue/Catalogue";
@@ -15,13 +14,20 @@ import GiftCard from "./components/giftcard/GiftCard";
 import Stores from "./components/stores/Stores";
 import Footer from "./components/footer/Footer";
 
+function CatalogueGuard() {
+  const [searchParams] = useSearchParams();
+  const category = searchParams.get("category");
+  if (!category) return <Navigate to="/" replace />;
+  return <Catalogue />;
+}
+
 function App() {
   return (
     <CartProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/catalogue" element={<Catalogue />} />
+          <Route path="/catalogue" element={<CatalogueGuard />} />
           <Route path="/product/:id" element={<ProductView />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />

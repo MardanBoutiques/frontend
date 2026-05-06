@@ -14,7 +14,7 @@ const STORES = [
     photo: "/photos/almaty_boutique.png",
     status: "Открыто до 20:00",
     mapUrl: "https://2gis.kz/almaty/search/Mardanboutiques%20%D0%90%D0%BB%D0%BC%D0%B0%D1%82%D1%8B/firm/70000001084011738/76.940071%2C43.255161?m=76.940071%2C43.255161%2F15.08",
-    embedUrl: "https://2gis.kz/almaty/firm/70000001084011738/76.940071%2C43.255161?m=76.940071%2C43.255161%2F16",
+    embedUrl: "https://maps.google.com/maps?q=43.255161,76.940071&z=16&output=embed",
     hours: [
       { day: "Понедельник", time: "11:00 – 21:00" },
       { day: "Вторник",     time: "11:00 – 21:00" },
@@ -35,7 +35,7 @@ const STORES = [
     photo: "/photos/astana_boutique.png",
     status: "Открыто до 20:00",
     mapUrl: "https://2gis.kz/astana/firm/70000001112703791?m=71.425735%2C51.120614%2F15.22",
-    embedUrl: "https://2gis.kz/astana/firm/70000001112703791/71.425735%2C51.120614?m=71.425735%2C51.120614%2F16",
+    embedUrl: "https://maps.google.com/maps?q=51.120614,71.425735&z=16&output=embed",
     hours: [
       { day: "Понедельник", time: "11:00 – 21:00" },
       { day: "Вторник",     time: "11:00 – 21:00" },
@@ -103,8 +103,6 @@ export default function Stores() {
       <>
         <NavBar forHome={false} />
         <div className="store-detail">
-          <button className="store-back" onClick={() => setSelected(null)}>← Все магазины</button>
-
           {store.photo && (
             <div className="store-detail-photo">
               <img src={store.photo} alt={store.city} />

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from '../../api/axios';
 import NavBar from '../navbar/NavBar';
 import { getImageUrl } from '../../utils/imageUrl';
+import { useCart } from '../../context/CartContext';
 import './GiftCard.css';
 
 function GiftCard() {
@@ -11,7 +12,13 @@ function GiftCard() {
   const [cardType, setCardType] = useState('physical');
   const [amount, setAmount] = useState('20000');
   const [customAmount, setCustomAmount] = useState('');
+  const [addedToCart, setAddedToCart] = useState(false);
   const navigate = useNavigate();
+  const { addToCart } = useCart();
+
+  useEffect(() => {
+    sessionStorage.setItem('lastCatalogueCategory', '__giftcard__');
+  }, []);
 
   useEffect(() => {
     const fetchGiftCard = async () => {
@@ -30,8 +37,21 @@ function GiftCard() {
     fetchGiftCard();
   }, []);
 
-  const handleOrder = () => {
-    navigate('/checkout', { state: { giftcard } });
+  const handleAddToCart = () => {
+    const selectedPrice = amount === 'custom' ? customAmount : amount;
+    if (!selectedPrice) return;
+    const typeName = cardType === 'physical' ? 'Физическая' : 'Онлайн';
+    addToCart(
+      {
+        id: `giftcard-${cardType}-${selectedPrice}`,
+        name: 'Подарочная карта',
+        price: Number(selectedPrice),
+        image: giftcard.image1,
+      },
+      `${typeName} · ${Number(selectedPrice).toLocaleString('ru-RU')} KZT`
+    );
+    setAddedToCart(true);
+    setTimeout(() => setAddedToCart(false), 2000);
   };
 
   if (loading) {
@@ -140,11 +160,11 @@ function GiftCard() {
           </div>
 
           {/* Кнопка добавления в корзину */}
-          <button 
+          <button
             className="add-to-bag-btn"
-            onClick={handleOrder}
+            onClick={handleAddToCart}
           >
-            Добавить в корзину
+            {addedToCart ? '✓ ДОБАВЛЕНО В КОРЗИНУ' : 'ДОБАВИТЬ В КОРЗИНУ'}
           </button>
 
           {/* Условия использования */}

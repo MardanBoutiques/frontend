@@ -4,25 +4,21 @@ import "./GiftBox.css";
 import NavBar from "../navbar/NavBar";
 import openAxios from "../../api/openAxios";
 import { getImageUrl } from "../../utils/imageUrl";
+import { useCart } from "../../context/CartContext";
 
 export default function GiftBox() {
   const [giftboxes, setGiftboxes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [addedToCart, setAddedToCart] = useState(false);
   const navigate = useNavigate();
+  const { addToCart } = useCart();
 
   useEffect(() => {
-    const fetchGiftBoxes = async () => {
-      try {
-        const response = await openAxios.get('/api/giftboxes/');
-        setGiftboxes(response.data);
-      } catch (error) {
-        console.error('Ошибка загрузки подарочных боксов:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchGiftBoxes();
+    sessionStorage.setItem('lastCatalogueCategory', '__giftbox__');
+    openAxios.get('/api/giftboxes/')
+      .then((res) => setGiftboxes(res.data))
+      .catch((err) => console.error('Ошибка загрузки:', err))
+      .finally(() => setLoading(false));
   }, []);
 
   if (loading) {
@@ -83,13 +79,29 @@ export default function GiftBox() {
           </div>
 
           {/* Карточка 3 — фото + кнопка по центру */}
-          <div className="giftbox-image-container giftbox-order-card" onClick={() => giftbox.in_stock && navigate('/checkout')}>
+          <div
+            className="giftbox-image-container giftbox-order-card"
+            onClick={() => {
+              if (!giftbox.in_stock) return;
+              addToCart(
+                { id: `giftbox-${giftbox.id}`, name: giftbox.title || 'Подарочный бокс', price: Number(giftbox.price), image: giftbox.image1 },
+                'Стандарт'
+              );
+              setAddedToCart(true);
+              setTimeout(() => setAddedToCart(false), 2000);
+            }}
+          >
             {giftbox.image3 && (
               <img src={getImageUrl(giftbox.image3)} alt="Gift Box 3" className="giftbox-image" />
             )}
             <div className="giftbox-overlay-center">
               {giftbox.in_stock ? (
-                <span className="giftbox-order-card-text">ЗАКАЗАТЬ БОКС</span>
+                <div className="giftbox-overlay-center-content">
+                  <span className="giftbox-order-card-text">
+                    {addedToCart ? '✓ ДОБАВЛЕНО В КОРЗИНУ' : 'ЗАКАЗАТЬ БОКС'}
+                  </span>
+                  <span className="giftbox-manager-note">Менеджер свяжется с вами для уточнения наполнения</span>
+                </div>
               ) : (
                 <span className="giftbox-order-card-text giftbox-order-card-unavailable">Временно недоступен</span>
               )}
@@ -97,6 +109,7 @@ export default function GiftBox() {
           </div>
 
         </section>
+
       </div>
     </>
   );

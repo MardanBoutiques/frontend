@@ -47,6 +47,16 @@
 
 .footer-phone-link {
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.footer-phone-icon {
+  width: 14px;
+  height: 14px;
+  filter: brightness(0) invert(1);
+  flex-shrink: 0;
 }
 
 .footer-social {
@@ -69,8 +79,8 @@
 }
 
 .footer-social img {
-  width: 22px;
-  height: 22px;
+  width: 16px;
+  height: 16px;
   filter: brightness(0) invert(1);
 }
 

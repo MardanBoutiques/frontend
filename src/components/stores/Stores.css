@@ -1,10 +1,7 @@
 /* ── Page ── */
 .stores-page {
   margin-top: 70px;
-  padding: 48px 40px 80px;
-  max-width: 1400px;
-  margin-left: auto;
-  margin-right: auto;
+  padding: 0;
 }
 
 .stores-title {
@@ -14,6 +11,7 @@
   text-transform: uppercase;
   letter-spacing: 0.04em;
   margin: 0 0 40px 0;
+  padding: 0 30px;
 }
 
 /* ── Desktop grid ── */
@@ -21,6 +19,14 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 2px;
+  height: calc(100vh - 70px);
+}
+
+@media (max-width: 640px) {
+  .stores-grid {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
 }
 
 /* ── Card (overlay style like home collection blocks) ── */
@@ -28,8 +34,8 @@
   position: relative;
   cursor: pointer;
   overflow: hidden;
-  aspect-ratio: 3 / 4;
   display: block;
+  height: 100%;
 }
 
 .store-card:hover .store-card-photo img {

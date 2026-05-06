@@ -8,6 +8,13 @@ const Cart = () => {
   const navigate = useNavigate();
   const { cartItems, removeFromCart, updateQuantity, getTotalPrice, getTotalItems } = useCart();
 
+  const goBackToCatalogue = () => {
+    const lastCategory = sessionStorage.getItem('lastCatalogueCategory');
+    if (lastCategory === '__giftbox__') navigate('/giftbox');
+    else if (lastCategory === '__giftcard__') navigate('/giftcard');
+    else navigate(lastCategory ? `/catalogue?category=${lastCategory}` : '/');
+  };
+
   const getImageUrl = (imagePath) => {
     if (!imagePath) return null;
     if (imagePath.startsWith('http')) return imagePath;
@@ -23,7 +30,7 @@ const Cart = () => {
           <div className="cart-empty">
             <h2>Ваша корзина пуста</h2>
             <p>Добавьте товары из каталога</p>
-            <button className="btn-continue-shopping" onClick={() => navigate('/catalogue')}>
+            <button className="btn-continue-shopping" onClick={goBackToCatalogue}>
               Перейти в каталог
             </button>
           </div>
@@ -115,9 +122,9 @@ const Cart = () => {
                 Оформить заказ
               </button>
 
-              <button 
+              <button
                 className="btn-continue"
-                onClick={() => navigate('/catalogue')}
+                onClick={goBackToCatalogue}
               >
                 Продолжить покупки
               </button>

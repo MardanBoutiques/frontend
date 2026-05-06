@@ -30,6 +30,7 @@ const Footer = () => {
             rel="noreferrer"
             className="footer-phone-link"
           >
+            <img src="/whatsapp-icon.png" alt="WhatsApp" className="footer-phone-icon" />
             +7 707 165 18 62 (ALM)
           </a>
           <a
@@ -38,6 +39,7 @@ const Footer = () => {
             rel="noreferrer"
             className="footer-phone-link"
           >
+            <img src="/whatsapp-icon.png" alt="WhatsApp" className="footer-phone-icon" />
             +7 771 269 96 45 (AST)
           </a>
           <div className="footer-social">
@@ -46,9 +48,6 @@ const Footer = () => {
             </a>
             <a href="https://www.tiktok.com/@mardan.boutiques" target="_blank" rel="noreferrer">
               <img src="/tiktok-icon.png" alt="TikTok" />
-            </a>
-            <a href="https://wa.me/77071651862" target="_blank" rel="noreferrer">
-              <img src="/whatsapp-icon.png" alt="WhatsApp" />
             </a>
           </div>
         </div>

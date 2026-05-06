@@ -21,27 +21,45 @@ const Accordion = ({ title, children, open, onToggle }) => {
 const COLOR_MAP = {
   'черный': '#1a1a1a',
   'белый': '#f5f5f5',
-  'темно-синий': '#123055',
+  'темно-синий': '#0f2744',
   'синий': '#1e40af',
+  'голубой': '#60a5fa',
+  'светло-голубой': '#93c5fd',
+  'лазурный': '#38bdf8',
   'серый': '#9ca3af',
   'светло-серый': '#d1d5db',
+  'темно-серый': '#4b5563',
+  'графит': '#4b5563',
   'коричневый': '#8B7355',
+  'темно-коричневый': '#5c3d2e',
+  'пепельно-коричневый': '#9e8572',
+  'теплo-коричневый': '#a0785a',
+  'мокко': '#7c5c42',
   'бежевый': '#d4b896',
+  'светло-бежевый': '#e8d5b7',
+  'песочный': '#c9a96e',
   'молочный': '#f0ead6',
   'кофе': '#6b3f2a',
   'красный': '#dc2626',
+  'розовый': '#f9a8d4',
   'зеленый': '#15803d',
   'хаки': '#6b7c3a',
-  'бордовый': '#7f1d1d',
   'оливковый': '#6b7c3a',
+  'фисташка': '#a8c5a0',
+  'бордовый': '#7f1d1d',
   'кремовый': '#fdf6e3',
+  'оранжевый': '#f97316',
 };
+
+const normalizeRu = (str) => str.toLowerCase().trim().replace(/ё/g, 'е').replace(/\s+/g, ' ');
 
 const getColorCode = (colorName) => {
   if (!colorName) return '#888';
-  const key = colorName.toLowerCase().trim();
+  // берём первый цвет если перечислено несколько
+  const first = colorName.split(',')[0];
+  const key = normalizeRu(first);
   for (const [k, v] of Object.entries(COLOR_MAP)) {
-    if (key.includes(k)) return v;
+    if (key.includes(normalizeRu(k))) return v;
   }
   return '#888';
 };
@@ -107,9 +125,16 @@ const ProductView = () => {
     );
   }
 
-  const sizes = product.available_sizes
-    ? product.available_sizes.split(',').map(s => s.trim()).filter(s => s)
-    : ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+  const getSizes = () => {
+    if (product.available_sizes) {
+      return product.available_sizes.split(',').map(s => s.trim()).filter(s => s);
+    }
+    if (product.category === 'accessories') return [];
+    if (product.category === 'suits') return ['46', '48', '50', '52', '54', '56'];
+    return ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+  };
+  const sizes = getSizes();
+  const isAccessory = product.category === 'accessories';
 
   // Собираем все фото: главное + галерея
   const getAllImages = () => {
@@ -200,36 +225,38 @@ const ProductView = () => {
               </div>
             )}
 
-            {/* Размеры */}
-            <div className="product-option">
-              <h3>Размер</h3>
-              <div className="size-options">
-                {sizes.map((size) => (
-                  <button
-                    key={size}
-                    className={`size-option ${selectedSize === size ? 'selected' : ''}`}
-                    onClick={() => setSelectedSize(size)}
-                  >
-                    {size}
-                  </button>
-                ))}
+            {/* Размеры — скрыты для аксессуаров */}
+            {!isAccessory && (
+              <div className="product-option">
+                <h3>Размер</h3>
+                <div className="size-options">
+                  {sizes.map((size) => (
+                    <button
+                      key={size}
+                      className={`size-option ${selectedSize === size ? 'selected' : ''}`}
+                      onClick={() => setSelectedSize(size)}
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Кнопка: добавить в корзину */}
             <div className="product-actions">
               <button
                 className={`btn-add-to-cart-large ${addedToCart ? 'added' : ''}`}
                 onClick={() => {
-                  if (!selectedSize) {
+                  if (!isAccessory && !selectedSize) {
                     alert('Пожалуйста, выберите размер');
                     return;
                   }
-                  addToCart(product, selectedSize, quantity);
+                  addToCart(product, isAccessory ? 'Один размер' : selectedSize, quantity);
                   setAddedToCart(true);
                   setTimeout(() => setAddedToCart(false), 2000);
                 }}
-                disabled={!selectedSize}
+                disabled={!isAccessory && !selectedSize}
                 type="button"
               >
                 {addedToCart ? '✓ ДОБАВЛЕНО В КОРЗИНУ' : 'ДОБАВИТЬ В КОРЗИНУ'}
@@ -252,7 +279,7 @@ const ProductView = () => {
               <Accordion title="Характеристики" open={openAccordion === 'specs'} onToggle={() => toggleAccordion('specs')}>
                 <ul className="product-specs-list">
                   <li><strong>Состав:</strong> {product.material}</li>
-                  {product.available_sizes && (
+                  {!isAccessory && product.available_sizes && (
                     <li><strong>Размеры:</strong> {product.available_sizes}</li>
                   )}
                   {product.colors && (

@@ -401,6 +401,9 @@ const Checkout = () => {
 
               <div className="summary-note">
                 * Менеджер свяжется с вами для подтверждения заказа
+                {cartItems.some(item => String(item.id).startsWith('giftbox-')) && (
+                  <><br /><br />* По подарочному боксу менеджер свяжется для уточнения наполнения</>
+                )}
               </div>
             </div>
           </div>
