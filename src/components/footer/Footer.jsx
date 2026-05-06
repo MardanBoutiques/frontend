@@ -18,6 +18,7 @@ const Footer = () => {
           <h4>Сервис</h4>
           <Link to="/giftbox">Подарочный бокс</Link>
           <Link to="/giftcard">Подарочная карта</Link>
+          <Link to="/stores">Запись на примерку</Link>
         </div>
 
         <div className="footer-col footer-col-contacts">
@@ -43,6 +44,9 @@ const Footer = () => {
             <a href="https://www.instagram.com/mardan.boutiques/" target="_blank" rel="noreferrer">
               <img src="/instagram-icon.png" alt="Instagram" />
             </a>
+            <a href="https://www.tiktok.com/@mardan.boutiques" target="_blank" rel="noreferrer">
+              <img src="/tiktok-icon.png" alt="TikTok" />
+            </a>
             <a href="https://wa.me/77071651862" target="_blank" rel="noreferrer">
               <img src="/whatsapp-icon.png" alt="WhatsApp" />
             </a>
@@ -52,7 +56,7 @@ const Footer = () => {
 
       </div>
       <div className="footer-bottom">
-        <span>© {new Date().getFullYear()} Mardan Boutique. Все права защищены.</span>
+        <span>© 2023 Mardan Boutique. Все права защищены.</span>
       </div>
     </footer>
   );
