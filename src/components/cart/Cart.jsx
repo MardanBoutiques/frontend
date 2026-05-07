@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../navbar/NavBar';
 import { useCart } from '../../context/CartContext';
+import { getImageUrl } from '../../utils/imageUrl';
 import './Cart.css';
 
 const Cart = () => {
@@ -13,13 +14,6 @@ const Cart = () => {
     if (lastCategory === '__giftbox__') navigate('/giftbox');
     else if (lastCategory === '__giftcard__') navigate('/giftcard');
     else navigate(lastCategory ? `/catalogue?category=${lastCategory}` : '/');
-  };
-
-  const getImageUrl = (imagePath) => {
-    if (!imagePath) return null;
-    if (imagePath.startsWith('http')) return imagePath;
-    if (imagePath.startsWith('/media/')) return `http://127.0.0.1:8001${imagePath}`;
-    return `http://127.0.0.1:8001/media/${imagePath}`;
   };
 
   if (cartItems.length === 0) {
