@@ -207,6 +207,20 @@
   color: #000;
 }
 
+.payment-logos {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.payment-logo {
+  height: 28px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
 /* Кнопка подтверждения */
 .btn-submit-order {
   width: 100%;

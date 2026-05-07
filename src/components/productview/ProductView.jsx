@@ -308,12 +308,61 @@ const ProductView = () => {
               {product.delivery_info ? (
                 <p style={{whiteSpace: 'pre-line'}} className="accordion-text">{product.delivery_info}</p>
               ) : (
-                <ul className="product-specs-list">
-                  <li>Бесплатная доставка при заказе от 50 000 KZT</li>
-                  <li>Доставка по Алматы: 1–2 рабочих дня</li>
-                  <li>Доставка по Казахстану: 3–5 рабочих дней</li>
-                  <li>Возврат в течение 14 дней</li>
-                </ul>
+                <div className="delivery-info">
+                  <div className="delivery-section">
+                    <p className="delivery-region">Внутри города Алматы и Астана</p>
+                    <table className="delivery-table">
+                      <thead>
+                        <tr><th>Способ</th><th>Стоимость</th><th>Срок</th></tr>
+                      </thead>
+                      <tbody>
+                        <tr><td>Яндекс Доставка</td><td>По тарифу Яндекса</td><td>День в день</td></tr>
+                        <tr><td>Самовывоз</td><td>Бесплатно</td><td>В рабочее время магазина</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div className="delivery-section">
+                    <p className="delivery-region">Внутри Казахстана</p>
+                    <table className="delivery-table">
+                      <thead>
+                        <tr><th>Способ</th><th>Стоимость</th><th>Срок</th></tr>
+                      </thead>
+                      <tbody>
+                        <tr><td>Казпочта</td><td>2 000 ₸</td><td>5–9 рабочих дней (до пункта выдачи)</td></tr>
+                        <tr><td>RIKA</td><td>от 3 500 ₸</td><td>2–4 дня (до двери, включая посёлки)</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div className="delivery-section">
+                    <p className="delivery-region">СНГ</p>
+                    <table className="delivery-table">
+                      <thead>
+                        <tr><th>Регион</th><th>Стоимость</th><th>Срок</th></tr>
+                      </thead>
+                      <tbody>
+                        <tr><td>СНГ</td><td>По тарифу СДЭК и KAZPOST</td><td>7–14 рабочих дней (до пункта выдачи)</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div className="delivery-section">
+                    <p className="delivery-region">Европа и Америка</p>
+                    <table className="delivery-table">
+                      <thead>
+                        <tr><th>Регион</th><th>Стоимость</th><th>Срок</th></tr>
+                      </thead>
+                      <tbody>
+                        <tr><td>Европа</td><td>По тарифу СДЭК и KAZPOST</td><td>от 2 недель (до пункта выдачи)</td></tr>
+                        <tr><td>Америка</td><td>По тарифу СДЭК и KAZPOST</td><td>от 2 недель (до пункта выдачи)</td></tr>
+                        <tr><td>Остальные страны</td><td>По тарифу СДЭК и KAZPOST</td><td>от 2 недель (до пункта выдачи)</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <p className="delivery-return">* Возврат в течение 14 дней при сохранении чека, товарного вида и этикеток.</p>
+                </div>
               )}
             </Accordion>
           </div>

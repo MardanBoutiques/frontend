@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../navbar/NavBar';
 import { useCart } from '../../context/CartContext';
@@ -16,12 +16,58 @@ const Checkout = () => {
     customerPhone: '',
     customerEmail: '',
     instagram: '',
+    country: '',
     city: '',
     address: '',
-    deliveryMethod: 'courier',
-    paymentMethod: 'cash',
+    deliveryMethod: 'yandex',
+    paymentMethod: 'card',
   });
   const [errors, setErrors] = useState({});
+
+  const CIS_COUNTRIES = ['россия', 'беларусь', 'украина', 'узбекистан', 'кыргызстан', 'киргизия',
+    'таджикистан', 'туркменистан', 'армения', 'азербайджан', 'грузия', 'молдова', 'молдавия'];
+
+  const getDeliveryZone = (country, city) => {
+    const c = country.toLowerCase().trim();
+    const ct = city.toLowerCase().trim();
+    if (!c || c === 'казахстан' || c === 'kazakhstan' || c === 'kz') {
+      if (ct === 'алматы' || ct === 'almaty' || ct === 'астана' || ct === 'astana' || ct === 'нур-султан') {
+        return 'almaty';
+      }
+      return 'kazakhstan';
+    }
+    if (CIS_COUNTRIES.some(s => c.includes(s))) return 'cis';
+    return 'international';
+  };
+
+  const DELIVERY_OPTIONS = {
+    almaty: [
+      { value: 'yandex', title: 'Яндекс Доставка', desc: 'Алматы и Астана · По тарифу Яндекса · День в день' },
+      { value: 'pickup', title: 'Самовывоз', desc: 'Бесплатно · В рабочее время магазина' },
+      { value: 'kazpost', title: 'Казпочта', desc: 'По Казахстану · 2 000 ₸ · 5–9 рабочих дней (до пункта выдачи)' },
+      { value: 'rika', title: 'RIKA', desc: 'По Казахстану · от 3 500 ₸ · 2–4 дня (до двери, включая посёлки)' },
+    ],
+    kazakhstan: [
+      { value: 'kazpost', title: 'Казпочта', desc: 'По Казахстану · 2 000 ₸ · 5–9 рабочих дней (до пункта выдачи)' },
+      { value: 'rika', title: 'RIKA', desc: 'По Казахстану · от 3 500 ₸ · 2–4 дня (до двери, включая посёлки)' },
+    ],
+    cis: [
+      { value: 'cdek', title: 'СДЭК и KAZPOST', desc: 'СНГ · По тарифу · 7–14 рабочих дней (до пункта выдачи)' },
+    ],
+    international: [
+      { value: 'international', title: 'СДЭК и KAZPOST (Международная)', desc: 'Европа, Америка и др. · По тарифу · от 2 недель (до пункта выдачи)' },
+    ],
+  };
+
+  useEffect(() => {
+    if (!formData.country && !formData.city) return;
+    const zone = getDeliveryZone(formData.country, formData.city);
+    const options = DELIVERY_OPTIONS[zone];
+    const current = options.find(o => o.value === formData.deliveryMethod);
+    if (!current) {
+      setFormData(prev => ({ ...prev, deliveryMethod: options[0].value }));
+    }
+  }, [formData.country, formData.city]);
 
   const validateForm = () => {
     const newErrors = {};
@@ -228,6 +274,21 @@ const Checkout = () => {
               <div className="form-section">
                 <h2>Адрес доставки</h2>
                 <div className="form-group">
+                  <label htmlFor="country">Страна *</label>
+                  <input
+                    type="text"
+                    id="country"
+                    name="country"
+                    value={formData.country}
+                    onChange={handleChange}
+                    required
+                    placeholder="Казахстан"
+                    className={errors.country ? 'error' : ''}
+                  />
+                  {errors.country && <span className="error-message">{errors.country}</span>}
+                </div>
+
+                <div className="form-group">
                   <label htmlFor="city">Город *</label>
                   <input
                     type="text"
@@ -262,47 +323,16 @@ const Checkout = () => {
               <div className="form-section">
                 <h2>Способ доставки</h2>
                 <div className="radio-group">
-                  <label className="radio-option">
-                    <input
-                      type="radio"
-                      name="deliveryMethod"
-                      value="courier"
-                      checked={formData.deliveryMethod === 'courier'}
-                      onChange={handleChange}
-                    />
-                    <div className="radio-content">
-                      <span className="radio-title">Курьер (Алматы)</span>
-                      <span className="radio-desc">1-2 рабочих дня</span>
-                    </div>
-                  </label>
-
-                  <label className="radio-option">
-                    <input
-                      type="radio"
-                      name="deliveryMethod"
-                      value="post"
-                      checked={formData.deliveryMethod === 'post'}
-                      onChange={handleChange}
-                    />
-                    <div className="radio-content">
-                      <span className="radio-title">Казпочта</span>
-                      <span className="radio-desc">3-5 рабочих дней</span>
-                    </div>
-                  </label>
-
-                  <label className="radio-option">
-                    <input
-                      type="radio"
-                      name="deliveryMethod"
-                      value="pickup"
-                      checked={formData.deliveryMethod === 'pickup'}
-                      onChange={handleChange}
-                    />
-                    <div className="radio-content">
-                      <span className="radio-title">Самовывоз</span>
-                      <span className="radio-desc">Бесплатно</span>
-                    </div>
-                  </label>
+                  {DELIVERY_OPTIONS[getDeliveryZone(formData.country, formData.city)].map(opt => (
+                    <label className="radio-option" key={opt.value}>
+                      <input type="radio" name="deliveryMethod" value={opt.value}
+                        checked={formData.deliveryMethod === opt.value} onChange={handleChange} />
+                      <div className="radio-content">
+                        <span className="radio-title">{opt.title}</span>
+                        <span className="radio-desc">{opt.desc}</span>
+                      </div>
+                    </label>
+                  ))}
                 </div>
               </div>
 
@@ -311,44 +341,30 @@ const Checkout = () => {
                 <h2>Способ оплаты</h2>
                 <div className="radio-group">
                   <label className="radio-option">
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="cash"
-                      checked={formData.paymentMethod === 'cash'}
-                      onChange={handleChange}
-                    />
+                    <input type="radio" name="paymentMethod" value="card"
+                      checked={formData.paymentMethod === 'card'} onChange={handleChange} />
                     <div className="radio-content">
-                      <span className="radio-title">Наличными при получении</span>
+                      <span className="radio-title">Банковская карта</span>
+                      <span className="radio-desc">Реквизиты отправит менеджер</span>
+                      <div className="payment-logos">
+                        <img src="/payment/visa.png" alt="Visa" className="payment-logo" />
+                        <img src="/payment/mastercard.png" alt="Mastercard" className="payment-logo" />
+                      </div>
                     </div>
                   </label>
 
                   <label className="radio-option">
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="kaspi"
-                      checked={formData.paymentMethod === 'kaspi'}
-                      onChange={handleChange}
-                    />
+                    <input type="radio" name="paymentMethod" value="kaspi"
+                      checked={formData.paymentMethod === 'kaspi'} onChange={handleChange} />
                     <div className="radio-content">
-                      <span className="radio-title">Kaspi перевод</span>
-                      <span className="radio-desc">Реквизиты отправит менеджер</span>
+                      <span className="radio-title">Kaspi</span>
+                      <div className="payment-logos">
+                        <img src="/payment/kaspi.png" alt="Kaspi" className="payment-logo" />
+                        <img src="/payment/kaspi-kredit.png" alt="Kaspi Kredit" className="payment-logo" />
+                      </div>
                     </div>
                   </label>
 
-                  <label className="radio-option disabled">
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="online"
-                      disabled
-                    />
-                    <div className="radio-content">
-                      <span className="radio-title">Онлайн оплата картой</span>
-                      <span className="radio-desc">Скоро</span>
-                    </div>
-                  </label>
                 </div>
               </div>
 
