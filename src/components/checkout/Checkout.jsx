@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import NavBar from '../navbar/NavBar';
 import { useCart } from '../../context/CartContext';
 import api from '../../api/axios';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 import './Checkout.css';
 
 const Checkout = () => {
@@ -77,10 +79,9 @@ const Checkout = () => {
       newErrors.customerName = 'ФИО должно содержать минимум 3 символа';
     }
     
-    // Validate phone (казахстанский формат)
-    const phoneRegex = /^(\+7|8)?[\s\-]?\(?[0-9]{3}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$/;
-    if (!formData.customerPhone || !phoneRegex.test(formData.customerPhone)) {
-      newErrors.customerPhone = 'Введите корректный номер телефона (+7 или 8)';
+    // Validate phone (минимум 7 цифр с кодом страны)
+    if (!formData.customerPhone || formData.customerPhone.replace(/\D/g, '').length < 7) {
+      newErrors.customerPhone = 'Введите корректный номер телефона';
     }
     
     // Validate email (если указан)
@@ -229,15 +230,16 @@ const Checkout = () => {
 
                 <div className="form-group">
                   <label htmlFor="customerPhone">Телефон *</label>
-                  <input
-                    type="tel"
-                    id="customerPhone"
-                    name="customerPhone"
+                  <PhoneInput
+                    country={'kz'}
                     value={formData.customerPhone}
-                    onChange={handleChange}
-                    required
-                    placeholder="+7 (777) 123-45-67"
-                    className={errors.customerPhone ? 'error' : ''}
+                    onChange={(phone) => setFormData(prev => ({ ...prev, customerPhone: '+' + phone }))}
+                    inputClass={errors.customerPhone ? 'error' : ''}
+                    containerClass="phone-input-container"
+                    preferredCountries={['kz', 'ru', 'ua', 'uz', 'by']}
+                    enableSearch
+                    searchPlaceholder="Поиск страны..."
+                    searchNotFound="Не найдено"
                   />
                   {errors.customerPhone && <span className="error-message">{errors.customerPhone}</span>}
                 </div>

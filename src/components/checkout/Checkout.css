@@ -152,6 +152,72 @@
   min-height: 80px;
 }
 
+/* Phone Input */
+.phone-input-container {
+  width: 100% !important;
+}
+
+.phone-input-container .form-control {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 10px 12px 10px 52px !important;
+  border: 1px solid var(--color-outline) !important;
+  border-radius: 0 !important;
+  font-size: 0.8125rem !important;
+  font-weight: 100 !important;
+  font-family: inherit !important;
+  color: var(--color-navy) !important;
+  height: auto !important;
+  transition: border-color 0.2s !important;
+}
+
+.phone-input-container .form-control.error {
+  border-color: #dc3545 !important;
+}
+
+.phone-input-container .form-control:focus {
+  outline: none !important;
+  border-color: var(--color-navy) !important;
+  box-shadow: none !important;
+}
+
+.phone-input-container .flag-dropdown {
+  border: 1px solid var(--color-outline) !important;
+  border-right: none !important;
+  border-radius: 0 !important;
+  background: #fafafa !important;
+}
+
+.phone-input-container .flag-dropdown.open {
+  border-color: var(--color-navy) !important;
+}
+
+.phone-input-container .selected-flag:hover,
+.phone-input-container .selected-flag:focus {
+  background: #f0f0f0 !important;
+}
+
+.phone-input-container .country-list {
+  border-radius: 0 !important;
+  border: 1px solid var(--color-outline) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+  font-size: 0.8125rem !important;
+  font-family: inherit !important;
+}
+
+.phone-input-container .country-list .country.highlight,
+.phone-input-container .country-list .country:hover {
+  background: #f5f5f5 !important;
+}
+
+.phone-input-container .search-box {
+  border-radius: 0 !important;
+  border: 1px solid var(--color-outline) !important;
+  font-size: 0.8125rem !important;
+  font-family: inherit !important;
+  padding: 6px 10px !important;
+}
+
 /* Radio группа */
 .radio-group {
   display: flex;
