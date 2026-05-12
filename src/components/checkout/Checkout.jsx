@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import NavBar from '../navbar/NavBar';
 import { useCart } from '../../context/CartContext';
 import api from '../../api/axios';
-import PhoneInput from 'react-phone-input-2';
+import _PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
+const PhoneInput = _PhoneInput.default || _PhoneInput;
 import './Checkout.css';
 
 const Checkout = () => {
