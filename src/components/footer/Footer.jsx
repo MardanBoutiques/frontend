@@ -55,7 +55,7 @@ const Footer = () => {
 
       </div>
       <div className="footer-bottom">
-        <span>© 2025 MardanBoutiques. Все права защищены.</span>
+        <span>© 2023 MardanBoutiques. Все права защищены.</span>
         <div className="footer-bottom-links">
           <Link to="/about">О компании</Link>
           <Link to="/vacancies">Вакансии</Link>
