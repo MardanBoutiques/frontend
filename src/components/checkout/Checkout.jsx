@@ -6,7 +6,7 @@ import api from '../../api/axios';
 import _PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import Select from 'react-select';
-import { Country, City } from 'country-state-city';
+import { Country, State, City } from 'country-state-city';
 import './Checkout.css';
 
 const PhoneInput = _PhoneInput.default || _PhoneInput;
@@ -30,6 +30,7 @@ const Checkout = () => {
   });
   const [errors, setErrors] = useState({});
   const [selectedCountry, setSelectedCountry] = useState(null);
+  const [selectedState, setSelectedState] = useState(null);
   const [selectedCity, setSelectedCity] = useState(null);
 
   const CIS_CODES = ['RU', 'BY', 'UA', 'UZ', 'KG', 'TJ', 'TM', 'AM', 'AZ', 'GE', 'MD'];
@@ -51,8 +52,23 @@ const Checkout = () => {
     label: c.name,
   }));
 
+  const stateList = selectedCountry
+    ? State.getStatesOfCountry(selectedCountry.value)
+    : [];
+  const hasStates = stateList.length > 0;
+
+  const stateOptions = stateList.map(s => ({
+    value: s.isoCode,
+    label: s.name,
+  }));
+
   const cityOptions = selectedCountry
-    ? City.getCitiesOfCountry(selectedCountry.value).map(c => ({ value: c.name, label: c.name }))
+    ? (hasStates && selectedState
+        ? City.getCitiesOfState(selectedCountry.value, selectedState.value)
+        : hasStates
+          ? []
+          : City.getCitiesOfCountry(selectedCountry.value)
+      ).map(c => ({ value: c.name, label: c.name }))
     : [];
 
   const DELIVERY_OPTIONS = {
@@ -294,6 +310,7 @@ const Checkout = () => {
                     value={selectedCountry}
                     onChange={(opt) => {
                       setSelectedCountry(opt);
+                      setSelectedState(null);
                       setSelectedCity(null);
                       setFormData(prev => ({ ...prev, country: opt ? opt.label : '', city: '' }));
                     }}
@@ -305,6 +322,24 @@ const Checkout = () => {
                   {errors.country && <span className="error-message">{errors.country}</span>}
                 </div>
 
+                {hasStates && (
+                  <div className="form-group">
+                    <label>Штат / Провинция *</label>
+                    <Select
+                      options={stateOptions}
+                      value={selectedState}
+                      onChange={(opt) => {
+                        setSelectedState(opt);
+                        setSelectedCity(null);
+                        setFormData(prev => ({ ...prev, city: '' }));
+                      }}
+                      placeholder="Выберите штат/провинцию..."
+                      classNamePrefix="rs"
+                      noOptionsMessage={() => 'Не найдено'}
+                    />
+                  </div>
+                )}
+
                 <div className="form-group">
                   <label>Город *</label>
                   <Select
@@ -314,8 +349,12 @@ const Checkout = () => {
                       setSelectedCity(opt);
                       setFormData(prev => ({ ...prev, city: opt ? opt.label : '' }));
                     }}
-                    placeholder={selectedCountry ? 'Выберите город...' : 'Сначала выберите страну'}
-                    isDisabled={!selectedCountry}
+                    placeholder={
+                      !selectedCountry ? 'Сначала выберите страну' :
+                      hasStates && !selectedState ? 'Сначала выберите штат/провинцию' :
+                      'Выберите город...'
+                    }
+                    isDisabled={!selectedCountry || (hasStates && !selectedState)}
                     classNamePrefix="rs"
                     className={errors.city ? 'rs-error' : ''}
                     noOptionsMessage={() => 'Не найдено'}
