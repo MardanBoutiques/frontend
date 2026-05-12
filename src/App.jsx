@@ -12,6 +12,8 @@ import GiftBox from "./components/giftbox/GiftBox";
 import GiftCard from "./components/giftcard/GiftCard";
 import Stores from "./components/stores/Stores";
 import Footer from "./components/footer/Footer";
+import About from "./components/about/About";
+import Vacancies from "./components/vacancies/Vacancies";
 
 const Checkout = lazy(() => import("./components/checkout/Checkout"));
 
@@ -36,6 +38,8 @@ function App() {
           <Route path="/giftbox" element={<GiftBox />} />
           <Route path="/giftcard" element={<GiftCard />} />
           <Route path="/stores" element={<Stores />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/vacancies" element={<Vacancies />} />
         </Routes>
         <Footer />
       </BrowserRouter>

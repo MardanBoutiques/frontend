@@ -56,6 +56,10 @@ const Footer = () => {
       </div>
       <div className="footer-bottom">
         <span>© 2023 Mardan Boutique. Все права защищены.</span>
+        <div className="footer-bottom-links">
+          <Link to="/about">О компании</Link>
+          <Link to="/vacancies">Вакансии</Link>
+        </div>
       </div>
     </footer>
   );
