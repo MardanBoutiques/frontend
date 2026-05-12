@@ -34,8 +34,8 @@ const STORES = [
     waPhone: "77712699645",
     photo: "/photos/astana_boutique.png",
     status: "Открыто до 20:00",
-    mapUrl: "https://2gis.kz/astana/firm/70000001112703791?m=71.425735%2C51.120614%2F15.22",
-    embedUrl: "https://maps.google.com/maps?q=51.120614,71.425735&z=16&output=embed",
+    mapUrl: "https://www.google.com/maps/place/%D1%83%D0%BB%D0%B8%D1%86%D0%B0+%D0%A2%D1%83%D1%80%D0%BA%D0%B8%D1%81%D1%82%D0%B0%D0%BD+8,+%D0%90%D1%81%D1%82%D0%B0%D0%BD%D0%B0+020000/@51.11496,71.4278068,19.62z/data=!4m17!1m10!3m9!1s0x4245843db3d21547:0x92a2c19ac18691d4!2z0JbQmiDQntC70LjQvNC_INCf0LDQu9Cw0YE!5m2!4m1!1i2!8m2!3d51.1149224!4d71.4283014!16s%2Fg%2F1ptwl35n5!3m5!1s0x4245843c4d5ee32b:0xe7e998190d816b93!8m2!3d51.1150065!4d71.4278776!16s%2Fg%2F11vm13xvtp?entry=ttu&g_ep=EgoyMDI2MDUwNi4wIKXMDSoASAFQAw%3D%3D",
+    embedUrl: "https://maps.google.com/maps?q=51.1150065,71.4278776&z=16&output=embed",
     hours: [
       { day: "Понедельник", time: "11:00 – 21:00" },
       { day: "Вторник",     time: "11:00 – 21:00" },
