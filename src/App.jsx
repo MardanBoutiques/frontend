@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import "./App.css";
 import { BrowserRouter, Route, Routes, Navigate, useSearchParams } from "react-router-dom";
 import { CartProvider } from "./context/CartContext";
@@ -8,11 +8,12 @@ import Wishlist from "./components/wishlist/Wishlist";
 import Catalogue from "./components/catalogue/Catalogue";
 import ProductView from "./components/productview/ProductView";
 import Cart from "./components/cart/Cart";
-import Checkout from "./components/checkout/Checkout";
 import GiftBox from "./components/giftbox/GiftBox";
 import GiftCard from "./components/giftcard/GiftCard";
 import Stores from "./components/stores/Stores";
 import Footer from "./components/footer/Footer";
+
+const Checkout = lazy(() => import("./components/checkout/Checkout"));
 
 function CatalogueGuard() {
   const [searchParams] = useSearchParams();
@@ -30,7 +31,7 @@ function App() {
           <Route path="/catalogue" element={<CatalogueGuard />} />
           <Route path="/product/:id" element={<ProductView />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/checkout" element={<Suspense fallback={null}><Checkout /></Suspense>} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/giftbox" element={<GiftBox />} />
           <Route path="/giftcard" element={<GiftCard />} />

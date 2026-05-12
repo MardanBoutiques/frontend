@@ -152,6 +152,85 @@
   min-height: 80px;
 }
 
+/* React Select (Country/City) */
+.rs__control {
+  border: 1px solid var(--color-outline) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  min-height: 38px !important;
+  font-size: 0.8125rem !important;
+  font-family: inherit !important;
+  background: #fff !important;
+}
+
+.rs__control:hover {
+  border-color: var(--color-navy) !important;
+}
+
+.rs__control--is-focused {
+  border-color: var(--color-navy) !important;
+}
+
+.rs__control--is-disabled {
+  background: #f5f5f5 !important;
+  opacity: 0.6 !important;
+}
+
+.rs-error .rs__control {
+  border-color: #dc3545 !important;
+}
+
+.rs__value-container {
+  padding: 2px 12px !important;
+}
+
+.rs__single-value {
+  font-size: 0.8125rem !important;
+  font-weight: 100 !important;
+  color: var(--color-navy) !important;
+  font-family: inherit !important;
+}
+
+.rs__placeholder {
+  font-size: 0.8125rem !important;
+  font-weight: 100 !important;
+  color: #aaa !important;
+}
+
+.rs__menu {
+  border-radius: 0 !important;
+  border: 1px solid var(--color-outline) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+  font-size: 0.8125rem !important;
+  font-family: inherit !important;
+  z-index: 100 !important;
+}
+
+.rs__option {
+  font-size: 0.8125rem !important;
+  font-weight: 100 !important;
+  color: var(--color-navy) !important;
+  padding: 8px 12px !important;
+}
+
+.rs__option--is-focused {
+  background: #f5f5f5 !important;
+}
+
+.rs__option--is-selected {
+  background: var(--color-navy) !important;
+  color: #fff !important;
+}
+
+.rs__indicator-separator {
+  display: none !important;
+}
+
+.rs__input {
+  font-size: 0.8125rem !important;
+  font-family: inherit !important;
+}
+
 /* Phone Input */
 .phone-input-container {
   width: 100% !important;

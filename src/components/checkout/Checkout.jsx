@@ -5,8 +5,11 @@ import { useCart } from '../../context/CartContext';
 import api from '../../api/axios';
 import _PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
-const PhoneInput = _PhoneInput.default || _PhoneInput;
+import Select from 'react-select';
+import { Country, City } from 'country-state-city';
 import './Checkout.css';
+
+const PhoneInput = _PhoneInput.default || _PhoneInput;
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -26,22 +29,31 @@ const Checkout = () => {
     paymentMethod: 'card',
   });
   const [errors, setErrors] = useState({});
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [selectedCity, setSelectedCity] = useState(null);
 
-  const CIS_COUNTRIES = ['россия', 'беларусь', 'украина', 'узбекистан', 'кыргызстан', 'киргизия',
-    'таджикистан', 'туркменистан', 'армения', 'азербайджан', 'грузия', 'молдова', 'молдавия'];
+  const CIS_CODES = ['RU', 'BY', 'UA', 'UZ', 'KG', 'TJ', 'TM', 'AM', 'AZ', 'GE', 'MD'];
 
-  const getDeliveryZone = (country, city) => {
-    const c = country.toLowerCase().trim();
-    const ct = city.toLowerCase().trim();
-    if (!c || c === 'казахстан' || c === 'kazakhstan' || c === 'kz') {
-      if (ct === 'алматы' || ct === 'almaty' || ct === 'астана' || ct === 'astana' || ct === 'нур-султан') {
+  const getDeliveryZone = (countryCode, city) => {
+    const ct = (city || '').toLowerCase().trim();
+    if (!countryCode || countryCode === 'KZ') {
+      if (['алматы', 'almaty', 'астана', 'astana', 'nur-sultan', 'нур-султан'].includes(ct)) {
         return 'almaty';
       }
       return 'kazakhstan';
     }
-    if (CIS_COUNTRIES.some(s => c.includes(s))) return 'cis';
+    if (CIS_CODES.includes(countryCode)) return 'cis';
     return 'international';
   };
+
+  const countryOptions = Country.getAllCountries().map(c => ({
+    value: c.isoCode,
+    label: c.name,
+  }));
+
+  const cityOptions = selectedCountry
+    ? City.getCitiesOfCountry(selectedCountry.value).map(c => ({ value: c.name, label: c.name }))
+    : [];
 
   const DELIVERY_OPTIONS = {
     almaty: [
@@ -63,14 +75,13 @@ const Checkout = () => {
   };
 
   useEffect(() => {
-    if (!formData.country && !formData.city) return;
-    const zone = getDeliveryZone(formData.country, formData.city);
+    const zone = getDeliveryZone(selectedCountry?.value, formData.city);
     const options = DELIVERY_OPTIONS[zone];
     const current = options.find(o => o.value === formData.deliveryMethod);
     if (!current) {
       setFormData(prev => ({ ...prev, deliveryMethod: options[0].value }));
     }
-  }, [formData.country, formData.city]);
+  }, [selectedCountry, formData.city]);
 
   const validateForm = () => {
     const newErrors = {};
@@ -277,31 +288,37 @@ const Checkout = () => {
               <div className="form-section">
                 <h2>Адрес доставки</h2>
                 <div className="form-group">
-                  <label htmlFor="country">Страна *</label>
-                  <input
-                    type="text"
-                    id="country"
-                    name="country"
-                    value={formData.country}
-                    onChange={handleChange}
-                    required
-                    placeholder="Казахстан"
-                    className={errors.country ? 'error' : ''}
+                  <label>Страна *</label>
+                  <Select
+                    options={countryOptions}
+                    value={selectedCountry}
+                    onChange={(opt) => {
+                      setSelectedCountry(opt);
+                      setSelectedCity(null);
+                      setFormData(prev => ({ ...prev, country: opt ? opt.label : '', city: '' }));
+                    }}
+                    placeholder="Выберите страну..."
+                    classNamePrefix="rs"
+                    className={errors.country ? 'rs-error' : ''}
+                    noOptionsMessage={() => 'Не найдено'}
                   />
                   {errors.country && <span className="error-message">{errors.country}</span>}
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="city">Город *</label>
-                  <input
-                    type="text"
-                    id="city"
-                    name="city"
-                    value={formData.city}
-                    onChange={handleChange}
-                    required
-                    placeholder="Алматы"
-                    className={errors.city ? 'error' : ''}
+                  <label>Город *</label>
+                  <Select
+                    options={cityOptions}
+                    value={selectedCity}
+                    onChange={(opt) => {
+                      setSelectedCity(opt);
+                      setFormData(prev => ({ ...prev, city: opt ? opt.label : '' }));
+                    }}
+                    placeholder={selectedCountry ? 'Выберите город...' : 'Сначала выберите страну'}
+                    isDisabled={!selectedCountry}
+                    classNamePrefix="rs"
+                    className={errors.city ? 'rs-error' : ''}
+                    noOptionsMessage={() => 'Не найдено'}
                   />
                   {errors.city && <span className="error-message">{errors.city}</span>}
                 </div>
@@ -326,7 +343,7 @@ const Checkout = () => {
               <div className="form-section">
                 <h2>Способ доставки</h2>
                 <div className="radio-group">
-                  {DELIVERY_OPTIONS[getDeliveryZone(formData.country, formData.city)].map(opt => (
+                  {DELIVERY_OPTIONS[getDeliveryZone(selectedCountry?.value, formData.city)].map(opt => (
                     <label className="radio-option" key={opt.value}>
                       <input type="radio" name="deliveryMethod" value={opt.value}
                         checked={formData.deliveryMethod === opt.value} onChange={handleChange} />
