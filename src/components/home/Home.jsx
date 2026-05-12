@@ -150,7 +150,7 @@ const HeroPictures = ({ images }) => {
         </div>
       </Link>
 
-      <Link to="/catalogue?category=jackets" className="collection-section">
+      <Link to="/catalogue?category=shirts" className="collection-section">
         <div
           className="collection-image-full"
           style={{
@@ -161,7 +161,7 @@ const HeroPictures = ({ images }) => {
           }}
         >
           <div className="collection-overlay">
-            <div className="collection-cta">Куртки</div>
+            <div className="collection-cta">Рубашки</div>
           </div>
         </div>
       </Link>

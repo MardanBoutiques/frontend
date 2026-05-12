@@ -10,7 +10,7 @@ const Footer = () => {
           <h4>Каталог</h4>
           <Link to="/catalogue?category=suits">Костюмы</Link>
           <Link to="/catalogue?category=knitwear">Трикотаж</Link>
-          <Link to="/catalogue?category=jackets">Куртки</Link>
+          <Link to="/catalogue?category=shirts">Рубашки</Link>
           <Link to="/catalogue?category=accessories">Аксессуары</Link>
         </div>
 
