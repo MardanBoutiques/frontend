@@ -1,0 +1,304 @@
+/* ── Hero ── */
+.about-hero {
+  margin-top: 70px;
+  width: 100%;
+  min-height: 92vh;
+  background-image: url('/photos/about-hero.jpg');
+  background-size: cover;
+  background-position: center;
+  background-color: #0c1521;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 80px;
+}
+
+.about-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.1) 60%);
+}
+
+.about-hero-inner {
+  position: relative;
+  z-index: 1;
+  padding: 0 80px;
+  max-width: 1200px;
+}
+
+.about-hero-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 100;
+  color: rgba(255,255,255,0.55);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  margin: 0 0 20px;
+}
+
+.about-hero-title {
+  font-size: clamp(4rem, 10vw, 9rem);
+  font-weight: var(--font-weight-regular);
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  margin: 0 0 28px;
+}
+
+.about-hero-tagline {
+  font-size: 1rem;
+  font-weight: 100;
+  color: rgba(255,255,255,0.75);
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+  margin: 0;
+  max-width: 480px;
+}
+
+/* ── Base section ── */
+.about-section {
+  padding: 96px 80px;
+  background: #fff;
+}
+
+.about-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.about-container--narrow {
+  max-width: 780px;
+}
+
+.about-label {
+  font-size: 0.6875rem;
+  font-weight: var(--font-weight-regular);
+  color: var(--color-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  margin: 0 0 28px;
+}
+
+.about-body {
+  font-size: 0.9375rem;
+  font-weight: 100;
+  color: #111;
+  line-height: 1.8;
+  margin: 0 0 16px;
+}
+
+.about-body:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Intro ── */
+.about-quote {
+  font-size: clamp(1.4rem, 2.8vw, 2.2rem);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-navy);
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  margin: 0 0 32px;
+}
+
+/* ── Key idea ── */
+.about-keyidea {
+  padding: 80px;
+  background: #f8f7f5;
+}
+
+.about-keyidea-line {
+  height: 1px;
+  background: var(--color-outline);
+  margin: 28px 0;
+}
+
+.about-keyidea-text {
+  font-size: clamp(1.25rem, 2.5vw, 2rem);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-navy);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ── Split layout ── */
+.about-container--split {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 64px;
+  align-items: start;
+}
+
+.about-split-left {
+  padding-top: 4px;
+}
+
+/* ── Founders ── */
+.about-founders {
+  background: #f8f7f5;
+}
+
+.about-founders-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  margin-bottom: 48px;
+  border: 1px solid var(--color-outline);
+}
+
+.about-founder-card {
+  padding: 40px 36px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.about-founder-name {
+  font-size: 1.125rem;
+  font-weight: var(--font-weight-regular);
+  color: var(--color-navy);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  transition: opacity 0.2s;
+  line-height: 1.3;
+}
+
+.about-founder-name:hover {
+  opacity: 0.55;
+}
+
+.about-founder-role {
+  font-size: 0.75rem;
+  font-weight: 100;
+  color: var(--color-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 0;
+}
+
+.about-founders-desc {
+  max-width: 620px;
+}
+
+/* ── Mission ── */
+.about-mission {
+  background: var(--color-navy);
+}
+
+.about-mission .about-label {
+  color: rgba(255,255,255,0.4);
+}
+
+.about-mission-text {
+  font-size: clamp(1.4rem, 2.8vw, 2.2rem);
+  font-weight: var(--font-weight-regular);
+  color: #fff;
+  line-height: 1.45;
+  letter-spacing: 0.02em;
+  margin: 0 0 24px;
+}
+
+.about-mission .about-body {
+  color: rgba(255,255,255,0.65);
+}
+
+/* ── Brands ── */
+.about-brands-intro {
+  max-width: 540px;
+  margin-bottom: 40px !important;
+}
+
+.about-brands-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+}
+
+.about-brand-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 36px 32px;
+  background: #f8f7f5;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.about-brand-card:hover {
+  background: #efefed;
+}
+
+.about-brand-name {
+  font-size: 1.25rem;
+  font-weight: var(--font-weight-regular);
+  color: var(--color-navy);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.about-brand-arrow {
+  font-size: 1.25rem;
+  color: var(--color-secondary);
+  transition: transform 0.2s;
+}
+
+.about-brand-card:hover .about-brand-arrow {
+  transform: translate(3px, -3px);
+}
+
+/* ── Tablet ── */
+@media (max-width: 1024px) {
+  .about-hero-inner,
+  .about-section {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  .about-keyidea {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  .about-container--split {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .about-founders-grid,
+  .about-brands-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Mobile ── */
+@media (max-width: 640px) {
+  .about-hero {
+    padding-bottom: 48px;
+    align-items: flex-end;
+  }
+
+  .about-hero-inner,
+  .about-section {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .about-section {
+    padding-top: 56px;
+    padding-bottom: 56px;
+  }
+
+  .about-keyidea {
+    padding: 48px 20px;
+  }
+
+  .about-founder-card {
+    padding: 28px 20px;
+  }
+}
