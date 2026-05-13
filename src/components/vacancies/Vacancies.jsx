@@ -67,10 +67,14 @@ const Vacancies = () => {
         <h2 className="vac-section-title">Какой опыт тебе даст работа в компании</h2>
         <div className="vac-benefits">
           {BENEFITS.map((b, i) => (
-            <div key={i} className="vac-benefit-card">
-              <span className="vac-benefit-num">0{i + 1}</span>
-              <h3 className="vac-benefit-title">{b.title}</h3>
-              <p className="vac-benefit-text">{b.text}</p>
+            <div key={i} className="vac-benefit-row">
+              <div className="vac-benefit-card">
+                <span className="vac-benefit-num">0{i + 1}</span>
+              </div>
+              <div className="vac-benefit-content">
+                <h3 className="vac-benefit-title">{b.title}</h3>
+                <p className="vac-benefit-text">{b.text}</p>
+              </div>
             </div>
           ))}
         </div>

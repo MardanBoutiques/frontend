@@ -92,30 +92,50 @@
 
 /* ── Benefits ── */
 .vac-benefits {
-  max-width: 1200px;
+  max-width: 860px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.vac-benefit-row {
+  display: flex;
+  align-items: center;
   gap: 32px;
+  padding: 28px 0;
+  border-bottom: 1px solid var(--color-outline);
+}
+
+.vac-benefits .vac-benefit-row:first-child {
+  border-top: 1px solid var(--color-outline);
 }
 
 .vac-benefit-card {
+  flex-shrink: 0;
+  width: 120px;
+  height: 120px;
+  background: var(--color-navy);
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 24px;
-  border: 1px solid var(--color-outline);
+  align-items: center;
+  justify-content: center;
 }
 
 .vac-benefit-num {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: 100;
-  color: var(--color-outline);
+  color: rgba(255,255,255,0.4);
   line-height: 1;
 }
 
+.vac-benefit-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .vac-benefit-title {
-  font-size: 0.8125rem;
+  font-size: 1rem;
   font-weight: var(--font-weight-regular);
   color: var(--color-navy);
   text-transform: uppercase;
@@ -129,6 +149,7 @@
   color: #000;
   line-height: 1.7;
   margin: 0;
+  max-width: 560px;
 }
 
 /* ── Vacancies list ── */
@@ -332,8 +353,9 @@
 
 /* ── Tablet ── */
 @media (max-width: 1024px) {
-  .vac-benefits {
-    grid-template-columns: repeat(2, 1fr);
+  .vac-benefit-card {
+    width: 90px;
+    height: 90px;
   }
 }
 
@@ -347,8 +369,13 @@
     padding: 48px 16px;
   }
 
-  .vac-benefits {
-    grid-template-columns: 1fr;
+  .vac-benefit-card {
+    width: 64px;
+    height: 64px;
+  }
+
+  .vac-benefit-num {
+    font-size: 1.25rem;
   }
 
   .vac-detail-container {
