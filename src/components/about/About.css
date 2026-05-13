@@ -137,6 +137,39 @@
   padding-top: 4px;
 }
 
+/* ── Name meaning grid ── */
+.about-meaning-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  margin-top: 48px;
+}
+
+.about-meaning-card {
+  padding: 36px 28px;
+  background: #f8f7f5;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.about-meaning-title {
+  font-size: 0.8125rem;
+  font-weight: var(--font-weight-regular);
+  color: var(--color-navy);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0;
+}
+
+.about-meaning-text {
+  font-size: 0.8125rem;
+  font-weight: 100;
+  color: #000;
+  line-height: 1.7;
+  margin: 0;
+}
+
 /* ── Founders ── */
 .about-founders {
   background: #f8f7f5;
@@ -151,11 +184,13 @@
 }
 
 .about-founder-card {
-  padding: 40px 36px;
+  padding: 56px 36px;
   background: #fff;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-height: 200px;
+  justify-content: flex-end;
 }
 
 .about-founder-name {
@@ -274,6 +309,10 @@
   .about-brands-grid {
     grid-template-columns: 1fr;
   }
+
+  .about-meaning-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 /* ── Mobile ── */
@@ -296,6 +335,10 @@
 
   .about-keyidea {
     padding: 48px 20px;
+  }
+
+  .about-meaning-grid {
+    grid-template-columns: 1fr;
   }
 
   .about-founder-card {
