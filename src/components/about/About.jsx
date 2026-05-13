@@ -99,7 +99,7 @@ const About = () => {
           <div className="about-founders-grid">
             <div className="about-founder-card">
               <a
-                href="https://www.instagram.com/mardan.boutiques/"
+                href="https://www.instagram.com/mardanqs/"
                 target="_blank"
                 rel="noreferrer"
                 className="about-founder-name"
@@ -110,7 +110,7 @@ const About = () => {
             </div>
             <div className="about-founder-card">
               <a
-                href="https://www.instagram.com/mardan.boutiques/"
+                href="https://www.instagram.com/eklive13/"
                 target="_blank"
                 rel="noreferrer"
                 className="about-founder-name"
