@@ -72,28 +72,26 @@
 
 /* ── Sections ── */
 .vac-section {
-  padding: 80px 24px;
+  padding: 64px 24px;
   background: #fff;
 }
 
-.vac-section-dark {
-  background: #fafafa;
+.vac-section-inner {
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .vac-section-title {
-  max-width: 1200px;
-  margin: 0 auto 48px;
   font-size: 0.8125rem;
   font-weight: var(--font-weight-regular);
   color: var(--color-navy);
   text-transform: uppercase;
   letter-spacing: 0.06em;
+  margin: 0 0 40px;
 }
 
 /* ── Benefits ── */
 .vac-benefits {
-  max-width: 860px;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -154,8 +152,6 @@
 
 /* ── Vacancies list ── */
 .vac-list {
-  max-width: 1200px;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 0;

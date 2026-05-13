@@ -64,39 +64,43 @@ const Vacancies = () => {
 
       {/* Benefits */}
       <div className="vac-section">
-        <h2 className="vac-section-title">Какой опыт тебе даст работа в компании</h2>
-        <div className="vac-benefits">
-          {BENEFITS.map((b, i) => (
-            <div key={i} className="vac-benefit-row">
-              <div className="vac-benefit-card">
-                <span className="vac-benefit-num">0{i + 1}</span>
+        <div className="vac-section-inner">
+          <h2 className="vac-section-title">Какой опыт тебе даст работа в компании</h2>
+          <div className="vac-benefits">
+            {BENEFITS.map((b, i) => (
+              <div key={i} className="vac-benefit-row">
+                <div className="vac-benefit-card">
+                  <span className="vac-benefit-num">0{i + 1}</span>
+                </div>
+                <div className="vac-benefit-content">
+                  <h3 className="vac-benefit-title">{b.title}</h3>
+                  <p className="vac-benefit-text">{b.text}</p>
+                </div>
               </div>
-              <div className="vac-benefit-content">
-                <h3 className="vac-benefit-title">{b.title}</h3>
-                <p className="vac-benefit-text">{b.text}</p>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Vacancies list */}
-      <div className="vac-section vac-section-dark" ref={vacanciesRef}>
-        <h2 className="vac-section-title">Открытые вакансии</h2>
-        <div className="vac-list">
-          {VACANCIES.map((v) => (
-            <div
-              key={v.id}
-              className="vac-card"
-              onClick={() => navigate(`/vacancies/${v.id}`)}
-            >
-              <div className="vac-card-left">
-                <p className="vac-card-city">{v.city}</p>
-                <h3 className="vac-card-title">{v.title}</h3>
+      <div className="vac-section" ref={vacanciesRef}>
+        <div className="vac-section-inner">
+          <h2 className="vac-section-title">Открытые вакансии</h2>
+          <div className="vac-list">
+            {VACANCIES.map((v) => (
+              <div
+                key={v.id}
+                className="vac-card"
+                onClick={() => navigate(`/vacancies/${v.id}`)}
+              >
+                <div className="vac-card-left">
+                  <p className="vac-card-city">{v.city}</p>
+                  <h3 className="vac-card-title">{v.title}</h3>
+                </div>
+                <span className="vac-card-arrow">→</span>
               </div>
-              <span className="vac-card-arrow">→</span>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </>
