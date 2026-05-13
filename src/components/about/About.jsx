@@ -143,7 +143,7 @@ const About = () => {
           </p>
           <div className="about-brands-grid">
             <a
-              href="https://www.instagram.com/mardan.boutiques/"
+              href="https://www.instagram.com/114.avenue/"
               target="_blank"
               rel="noreferrer"
               className="about-brand-card"
@@ -152,12 +152,12 @@ const About = () => {
               <span className="about-brand-arrow">↗</span>
             </a>
             <a
-              href="https://www.instagram.com/mardan.boutiques/"
+              href="https://www.instagram.com/inspira.kz/"
               target="_blank"
               rel="noreferrer"
               className="about-brand-card"
             >
-              <span className="about-brand-name">INSPIRE</span>
+              <span className="about-brand-name">INSPIRA</span>
               <span className="about-brand-arrow">↗</span>
             </a>
           </div>
