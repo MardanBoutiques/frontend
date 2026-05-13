@@ -59,18 +59,13 @@ const About = () => {
       </section>
 
       {/* Name meaning */}
-      <section className="about-section">
+      <section className="about-section about-meaning-section">
         <div className="about-container">
-          <div className="about-container--split">
-            <div className="about-split-left">
-              <p className="about-label">Значение названия</p>
-            </div>
-            <div className="about-split-right">
-              <p className="about-body">
-                MARDAN — в переводе «отважный мужчина». Это человек, который принимает решения, несёт ответственность, выбирает качество и ценит комфорт. Название отражает наш характер: уверенный, решительный и ориентированный на поступок.
-              </p>
-            </div>
-          </div>
+          <p className="about-label">Значение названия</p>
+          <h2 className="about-meaning-headline">MARDAN</h2>
+          <p className="about-body about-meaning-desc">
+            В переводе — «отважный мужчина». Это человек, который принимает решения, несёт ответственность, выбирает качество и ценит комфорт. Название отражает наш характер: уверенный, решительный и ориентированный на поступок.
+          </p>
           <div className="about-meaning-grid">
             <div className="about-meaning-card">
               <h3 className="about-meaning-title">Принимает решения</h3>

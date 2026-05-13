@@ -137,6 +137,26 @@
   padding-top: 4px;
 }
 
+/* ── Name meaning section ── */
+.about-meaning-section {
+  background: #f8f7f5;
+}
+
+.about-meaning-headline {
+  font-size: clamp(3rem, 7vw, 6rem);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-navy);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  margin: 0 0 24px;
+}
+
+.about-meaning-desc {
+  max-width: 620px;
+  margin-bottom: 48px !important;
+}
+
 /* ── Name meaning grid ── */
 .about-meaning-grid {
   display: grid;
@@ -147,7 +167,7 @@
 
 .about-meaning-card {
   padding: 36px 28px;
-  background: #f8f7f5;
+  background: #fff;
   display: flex;
   flex-direction: column;
   gap: 12px;
