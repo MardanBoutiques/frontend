@@ -153,11 +153,6 @@ const Checkout = () => {
       return;
     }
 
-    if (!turnstileToken) {
-      alert('Пожалуйста, подтвердите что вы не робот');
-      return;
-    }
-
     if (!validateForm()) {
       alert('Пожалуйста, исправьте ошибки в форме');
       return;
@@ -447,7 +442,7 @@ const Checkout = () => {
                 <button
                   type="submit"
                   className="btn-submit-order"
-                  disabled={loading || !turnstileToken}
+                  disabled={loading}
                 >
                   {loading ? 'Оформление...' : 'Подтвердить заказ'}
                 </button>
