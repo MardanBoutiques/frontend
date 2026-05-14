@@ -7,7 +7,10 @@ import _PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import Select from 'react-select';
 import { Country, State, City } from 'country-state-city';
+import { Turnstile } from '@marsidev/react-turnstile';
 import './Checkout.css';
+
+const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA';
 
 const PhoneInput = _PhoneInput.default || _PhoneInput;
 
@@ -29,6 +32,7 @@ const Checkout = () => {
     paymentMethod: 'card',
   });
   const [errors, setErrors] = useState({});
+  const [turnstileToken, setTurnstileToken] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedState, setSelectedState] = useState(null);
   const [selectedCity, setSelectedCity] = useState(null);
@@ -149,7 +153,11 @@ const Checkout = () => {
       return;
     }
 
-    // Валидация формы
+    if (!turnstileToken) {
+      alert('Пожалуйста, подтвердите что вы не робот');
+      return;
+    }
+
     if (!validateForm()) {
       alert('Пожалуйста, исправьте ошибки в форме');
       return;
@@ -173,7 +181,8 @@ const Checkout = () => {
         quantity: item.quantity,
         price: item.price
       })),
-      total_amount: getTotalPrice()
+      total_amount: getTotalPrice(),
+      turnstile_token: turnstileToken,
     };
 
     try {
@@ -428,10 +437,17 @@ const Checkout = () => {
               </div>
 
               <div className="form-section">
+                <Turnstile
+                  siteKey={TURNSTILE_SITE_KEY}
+                  onSuccess={setTurnstileToken}
+                  onExpire={() => setTurnstileToken(null)}
+                  onError={() => setTurnstileToken(null)}
+                  options={{ theme: 'light', language: 'ru' }}
+                />
                 <button
                   type="submit"
                   className="btn-submit-order"
-                  disabled={loading}
+                  disabled={loading || !turnstileToken}
                 >
                   {loading ? 'Оформление...' : 'Подтвердить заказ'}
                 </button>
