@@ -4,7 +4,6 @@ import { BrowserRouter, Route, Routes, Navigate, useSearchParams } from "react-r
 import { CartProvider } from "./context/CartContext";
 
 import Home from "./components/home/Home";
-import Wishlist from "./components/wishlist/Wishlist";
 import Catalogue from "./components/catalogue/Catalogue";
 import ProductView from "./components/productview/ProductView";
 import Cart from "./components/cart/Cart";
@@ -35,7 +34,6 @@ function App() {
           <Route path="/product/:id" element={<ProductView />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Suspense fallback={null}><Checkout /></Suspense>} />
-          <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/giftbox" element={<GiftBox />} />
           <Route path="/giftcard" element={<GiftCard />} />
           <Route path="/stores" element={<Stores />} />

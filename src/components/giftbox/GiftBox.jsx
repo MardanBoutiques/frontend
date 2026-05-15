@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./GiftBox.css";
 import NavBar from "../navbar/NavBar";
-import openAxios from "../../api/openAxios";
+import openAxios from "../../api/axios";
 import { getImageUrl } from "../../utils/imageUrl";
 import { useCart } from "../../context/CartContext";
 

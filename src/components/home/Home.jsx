@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Home.css";
 import NavBar from "../navbar/NavBar";
-import openAxios from "../../api/openAxios";
+import openAxios from "../../api/axios";
 import { getImageUrl } from "../../utils/imageUrl";
 // eslint-disable-next-line react/prop-types
 // function Surrounding({ element }) {
