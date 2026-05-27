@@ -112,6 +112,7 @@ const ProductCard = ({ product }) => {
                 title={c.name}
               />
             ))}
+            <span className="color-count">{colorDots.length} {colorDots.length === 1 ? 'цвет' : colorDots.length < 5 ? 'цвета' : 'цветов'}</span>
           </div>
         )}
       </div>
