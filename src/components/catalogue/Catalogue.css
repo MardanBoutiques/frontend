@@ -177,10 +177,6 @@
   flex-shrink: 0;
 }
 
-.color-dot.active {
-  border: 1.5px solid #333;
-  transform: scale(1.15);
-}
 
 /* ── Filter Sidebar ── */
 .side-filter {

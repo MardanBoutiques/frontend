@@ -71,24 +71,16 @@ const getColorHex = (name) => {
   return null;
 };
 
-const ProductCard = ({ product, allProducts }) => {
+const ProductCard = ({ product }) => {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
     navigate(`/product/${product.id}`);
   };
 
-  // Find all variants sharing the same article (non-empty)
-  const variants = product.article
-    ? allProducts.filter(p => p.article && p.article === product.article)
-    : [product];
-
-  // One dot per variant, color from the first color in that variant's colors field
-  const variantDots = variants.map(v => {
-    const firstName = parseColors(v.colors)[0];
-    const hex = firstName ? getColorHex(firstName) : null;
-    return { id: v.id, hex, name: firstName || '' };
-  });
+  const colorDots = parseColors(product.colors)
+    .map(name => ({ name, hex: getColorHex(name) }))
+    .filter(c => c.hex);
 
   return (
     <div className="product-card" onClick={handleCardClick} style={{cursor: 'pointer'}}>
@@ -109,18 +101,15 @@ const ProductCard = ({ product, allProducts }) => {
           <p className="product-price">{Math.round(product.price).toLocaleString('ru-RU')} KZT</p>
         </div>
         <p className="product-desc">{product.description}</p>
-        {variantDots.some(d => d.hex) && (
+        {colorDots.length > 0 && (
           <div className="product-colors">
-            {variantDots.map((d) => (
-              d.hex && (
-                <span
-                  key={d.id}
-                  className={`color-dot${d.id === product.id ? ' active' : ''}`}
-                  style={{ backgroundColor: d.hex }}
-                  title={d.name}
-                  onClick={(e) => { e.stopPropagation(); navigate(`/product/${d.id}`); }}
-                />
-              )
+            {colorDots.map((c, i) => (
+              <span
+                key={i}
+                className="color-dot"
+                style={{ backgroundColor: c.hex }}
+                title={c.name}
+              />
             ))}
           </div>
         )}
@@ -303,7 +292,7 @@ const Catalogue = () => {
         onClick={() => setFilterChosen(false)}
       >
         {sortedProducts.map((product, index) => (
-          <ProductCard product={product} allProducts={products} key={index} />
+          <ProductCard product={product} key={index} />
         ))}
       </Grid>
     </>
