@@ -53,8 +53,8 @@
 }
 
 .footer-phone-icon {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   filter: brightness(0) invert(1);
   flex-shrink: 0;
 }
@@ -82,6 +82,12 @@
   width: 16px;
   height: 16px;
   filter: brightness(0) invert(1);
+}
+
+.footer-social svg {
+  width: 16px;
+  height: 16px;
+  color: #fff;
 }
 
 .footer-brand {
