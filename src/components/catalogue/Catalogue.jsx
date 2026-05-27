@@ -96,7 +96,7 @@ const ProductCard = ({ product, variants }) => {
         <p className="product-desc">{product.description}</p>
         {dots.length > 0 && (
           <div className="product-colors">
-            {dots.map((d) => (
+            {dots.slice(0, 5).map((d) => (
               <span
                 key={d.id}
                 className={`color-dot${d.id === product.id ? ' active' : ''}`}
@@ -105,6 +105,9 @@ const ProductCard = ({ product, variants }) => {
                 onClick={(e) => { e.stopPropagation(); navigate(`/product/${d.id}`); }}
               />
             ))}
+            {dots.length > 5 && (
+              <span className="color-more">+{dots.length - 5}</span>
+            )}
           </div>
         )}
       </div>

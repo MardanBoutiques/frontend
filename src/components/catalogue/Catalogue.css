@@ -188,6 +188,13 @@
   transform: scale(1.15);
 }
 
+.color-more {
+  font-size: 0.7rem;
+  color: var(--color-secondary, #888);
+  align-self: center;
+  margin-left: 2px;
+}
+
 
 /* ── Filter Sidebar ── */
 .side-filter {
