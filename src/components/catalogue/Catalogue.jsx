@@ -14,12 +14,74 @@ const Grid = ({ children, onClick, className }) => {
   );
 };
 
+const COLOR_MAP = {
+  'черный': '#1a1a1a',
+  'чёрный': '#1a1a1a',
+  'белый': '#f5f5f5',
+  'серый': '#9e9e9e',
+  'светло-серый': '#d3d3d3',
+  'темно-серый': '#555555',
+  'бежевый': '#c8a97e',
+  'молочный': '#f0ead6',
+  'кремовый': '#fffdd0',
+  'коричневый': '#7b4f2e',
+  'шоколадный': '#4b2c20',
+  'синий': '#2b4fa3',
+  'темно-синий': '#1a2e6e',
+  'голубой': '#6fa8dc',
+  'небесно-голубой': '#87ceeb',
+  'красный': '#c0392b',
+  'бордовый': '#7b1a2e',
+  'розовый': '#e8a0b0',
+  'пудровый': '#e8cfc5',
+  'зеленый': '#4a7c59',
+  'зелёный': '#4a7c59',
+  'хаки': '#78866b',
+  'оливковый': '#708238',
+  'желтый': '#f0c040',
+  'жёлтый': '#f0c040',
+  'горчичный': '#c8960c',
+  'оранжевый': '#e07b39',
+  'фиолетовый': '#7b5ea7',
+  'сиреневый': '#c3a0d8',
+  'лавандовый': '#b57edc',
+  'графитовый': '#434343',
+  'терракотовый': '#c0634c',
+  'мятный': '#98d1b8',
+  'изумрудный': '#2ecc71',
+  'капучино': '#a07850',
+  'карамельный': '#c8874a',
+};
+
+const parseColors = (colorsStr) => {
+  if (!colorsStr) return [];
+  return colorsStr
+    .split(/[,;/]/)
+    .map(c => c.trim().toLowerCase())
+    .filter(Boolean)
+    .slice(0, 5);
+};
+
+const getColorHex = (name) => {
+  const lower = name.toLowerCase();
+  if (COLOR_MAP[lower]) return COLOR_MAP[lower];
+  for (const key of Object.keys(COLOR_MAP)) {
+    if (lower.includes(key) || key.includes(lower)) return COLOR_MAP[key];
+  }
+  return null;
+};
+
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
-  
+
   const handleCardClick = () => {
     navigate(`/product/${product.id}`);
   };
+
+  const colorNames = parseColors(product.colors);
+  const colorDots = colorNames
+    .map(name => ({ name, hex: getColorHex(name) }))
+    .filter(c => c.hex);
 
   return (
     <div className="product-card" onClick={handleCardClick} style={{cursor: 'pointer'}}>
@@ -40,11 +102,18 @@ const ProductCard = ({ product }) => {
           <p className="product-price">{Math.round(product.price).toLocaleString('ru-RU')} KZT</p>
         </div>
         <p className="product-desc">{product.description}</p>
-        <div className="product-colors">
-          <span className="color-dot" style={{ backgroundColor: '#8B7355' }}></span>
-          <span className="color-dot" style={{ backgroundColor: '#D3D3D3' }}></span>
-          <span className="color-dot" style={{ backgroundColor: '#000000' }}></span>
-        </div>
+        {colorDots.length > 0 && (
+          <div className="product-colors">
+            {colorDots.map((c, i) => (
+              <span
+                key={i}
+                className="color-dot"
+                style={{ backgroundColor: c.hex }}
+                title={c.name}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
