@@ -84,12 +84,6 @@
   filter: brightness(0) invert(1);
 }
 
-.footer-social svg {
-  width: 16px;
-  height: 16px;
-  color: #fff;
-}
-
 .footer-brand {
   align-items: flex-start;
 }
