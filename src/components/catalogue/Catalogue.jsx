@@ -16,71 +16,64 @@ const Grid = ({ children, onClick, className }) => {
 
 const COLOR_MAP = {
   'черный': '#1a1a1a',
-  'чёрный': '#1a1a1a',
   'белый': '#f5f5f5',
-  'серый': '#9e9e9e',
-  'светло-серый': '#d3d3d3',
-  'темно-серый': '#555555',
-  'бежевый': '#c8a97e',
+  'темно-синий': '#0f2744',
+  'синий': '#1e40af',
+  'голубой': '#60a5fa',
+  'светло-голубой': '#93c5fd',
+  'лазурный': '#38bdf8',
+  'серый': '#9ca3af',
+  'светло-серый': '#d1d5db',
+  'темно-серый': '#4b5563',
+  'графит': '#4b5563',
+  'коричневый': '#8B7355',
+  'темно-коричневый': '#5c3d2e',
+  'бежевый': '#d4b896',
+  'светло-бежевый': '#e8d5b7',
+  'песочный': '#c9a96e',
   'молочный': '#f0ead6',
-  'кремовый': '#fffdd0',
-  'коричневый': '#7b4f2e',
-  'шоколадный': '#4b2c20',
-  'синий': '#2b4fa3',
-  'темно-синий': '#1a2e6e',
-  'голубой': '#6fa8dc',
-  'небесно-голубой': '#87ceeb',
-  'красный': '#c0392b',
-  'бордовый': '#7b1a2e',
-  'розовый': '#e8a0b0',
-  'пудровый': '#e8cfc5',
-  'зеленый': '#4a7c59',
-  'зелёный': '#4a7c59',
-  'хаки': '#78866b',
-  'оливковый': '#708238',
-  'желтый': '#f0c040',
-  'жёлтый': '#f0c040',
+  'кофе': '#6b3f2a',
+  'красный': '#dc2626',
+  'розовый': '#f9a8d4',
+  'зеленый': '#15803d',
+  'хаки': '#6b7c3a',
+  'оливковый': '#6b7c3a',
+  'фисташка': '#a8c5a0',
+  'бордовый': '#7f1d1d',
+  'кремовый': '#fdf6e3',
+  'оранжевый': '#f97316',
   'горчичный': '#c8960c',
-  'оранжевый': '#e07b39',
+  'мятный': '#98d1b8',
+  'графитовый': '#4b5563',
+  'пудровый': '#f9c6d0',
+  'терракотовый': '#c0634c',
   'фиолетовый': '#7b5ea7',
   'сиреневый': '#c3a0d8',
-  'лавандовый': '#b57edc',
-  'графитовый': '#434343',
-  'терракотовый': '#c0634c',
-  'мятный': '#98d1b8',
-  'изумрудный': '#2ecc71',
-  'капучино': '#a07850',
-  'карамельный': '#c8874a',
 };
 
-const parseColors = (colorsStr) => {
-  if (!colorsStr) return [];
-  return colorsStr
-    .split(/[,;/]/)
-    .map(c => c.trim().toLowerCase())
-    .filter(Boolean)
-    .slice(0, 5);
-};
+const normalizeRu = (str) => str.toLowerCase().trim().replace(/ё/g, 'е').replace(/\s+/g, ' ');
 
-const getColorHex = (name) => {
-  const lower = name.toLowerCase();
-  if (COLOR_MAP[lower]) return COLOR_MAP[lower];
-  for (const key of Object.keys(COLOR_MAP)) {
-    if (lower.includes(key) || key.includes(lower)) return COLOR_MAP[key];
+const getColorCode = (colorName) => {
+  if (!colorName) return null;
+  const first = colorName.split(',')[0];
+  const key = normalizeRu(first);
+  for (const [k, v] of Object.entries(COLOR_MAP)) {
+    if (key.includes(normalizeRu(k))) return v;
   }
   return null;
 };
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, variants }) => {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
     navigate(`/product/${product.id}`);
   };
 
-  const colorDots = parseColors(product.colors)
-    .map(name => ({ name, hex: getColorHex(name) }))
-    .filter(c => c.hex);
+  // variants = all products with the same name (including this one)
+  const dots = variants
+    .map(v => ({ id: v.id, hex: getColorCode(v.colors), label: v.colors }))
+    .filter(d => d.hex);
 
   return (
     <div className="product-card" onClick={handleCardClick} style={{cursor: 'pointer'}}>
@@ -101,14 +94,15 @@ const ProductCard = ({ product }) => {
           <p className="product-price">{Math.round(product.price).toLocaleString('ru-RU')} KZT</p>
         </div>
         <p className="product-desc">{product.description}</p>
-        {colorDots.length > 0 && (
+        {dots.length > 0 && (
           <div className="product-colors">
-            {colorDots.map((c, i) => (
+            {dots.map((d) => (
               <span
-                key={i}
-                className="color-dot"
-                style={{ backgroundColor: c.hex }}
-                title={c.name}
+                key={d.id}
+                className={`color-dot${d.id === product.id ? ' active' : ''}`}
+                style={{ backgroundColor: d.hex }}
+                title={d.label}
+                onClick={(e) => { e.stopPropagation(); navigate(`/product/${d.id}`); }}
               />
             ))}
           </div>
@@ -291,9 +285,10 @@ const Catalogue = () => {
         className={`grid ${filterChosen ? "dark" : "light"}`}
         onClick={() => setFilterChosen(false)}
       >
-        {sortedProducts.map((product, index) => (
-          <ProductCard product={product} key={index} />
-        ))}
+        {sortedProducts.map((product, index) => {
+          const variants = products.filter(p => p.name === product.name);
+          return <ProductCard product={product} variants={variants} key={index} />;
+        })}
       </Grid>
     </>
   );
