@@ -164,6 +164,7 @@
 
 .product-colors {
   display: flex;
+  align-items: center;
   gap: 4px;
   margin-top: 4px;
 }
@@ -173,7 +174,7 @@
   height: 12px;
   border-radius: 50%;
   border: 1px solid rgba(0,0,0,0.15);
-  display: inline-block;
+  display: block;
   flex-shrink: 0;
   cursor: pointer;
   transition: transform 0.15s ease;
@@ -191,7 +192,9 @@
 .color-more {
   font-size: 0.7rem;
   color: var(--color-secondary, #888);
-  align-self: center;
+  line-height: 12px;
+  height: 12px;
+  display: block;
   margin-left: 2px;
 }
 
