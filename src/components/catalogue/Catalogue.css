@@ -177,12 +177,9 @@
   flex-shrink: 0;
 }
 
-.color-count {
-  font-size: 0.7rem;
-  color: var(--color-secondary, #888);
-  margin-left: 4px;
-  align-self: center;
-  white-space: nowrap;
+.color-dot.active {
+  border: 1.5px solid #333;
+  transform: scale(1.15);
 }
 
 /* ── Filter Sidebar ── */

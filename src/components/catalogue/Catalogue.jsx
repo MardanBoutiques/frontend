@@ -71,17 +71,24 @@ const getColorHex = (name) => {
   return null;
 };
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, allProducts }) => {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
     navigate(`/product/${product.id}`);
   };
 
-  const colorNames = parseColors(product.colors);
-  const colorDots = colorNames
-    .map(name => ({ name, hex: getColorHex(name) }))
-    .filter(c => c.hex);
+  // Find all variants sharing the same article (non-empty)
+  const variants = product.article
+    ? allProducts.filter(p => p.article && p.article === product.article)
+    : [product];
+
+  // One dot per variant, color from the first color in that variant's colors field
+  const variantDots = variants.map(v => {
+    const firstName = parseColors(v.colors)[0];
+    const hex = firstName ? getColorHex(firstName) : null;
+    return { id: v.id, hex, name: firstName || '' };
+  });
 
   return (
     <div className="product-card" onClick={handleCardClick} style={{cursor: 'pointer'}}>
@@ -102,17 +109,19 @@ const ProductCard = ({ product }) => {
           <p className="product-price">{Math.round(product.price).toLocaleString('ru-RU')} KZT</p>
         </div>
         <p className="product-desc">{product.description}</p>
-        {colorDots.length > 0 && (
+        {variantDots.some(d => d.hex) && (
           <div className="product-colors">
-            {colorDots.map((c, i) => (
-              <span
-                key={i}
-                className="color-dot"
-                style={{ backgroundColor: c.hex }}
-                title={c.name}
-              />
+            {variantDots.map((d) => (
+              d.hex && (
+                <span
+                  key={d.id}
+                  className={`color-dot${d.id === product.id ? ' active' : ''}`}
+                  style={{ backgroundColor: d.hex }}
+                  title={d.name}
+                  onClick={(e) => { e.stopPropagation(); navigate(`/product/${d.id}`); }}
+                />
+              )
             ))}
-            <span className="color-count">{colorDots.length} {colorDots.length === 1 ? 'цвет' : colorDots.length < 5 ? 'цвета' : 'цветов'}</span>
           </div>
         )}
       </div>
@@ -294,7 +303,7 @@ const Catalogue = () => {
         onClick={() => setFilterChosen(false)}
       >
         {sortedProducts.map((product, index) => (
-          <ProductCard product={product} key={index}></ProductCard>
+          <ProductCard product={product} allProducts={products} key={index} />
         ))}
       </Grid>
     </>
