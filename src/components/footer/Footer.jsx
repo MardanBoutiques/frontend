@@ -50,7 +50,7 @@ const Footer = () => {
               <img src="/tiktok-icon.png" alt="TikTok" />
             </a>
             <a href="mailto:mardan.essential@mail.ru" title="mardan.essential@mail.ru">
-              <img src="/email.png" alt="Email" className="footer-email-icon" />
+              <img src="/email_icon.png" alt="Email" className="footer-email-icon" />
             </a>
           </div>
         </div>
