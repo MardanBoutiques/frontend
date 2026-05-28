@@ -127,6 +127,11 @@ const Checkout = () => {
     if (!formData.city || formData.city.trim().length < 2) {
       newErrors.city = 'Укажите город';
     }
+
+    // Validate zip
+    if (!formData.zipCode || formData.zipCode.trim().length < 1) {
+      newErrors.zipCode = 'Укажите почтовый индекс';
+    }
     
     // Validate address
     if (!formData.address || formData.address.trim().length < 10) {
@@ -338,13 +343,11 @@ const Checkout = () => {
                         zipCode: opt ? opt.postcode || '' : '',
                       }));
                     }}
-                    placeholder={!selectedCountry ? 'Сначала выберите страну' : 'Начните вводить город...'}
+                    placeholder={!selectedCountry ? 'Сначала выберите страну' : 'Введите ваш город'}
                     isDisabled={!selectedCountry}
                     classNamePrefix="rs"
                     className={errors.city ? 'rs-error' : ''}
-                    noOptionsMessage={({ inputValue }) =>
-                      inputValue.length < 2 ? 'Введите минимум 2 символа' : 'Город не найден'
-                    }
+                    noOptionsMessage={() => 'Город не найден'}
                     loadingMessage={() => 'Поиск...'}
                     cacheOptions
                   />
@@ -352,7 +355,7 @@ const Checkout = () => {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="zipCode">ZIP / Почтовый индекс</label>
+                  <label htmlFor="zipCode">ZIP / Почтовый индекс *</label>
                   <input
                     type="text"
                     id="zipCode"
@@ -360,7 +363,9 @@ const Checkout = () => {
                     value={formData.zipCode}
                     onChange={handleChange}
                     placeholder="Заполняется автоматически или вручную"
+                    className={errors.zipCode ? 'error' : ''}
                   />
+                  {errors.zipCode && <span className="error-message">{errors.zipCode}</span>}
                 </div>
 
                 <div className="form-group">
