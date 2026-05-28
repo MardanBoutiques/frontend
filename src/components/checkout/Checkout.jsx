@@ -362,7 +362,7 @@ const Checkout = () => {
                     name="zipCode"
                     value={formData.zipCode}
                     onChange={handleChange}
-                    placeholder="Заполняется автоматически или вручную"
+                    placeholder="Введите индекс"
                     className={errors.zipCode ? 'error' : ''}
                   />
                   {errors.zipCode && <span className="error-message">{errors.zipCode}</span>}
