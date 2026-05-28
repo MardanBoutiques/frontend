@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../navbar/NavBar';
 import { useCart } from '../../context/CartContext';
@@ -51,29 +51,34 @@ const Checkout = () => {
     return 'international';
   };
 
-  const countryOptions = Country.getAllCountries().map(c => ({
-    value: c.isoCode,
-    label: c.name,
-  }));
+  const countryOptions = useMemo(() =>
+    Country.getAllCountries().map(c => ({ value: c.isoCode, label: c.name })),
+  []);
 
-  const stateList = selectedCountry
-    ? State.getStatesOfCountry(selectedCountry.value)
-    : [];
+  const stateList = useMemo(() =>
+    selectedCountry ? State.getStatesOfCountry(selectedCountry.value) : [],
+  [selectedCountry]);
+
   const hasStates = stateList.length > 0;
 
-  const stateOptions = stateList.map(s => ({
-    value: s.isoCode,
-    label: s.name,
-  }));
+  const stateOptions = useMemo(() =>
+    stateList.map(s => ({ value: s.isoCode, label: s.name })),
+  [stateList]);
 
-  const cityOptions = selectedCountry
-    ? (hasStates && selectedState
+  const allCities = useMemo(() => {
+    if (!selectedCountry) return [];
+    try {
+      return hasStates && selectedState
         ? City.getCitiesOfState(selectedCountry.value, selectedState.value)
         : hasStates
           ? []
-          : City.getCitiesOfCountry(selectedCountry.value)
-      ).map(c => ({ value: c.name, label: c.name }))
-    : [];
+          : City.getCitiesOfCountry(selectedCountry.value);
+    } catch {
+      return [];
+    }
+  }, [selectedCountry, selectedState, hasStates]);
+
+  const cityOptions = allCities.map(c => ({ value: c.name, label: c.name }));
 
   const DELIVERY_OPTIONS = {
     almaty: [
@@ -356,12 +361,17 @@ const Checkout = () => {
                     placeholder={
                       !selectedCountry ? 'Сначала выберите страну' :
                       hasStates && !selectedState ? 'Сначала выберите штат/провинцию' :
-                      'Выберите город...'
+                      'Начните вводить город...'
                     }
                     isDisabled={!selectedCountry || (hasStates && !selectedState)}
                     classNamePrefix="rs"
                     className={errors.city ? 'rs-error' : ''}
-                    noOptionsMessage={() => 'Не найдено'}
+                    noOptionsMessage={({ inputValue }) =>
+                      inputValue.length < 2 ? 'Введите минимум 2 символа' : 'Не найдено'
+                    }
+                    filterOption={(option, input) =>
+                      input.length < 2 ? false : option.label.toLowerCase().includes(input.toLowerCase())
+                    }
                   />
                   {errors.city && <span className="error-message">{errors.city}</span>}
                 </div>
