@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../navbar/NavBar';
 import { useCart } from '../../context/CartContext';
