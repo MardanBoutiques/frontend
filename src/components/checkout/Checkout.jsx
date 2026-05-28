@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../navbar/NavBar';
 import { useCart } from '../../context/CartContext';
@@ -6,13 +6,22 @@ import api from '../../api/axios';
 import _PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import Select from 'react-select';
-import { Country, State, City } from 'country-state-city';
+import AsyncSelect from 'react-select/async';
+import { COUNTRIES } from '../../utils/countries';
 import { Turnstile } from '@marsidev/react-turnstile';
 import './Checkout.css';
 
 const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA';
 
 const PhoneInput = _PhoneInput.default || _PhoneInput;
+
+function debounce(fn, delay) {
+  let timer;
+  return function(...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), delay);
+  };
+}
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -27,6 +36,7 @@ const Checkout = () => {
     instagram: '',
     country: '',
     city: '',
+    zipCode: '',
     address: '',
     deliveryMethod: 'yandex',
     paymentMethod: 'card',
@@ -34,7 +44,6 @@ const Checkout = () => {
   const [errors, setErrors] = useState({});
   const [turnstileToken, setTurnstileToken] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
-  const [selectedState, setSelectedState] = useState(null);
   const [selectedCity, setSelectedCity] = useState(null);
 
   const CIS_CODES = ['RU', 'BY', 'UA', 'UZ', 'KG', 'TJ', 'TM', 'AM', 'AZ', 'GE', 'MD'];
@@ -51,34 +60,19 @@ const Checkout = () => {
     return 'international';
   };
 
-  const countryOptions = useMemo(() =>
-    Country.getAllCountries().map(c => ({ value: c.isoCode, label: c.name })),
-  []);
+  // Debounced Nominatim city autocomplete
+  const loadCityOptions = useCallback((inputValue, callback) => {
+    if (inputValue.length < 2) return callback([]);
+    const countryCode = selectedCountry?.value || '';
+    api.get(`/api/city-suggest/?q=${encodeURIComponent(inputValue)}&country=${countryCode}`)
+      .then(res => callback(res.data))
+      .catch(() => callback([]));
+  }, [selectedCountry]);
 
-  const stateList = useMemo(() =>
-    selectedCountry ? State.getStatesOfCountry(selectedCountry.value) : [],
-  [selectedCountry]);
-
-  const hasStates = stateList.length > 0;
-
-  const stateOptions = useMemo(() =>
-    stateList.map(s => ({ value: s.isoCode, label: s.name })),
-  [stateList]);
-
-  const allCities = useMemo(() => {
-    if (!selectedCountry) return [];
-    try {
-      return hasStates && selectedState
-        ? City.getCitiesOfState(selectedCountry.value, selectedState.value)
-        : hasStates
-          ? []
-          : City.getCitiesOfCountry(selectedCountry.value);
-    } catch {
-      return [];
-    }
-  }, [selectedCountry, selectedState, hasStates]);
-
-  const cityOptions = allCities.map(c => ({ value: c.name, label: c.name }));
+  const debouncedLoadCities = useCallback(
+    debounce(loadCityOptions, 350),
+    [loadCityOptions]
+  );
 
   const DELIVERY_OPTIONS = {
     almaty: [
@@ -171,6 +165,7 @@ const Checkout = () => {
       customer_email: formData.customerEmail,
       instagram: formData.instagram,
       city: formData.city,
+      zip_code: formData.zipCode,
       address: formData.address,
       delivery_method: formData.deliveryMethod,
       payment_method: formData.paymentMethod,
@@ -315,13 +310,12 @@ const Checkout = () => {
                 <div className="form-group">
                   <label>Страна *</label>
                   <Select
-                    options={countryOptions}
+                    options={COUNTRIES}
                     value={selectedCountry}
                     onChange={(opt) => {
                       setSelectedCountry(opt);
-                      setSelectedState(null);
                       setSelectedCity(null);
-                      setFormData(prev => ({ ...prev, country: opt ? opt.label : '', city: '' }));
+                      setFormData(prev => ({ ...prev, country: opt ? opt.label : '', city: '', zipCode: '' }));
                     }}
                     placeholder="Выберите страну..."
                     classNamePrefix="rs"
@@ -331,49 +325,42 @@ const Checkout = () => {
                   {errors.country && <span className="error-message">{errors.country}</span>}
                 </div>
 
-                {hasStates && (
-                  <div className="form-group">
-                    <label>Штат / Провинция *</label>
-                    <Select
-                      options={stateOptions}
-                      value={selectedState}
-                      onChange={(opt) => {
-                        setSelectedState(opt);
-                        setSelectedCity(null);
-                        setFormData(prev => ({ ...prev, city: '' }));
-                      }}
-                      placeholder="Выберите штат/провинцию..."
-                      classNamePrefix="rs"
-                      noOptionsMessage={() => 'Не найдено'}
-                    />
-                  </div>
-                )}
-
                 <div className="form-group">
                   <label>Город *</label>
-                  <Select
-                    options={cityOptions}
+                  <AsyncSelect
+                    loadOptions={debouncedLoadCities}
                     value={selectedCity}
                     onChange={(opt) => {
                       setSelectedCity(opt);
-                      setFormData(prev => ({ ...prev, city: opt ? opt.label : '' }));
+                      setFormData(prev => ({
+                        ...prev,
+                        city: opt ? opt.city : '',
+                        zipCode: opt ? opt.postcode || '' : '',
+                      }));
                     }}
-                    placeholder={
-                      !selectedCountry ? 'Сначала выберите страну' :
-                      hasStates && !selectedState ? 'Сначала выберите штат/провинцию' :
-                      'Начните вводить город...'
-                    }
-                    isDisabled={!selectedCountry || (hasStates && !selectedState)}
+                    placeholder={!selectedCountry ? 'Сначала выберите страну' : 'Начните вводить город...'}
+                    isDisabled={!selectedCountry}
                     classNamePrefix="rs"
                     className={errors.city ? 'rs-error' : ''}
                     noOptionsMessage={({ inputValue }) =>
-                      inputValue.length < 2 ? 'Введите минимум 2 символа' : 'Не найдено'
+                      inputValue.length < 2 ? 'Введите минимум 2 символа' : 'Город не найден'
                     }
-                    filterOption={(option, input) =>
-                      input.length < 2 ? false : option.label.toLowerCase().includes(input.toLowerCase())
-                    }
+                    loadingMessage={() => 'Поиск...'}
+                    cacheOptions
                   />
                   {errors.city && <span className="error-message">{errors.city}</span>}
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="zipCode">ZIP / Почтовый индекс</label>
+                  <input
+                    type="text"
+                    id="zipCode"
+                    name="zipCode"
+                    value={formData.zipCode}
+                    onChange={handleChange}
+                    placeholder="Заполняется автоматически или вручную"
+                  />
                 </div>
 
                 <div className="form-group">

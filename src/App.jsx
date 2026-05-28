@@ -33,7 +33,7 @@ function App() {
           <Route path="/catalogue" element={<CatalogueGuard />} />
           <Route path="/product/:id" element={<ProductView />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Suspense fallback={null}><Checkout /></Suspense>} />
+          <Route path="/checkout" element={<Suspense fallback={<div style={{marginTop:'70px',minHeight:'calc(100vh - 70px)',background:'#fff'}} />}><Checkout /></Suspense>} />
           <Route path="/giftbox" element={<GiftBox />} />
           <Route path="/giftcard" element={<GiftCard />} />
           <Route path="/stores" element={<Stores />} />
