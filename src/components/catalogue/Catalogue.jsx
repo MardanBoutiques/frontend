@@ -5,6 +5,7 @@ import "./Catalogue.css";
 import api from "../../api/axios";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { getImageUrl } from "../../utils/imageUrl";
+import { getColorCode } from "../../utils/colorMap";
 
 const Grid = ({ children, onClick, className }) => {
   return (
@@ -12,55 +13,6 @@ const Grid = ({ children, onClick, className }) => {
       {children}
     </div>
   );
-};
-
-const COLOR_MAP = {
-  'черный': '#1a1a1a',
-  'белый': '#f5f5f5',
-  'темно-синий': '#0f2744',
-  'синий': '#1e40af',
-  'голубой': '#60a5fa',
-  'светло-голубой': '#93c5fd',
-  'лазурный': '#38bdf8',
-  'серый': '#9ca3af',
-  'светло-серый': '#d1d5db',
-  'темно-серый': '#4b5563',
-  'графит': '#4b5563',
-  'коричневый': '#8B7355',
-  'темно-коричневый': '#5c3d2e',
-  'бежевый': '#d4b896',
-  'светло-бежевый': '#e8d5b7',
-  'песочный': '#c9a96e',
-  'молочный': '#f0ead6',
-  'кофе': '#6b3f2a',
-  'красный': '#dc2626',
-  'розовый': '#f9a8d4',
-  'зеленый': '#15803d',
-  'хаки': '#6b7c3a',
-  'оливковый': '#6b7c3a',
-  'фисташка': '#a8c5a0',
-  'бордовый': '#7f1d1d',
-  'кремовый': '#fdf6e3',
-  'оранжевый': '#f97316',
-  'горчичный': '#c8960c',
-  'мятный': '#98d1b8',
-  'графитовый': '#4b5563',
-  'пудровый': '#f9c6d0',
-  'терракотовый': '#c0634c',
-  'фиолетовый': '#7b5ea7',
-  'сиреневый': '#c3a0d8',
-};
-
-const normalizeRu = (str) => str.toLowerCase().trim().replace(/ё/g, 'е').replace(/\s+/g, ' ');
-
-const getColorCode = (colorName) => {
-  if (!colorName) return null;
-  const first = colorName.split(',')[0];
-  const key = normalizeRu(first);
-  for (const [k, v] of Object.entries(COLOR_MAP)) {
-    if (key.includes(normalizeRu(k))) return v;
-  }
-  return null;
 };
 
 const ProductCard = ({ product, variants }) => {

@@ -4,6 +4,7 @@ import NavBar from "../navbar/NavBar";
 import api from "../../api/axios";
 import { useCart } from "../../context/CartContext";
 import { getImageUrl } from "../../utils/imageUrl";
+import { getColorCode as getMappedColorCode } from "../../utils/colorMap";
 import "./ProductView.css";
 
 const Accordion = ({ title, children, open, onToggle }) => {
@@ -18,51 +19,9 @@ const Accordion = ({ title, children, open, onToggle }) => {
   );
 };
 
-const COLOR_MAP = {
-  'черный': '#1a1a1a',
-  'белый': '#f5f5f5',
-  'темно-синий': '#0f2744',
-  'синий': '#1e40af',
-  'голубой': '#60a5fa',
-  'светло-голубой': '#93c5fd',
-  'лазурный': '#38bdf8',
-  'серый': '#9ca3af',
-  'светло-серый': '#d1d5db',
-  'темно-серый': '#4b5563',
-  'графит': '#4b5563',
-  'коричневый': '#8B7355',
-  'темно-коричневый': '#5c3d2e',
-  'пепельно-коричневый': '#9e8572',
-  'теплo-коричневый': '#a0785a',
-  'мокко': '#7c5c42',
-  'бежевый': '#d4b896',
-  'светло-бежевый': '#e8d5b7',
-  'песочный': '#c9a96e',
-  'молочный': '#f0ead6',
-  'кофе': '#6b3f2a',
-  'красный': '#dc2626',
-  'розовый': '#f9a8d4',
-  'зеленый': '#15803d',
-  'хаки': '#6b7c3a',
-  'оливковый': '#6b7c3a',
-  'фисташка': '#a8c5a0',
-  'бордовый': '#7f1d1d',
-  'кремовый': '#fdf6e3',
-  'оранжевый': '#f97316',
-};
-
-const normalizeRu = (str) => str.toLowerCase().trim().replace(/ё/g, 'е').replace(/\s+/g, ' ');
-
-const getColorCode = (colorName) => {
-  if (!colorName) return '#888';
-  // берём первый цвет если перечислено несколько
-  const first = colorName.split(',')[0];
-  const key = normalizeRu(first);
-  for (const [k, v] of Object.entries(COLOR_MAP)) {
-    if (key.includes(normalizeRu(k))) return v;
-  }
-  return '#888';
-};
+// Variant swatches must stay clickable even when a color can't be mapped,
+// so this falls back to a neutral grey instead of hiding the option.
+const getColorCode = (colorName) => getMappedColorCode(colorName) || '#888';
 
 const ProductView = () => {
   const { id } = useParams();
