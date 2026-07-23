@@ -208,8 +208,9 @@ export default function Home() {
       </NavBar>
       <HeroSection heroImage={getHeroImage()}>
         <Link to="/catalogue?category=suits">Костюмы</Link>
+        <Link to="/catalogue?category=shirts">Рубашки</Link>
         <Link to="/catalogue?category=knitwear">Трикотаж</Link>
-        <Link to="/catalogue?category=jackets">Куртки</Link>
+        <Link to="/catalogue?category=pants">Брюки</Link>
         <Link to="/catalogue?category=accessories">Аксессуары</Link>
         <Link to="/giftbox">Подарочный бокс</Link>
         <Link to="/giftcard">Подарочная карта</Link>
