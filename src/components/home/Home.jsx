@@ -134,7 +134,7 @@ const HeroPictures = ({ images }) => {
         </div>
       </Link>
 
-      <Link to="/catalogue?category=knitwear" className="collection-section">
+      <Link to="/catalogue?category=pants" className="collection-section">
         <div
           className="collection-image-full"
           style={{
@@ -145,7 +145,7 @@ const HeroPictures = ({ images }) => {
           }}
         >
           <div className="collection-overlay">
-            <div className="collection-cta">Трикотаж</div>
+            <div className="collection-cta">Брюки</div>
           </div>
         </div>
       </Link>
@@ -209,7 +209,6 @@ export default function Home() {
       <HeroSection heroImage={getHeroImage()}>
         <Link to="/catalogue?category=suits">Костюмы</Link>
         <Link to="/catalogue?category=shirts">Рубашки</Link>
-        <Link to="/catalogue?category=knitwear">Трикотаж</Link>
         <Link to="/catalogue?category=pants">Брюки</Link>
         <Link to="/catalogue?category=accessories">Аксессуары</Link>
         <Link to="/giftbox">Подарочный бокс</Link>

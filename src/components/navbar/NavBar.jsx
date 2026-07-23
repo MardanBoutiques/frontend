@@ -37,7 +37,6 @@ const NavBar = ({ children, forHome }) => {
         <nav className="sidebar-nav">
           <a href="#" onClick={() => { navigate("/catalogue?category=suits"); setMenuOpen(false); }}>Костюмы</a>
           <a href="#" onClick={() => { navigate("/catalogue?category=shirts"); setMenuOpen(false); }}>Рубашки</a>
-          <a href="#" onClick={() => { navigate("/catalogue?category=knitwear"); setMenuOpen(false); }}>Трикотаж</a>
           <a href="#" onClick={() => { navigate("/catalogue?category=pants"); setMenuOpen(false); }}>Брюки</a>
           <a href="#" onClick={() => { navigate("/catalogue?category=accessories"); setMenuOpen(false); }}>Аксессуары</a>
           <a href="#" onClick={() => { navigate("/giftbox"); setMenuOpen(false); }}>Подарочный бокс</a>
