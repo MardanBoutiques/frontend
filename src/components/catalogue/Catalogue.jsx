@@ -118,6 +118,7 @@ const Catalogue = () => {
   const [sortType, setSortType] = useState('');
   const [searchParams] = useSearchParams();
   const category = searchParams.get("category");
+  const subcategory = searchParams.get("subcategory");
 
   useEffect(() => {
     if (category) sessionStorage.setItem('lastCatalogueCategory', category);
@@ -134,12 +135,15 @@ const Catalogue = () => {
       })
       .then((data) => {
         let filtered = data;
-        
+
         // Фильтрация по категории из URL
         if (category) {
-          filtered = data.filter(product => product.category === category);
+          filtered = filtered.filter(product => product.category === category);
         }
-        
+        if (subcategory) {
+          filtered = filtered.filter(product => product.accessory_type === subcategory);
+        }
+
         setProducts(filtered);
         setSortedProducts(filtered);
         setLoading(false);
@@ -148,7 +152,7 @@ const Catalogue = () => {
         setError(error.message);
         setLoading(false);
       });
-  }, [category]);
+  }, [category, subcategory]);
 
   const handleSort = (type) => {
     setSortType(type);
@@ -175,7 +179,18 @@ const Catalogue = () => {
     setFilterChosen(false);
   };
 
+  const accessoryTypeTitles = {
+    'ties': 'Галстуки',
+    'pocket_squares': 'Платки',
+    'cardholders': 'Кардхолдеры',
+    'clutches': 'Клатчи',
+    'briefcases': 'Дипломаты',
+    'wallets': 'Портмоне',
+  };
+
   const getCategoryTitle = () => {
+    if (subcategory) return accessoryTypeTitles[subcategory] || '';
+
     const categoryTitles = {
       'suits': 'Костюмы',
       'shirts': 'Рубашки',

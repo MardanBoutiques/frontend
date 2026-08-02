@@ -85,6 +85,34 @@
   opacity: 0.5;
 }
 
+.sidebar-nav-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-subnav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-left: 20px;
+}
+
+.sidebar-subnav a {
+  padding: 10px 0;
+  color: var(--color-navy);
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: var(--font-weight-regular);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.75;
+  transition: opacity 0.2s ease;
+}
+
+.sidebar-subnav a:hover {
+  opacity: 0.5;
+}
+
 /* Navbar styling */
 #navbar,
 #navbar-home {

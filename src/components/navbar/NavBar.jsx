@@ -8,10 +8,26 @@ const NavBar = ({ children, forHome }) => {
   const navigate = useNavigate();
   const { getTotalItems } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [accessoriesOpen, setAccessoriesOpen] = useState(false);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
+
+  const goTo = (path) => {
+    navigate(path);
+    setMenuOpen(false);
+  };
+
+  const accessorySubcategories = [
+    { label: 'Все аксессуары', value: null },
+    { label: 'Галстуки', value: 'ties' },
+    { label: 'Платки', value: 'pocket_squares' },
+    { label: 'Кардхолдеры', value: 'cardholders' },
+    { label: 'Клатчи', value: 'clutches' },
+    { label: 'Дипломаты', value: 'briefcases' },
+    { label: 'Портмоне', value: 'wallets' },
+  ];
 
   return (
     <>
@@ -38,7 +54,26 @@ const NavBar = ({ children, forHome }) => {
           <a href="#" onClick={() => { navigate("/catalogue?category=suits"); setMenuOpen(false); }}>Костюмы</a>
           <a href="#" onClick={() => { navigate("/catalogue?category=shirts"); setMenuOpen(false); }}>Рубашки</a>
           <a href="#" onClick={() => { navigate("/catalogue?category=pants"); setMenuOpen(false); }}>Брюки</a>
-          <a href="#" onClick={() => { navigate("/catalogue?category=accessories"); setMenuOpen(false); }}>Аксессуары</a>
+
+          <div className="sidebar-nav-group">
+            <a href="#" onClick={(e) => { e.preventDefault(); setAccessoriesOpen(!accessoriesOpen); }}>
+              Аксессуары {accessoriesOpen ? '−' : '+'}
+            </a>
+            {accessoriesOpen && (
+              <div className="sidebar-subnav">
+                {accessorySubcategories.map((sub) => (
+                  <a
+                    key={sub.label}
+                    href="#"
+                    onClick={() => goTo(sub.value ? `/catalogue?category=accessories&subcategory=${sub.value}` : '/catalogue?category=accessories')}
+                  >
+                    {sub.label}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+
           <a href="#" onClick={() => { navigate("/giftbox"); setMenuOpen(false); }}>Подарочный бокс</a>
           <a href="#" onClick={() => { navigate("/giftcard"); setMenuOpen(false); }}>Подарочная карта</a>
           <a href="#" onClick={() => { navigate("/stores"); setMenuOpen(false); }}>Адреса магазинов</a>
