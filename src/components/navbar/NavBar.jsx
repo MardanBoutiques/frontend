@@ -12,11 +12,13 @@ const NavBar = ({ children, forHome }) => {
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
+    setAccessoriesOpen(false);
   };
 
   const goTo = (path) => {
     navigate(path);
     setMenuOpen(false);
+    setAccessoriesOpen(false);
   };
 
   const accessorySubcategories = [
@@ -48,36 +50,38 @@ const NavBar = ({ children, forHome }) => {
       </div>
 
       {/* Fullscreen Menu */}
-      <div className={`sidebar-menu ${menuOpen ? "open" : ""}`}>
+      <div className={`sidebar-menu ${menuOpen ? "open" : ""} ${accessoriesOpen ? "drilled" : ""}`}>
         <button className="close-btn" onClick={toggleMenu}>✕</button>
-        <nav className="sidebar-nav">
-          <a href="#" onClick={() => { navigate("/catalogue?category=suits"); setMenuOpen(false); }}>Костюмы</a>
-          <a href="#" onClick={() => { navigate("/catalogue?category=shirts"); setMenuOpen(false); }}>Рубашки</a>
-          <a href="#" onClick={() => { navigate("/catalogue?category=pants"); setMenuOpen(false); }}>Брюки</a>
-
-          <div className="sidebar-nav-group">
-            <a href="#" onClick={(e) => { e.preventDefault(); setAccessoriesOpen(!accessoriesOpen); }}>
-              Аксессуары {accessoriesOpen ? '−' : '+'}
+        <div className="sidebar-columns">
+          <nav className="sidebar-nav sidebar-nav-main">
+            <a href="#" onClick={() => goTo("/catalogue?category=suits")}>Костюмы</a>
+            <a href="#" onClick={() => goTo("/catalogue?category=shirts")}>Рубашки</a>
+            <a href="#" onClick={() => goTo("/catalogue?category=pants")}>Брюки</a>
+            <a
+              href="#"
+              className={accessoriesOpen ? "active" : ""}
+              onClick={(e) => { e.preventDefault(); setAccessoriesOpen(true); }}
+            >
+              Аксессуары
             </a>
-            {accessoriesOpen && (
-              <div className="sidebar-subnav">
-                {accessorySubcategories.map((sub) => (
-                  <a
-                    key={sub.label}
-                    href="#"
-                    onClick={() => goTo(sub.value ? `/catalogue?category=accessories&subcategory=${sub.value}` : '/catalogue?category=accessories')}
-                  >
-                    {sub.label}
-                  </a>
-                ))}
-              </div>
-            )}
-          </div>
+            <a href="#" onClick={() => goTo("/giftbox")}>Подарочный бокс</a>
+            <a href="#" onClick={() => goTo("/giftcard")}>Подарочная карта</a>
+            <a href="#" onClick={() => goTo("/stores")}>Адреса магазинов</a>
+          </nav>
 
-          <a href="#" onClick={() => { navigate("/giftbox"); setMenuOpen(false); }}>Подарочный бокс</a>
-          <a href="#" onClick={() => { navigate("/giftcard"); setMenuOpen(false); }}>Подарочная карта</a>
-          <a href="#" onClick={() => { navigate("/stores"); setMenuOpen(false); }}>Адреса магазинов</a>
-        </nav>
+          <nav className="sidebar-nav sidebar-nav-sub">
+            <button className="sidebar-back" onClick={() => setAccessoriesOpen(false)}>← Назад</button>
+            {accessorySubcategories.map((sub) => (
+              <a
+                key={sub.label}
+                href="#"
+                onClick={() => goTo(sub.value ? `/catalogue?category=accessories&subcategory=${sub.value}` : '/catalogue?category=accessories')}
+              >
+                {sub.label}
+              </a>
+            ))}
+          </nav>
+        </div>
       </div>
     </>
   );
