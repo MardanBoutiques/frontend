@@ -51,7 +51,12 @@ const NavBar = ({ children, forHome }) => {
 
       {/* Fullscreen Menu */}
       <div className={`sidebar-menu ${menuOpen ? "open" : ""} ${accessoriesOpen ? "drilled" : ""}`}>
-        <button className="close-btn" onClick={toggleMenu}>✕</button>
+        <div className="sidebar-topbar">
+          {accessoriesOpen && (
+            <button className="back-btn" onClick={() => setAccessoriesOpen(false)}>‹</button>
+          )}
+          <button className="close-btn" onClick={toggleMenu}>✕</button>
+        </div>
         <div className="sidebar-columns">
           <nav className="sidebar-nav sidebar-nav-main">
             <a href="#" onClick={() => goTo("/catalogue?category=suits")}>Костюмы</a>
@@ -70,7 +75,7 @@ const NavBar = ({ children, forHome }) => {
           </nav>
 
           <nav className="sidebar-nav sidebar-nav-sub">
-            <button className="sidebar-back" onClick={() => setAccessoriesOpen(false)}>← Назад</button>
+            <h2 className="sidebar-subnav-title">Аксессуары</h2>
             {accessorySubcategories.map((sub) => (
               <a
                 key={sub.label}
