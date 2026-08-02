@@ -75,6 +75,7 @@ const NavBar = ({ children, forHome }) => {
               <a
                 key={sub.label}
                 href="#"
+                className={sub.value ? "sidebar-subnav-item" : "sidebar-subnav-all"}
                 onClick={() => goTo(sub.value ? `/catalogue?category=accessories&subcategory=${sub.value}` : '/catalogue?category=accessories')}
               >
                 {sub.label}

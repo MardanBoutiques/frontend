@@ -108,8 +108,14 @@
   transform: translateX(0);
 }
 
-.sidebar-nav-sub a {
-  font-size: 1.25rem;
+.sidebar-subnav-all {
+  font-size: 1.5rem;
+  font-weight: var(--font-weight-regular);
+}
+
+.sidebar-subnav-item {
+  font-size: 1.15rem;
+  font-weight: var(--font-weight-light);
 }
 
 .sidebar-back {
