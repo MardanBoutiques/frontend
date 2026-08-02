@@ -87,13 +87,6 @@
   margin: 0 0 2px 0;
 }
 
-.store-card-brand {
-  font-size: 0.8125rem;
-  font-weight: 100;
-  color: rgba(255, 255, 255, 0.85);
-  margin: 0 0 2px 0;
-  line-height: 1.4;
-}
 
 .store-card-status {
   display: flex;
@@ -180,15 +173,6 @@
   margin-bottom: 40px;
   padding-bottom: 32px;
   border-bottom: 1px solid var(--color-outline);
-}
-
-.store-detail-brand {
-  font-size: 0.8125rem;
-  font-weight: 100;
-  color: var(--color-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin: 0 0 8px 0;
 }
 
 .store-detail-city {

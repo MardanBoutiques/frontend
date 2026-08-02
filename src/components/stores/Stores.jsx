@@ -111,7 +111,6 @@ export default function Stores() {
 
           <div className="store-detail-header">
             <h1 className="store-detail-city">{store.city}</h1>
-            <p className="store-detail-brand">Mardan Boutique</p>
             {(() => { const s = getStoreStatus(store.hours); return (
               <p className={`store-detail-status ${s.open ? "status-open" : "status-closed"}`}>
                 <span className="status-dot"></span>{s.label}
@@ -174,7 +173,6 @@ export default function Stores() {
               </div>
               <div className="store-card-info">
                 <h2>{store.city}</h2>
-                <p className="store-card-brand">Mardan Boutique</p>
                 {(() => { const s = getStoreStatus(store.hours); return (
                   <p className={`store-card-status ${s.open ? "status-open" : "status-closed"}`}>
                     <span className="status-dot"></span>{s.label}
