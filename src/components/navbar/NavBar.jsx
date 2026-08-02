@@ -53,7 +53,7 @@ const NavBar = ({ children, forHome }) => {
       <div className={`sidebar-menu ${menuOpen ? "open" : ""} ${accessoriesOpen ? "drilled" : ""}`}>
         <div className="sidebar-topbar">
           {accessoriesOpen && (
-            <button className="back-btn" onClick={() => setAccessoriesOpen(false)}>‹</button>
+            <button className="back-btn" onClick={() => setAccessoriesOpen(false)}>&lt;</button>
           )}
           <button className="close-btn" onClick={toggleMenu}>✕</button>
         </div>
