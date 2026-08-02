@@ -64,13 +64,14 @@
 }
 
 .back-btn {
+  display: none;
   position: absolute;
-  top: 24px;
+  top: 20px;
   left: 28px;
   background: none;
   border: none;
   font-size: 20px;
-  font-weight: 300;
+  font-weight: 400;
   cursor: pointer;
   color: var(--color-navy);
   padding: 0;
@@ -250,6 +251,11 @@
 @media (max-width: 768px) {
   .burger-menu {
     left: 15px;
+  }
+
+  .back-btn {
+    display: block;
+    font-size: 28px;
   }
 
   .sidebar-menu {
