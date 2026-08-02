@@ -75,7 +75,6 @@ const NavBar = ({ children, forHome }) => {
           </nav>
 
           <nav className="sidebar-nav sidebar-nav-sub">
-            <h2 className="sidebar-subnav-title">Аксессуары</h2>
             {accessorySubcategories.map((sub) => (
               <a
                 key={sub.label}

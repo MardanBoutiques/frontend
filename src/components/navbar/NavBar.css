@@ -65,11 +65,12 @@
 
 .back-btn {
   position: absolute;
-  top: 16px;
+  top: 24px;
   left: 28px;
   background: none;
   border: none;
-  font-size: 32px;
+  font-size: 20px;
+  font-weight: 300;
   cursor: pointer;
   color: var(--color-navy);
   padding: 0;
@@ -127,15 +128,6 @@
   opacity: 1;
   pointer-events: auto;
   transform: translateX(0);
-}
-
-.sidebar-subnav-title {
-  margin: 0 0 20px;
-  color: var(--color-navy);
-  font-size: 1.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
 }
 
 .sidebar-nav-sub a.sidebar-subnav-all {
