@@ -12,6 +12,7 @@ import GiftCard from "./components/giftcard/GiftCard";
 import Stores from "./components/stores/Stores";
 import Footer from "./components/footer/Footer";
 import About from "./components/about/About";
+import Support from "./components/support/Support";
 import Vacancies from "./components/vacancies/Vacancies";
 import VacancyDetail from "./components/vacancies/VacancyDetail";
 
@@ -38,6 +39,7 @@ function App() {
           <Route path="/giftcard" element={<GiftCard />} />
           <Route path="/stores" element={<Stores />} />
           <Route path="/about" element={<About />} />
+          <Route path="/support" element={<Support />} />
           <Route path="/vacancies" element={<Vacancies />} />
           <Route path="/vacancies/:id" element={<VacancyDetail />} />
         </Routes>
