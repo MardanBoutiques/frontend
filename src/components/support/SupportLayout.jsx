@@ -3,7 +3,6 @@ import NavBar from "../navbar/NavBar";
 import "./Support.css";
 
 const NAV_ITEMS = [
-  { to: "/support", label: "Обзор", end: true },
   { to: "/support/faq", label: "Частые вопросы" },
   { to: "/support/shipping", label: "Доставка и возврат" },
   { to: "/support/terms", label: "Условия использования" },

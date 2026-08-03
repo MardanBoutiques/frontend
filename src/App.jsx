@@ -14,7 +14,6 @@ import Footer from "./components/footer/Footer";
 import About from "./components/about/About";
 import SupportLayout from "./components/support/SupportLayout";
 import {
-  SupportOverview,
   SupportFaq,
   SupportShipping,
   SupportTerms,
@@ -48,7 +47,7 @@ function App() {
           <Route path="/stores" element={<Stores />} />
           <Route path="/about" element={<About />} />
           <Route path="/support" element={<SupportLayout />}>
-            <Route index element={<SupportOverview />} />
+            <Route index element={<Navigate to="faq" replace />} />
             <Route path="faq" element={<SupportFaq />} />
             <Route path="shipping" element={<SupportShipping />} />
             <Route path="terms" element={<SupportTerms />} />
