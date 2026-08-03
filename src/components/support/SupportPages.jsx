@@ -92,7 +92,7 @@ const DELIVERY_METHODS = [
 
 export const SupportShipping = () => (
   <div>
-    <p className="support-label">Доставка</p>
+    <p className="support-label">Доставка и возврат</p>
     <p className="support-body">
       Мы отправляем заказы по Казахстану и на международные направления. Точные сроки и стоимость доставки
       менеджер уточнит при подтверждении заказа — они зависят от города и выбранного способа.
@@ -105,50 +105,11 @@ export const SupportShipping = () => (
         </div>
       ))}
     </div>
-  </div>
-);
 
-export const SupportReturns = () => (
-  <div>
-    <p className="support-label">Возврат и обмен</p>
+    <p className="support-label support-subsection-label">Возврат и обмен</p>
     <p className="support-body support-placeholder">
       Раздел уточняется. Напишите нам в WhatsApp или на почту — поможем с возвратом или обменом
       индивидуально по каждому заказу.
-    </p>
-  </div>
-);
-
-export const SupportPayment = () => (
-  <div>
-    <p className="support-label">Оплата</p>
-    <div className="support-payment-grid">
-      <div className="support-payment-item">
-        <span className="support-payment-name">Kaspi</span>
-      </div>
-      <div className="support-payment-item">
-        <span className="support-payment-name">Банковская карта</span>
-      </div>
-    </div>
-  </div>
-);
-
-export const SupportSizing = () => (
-  <div>
-    <p className="support-label">Размеры</p>
-    <p className="support-body">
-      Доступные размеры указаны на странице каждого товара. Если не уверены с выбором — напишите нам
-      артикул или название товара, поможем подобрать подходящий размер, или запишитесь на примерку
-      в один из бутиков.
-    </p>
-  </div>
-);
-
-export const SupportCare = () => (
-  <div>
-    <p className="support-label">Уход за изделием</p>
-    <p className="support-body">
-      Рекомендации по уходу для каждой вещи — в описании товара на его странице (материал, состав
-      и инструкции по уходу указаны индивидуально).
     </p>
   </div>
 );

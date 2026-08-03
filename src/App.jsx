@@ -17,10 +17,6 @@ import {
   SupportOverview,
   SupportFaq,
   SupportShipping,
-  SupportReturns,
-  SupportPayment,
-  SupportSizing,
-  SupportCare,
   SupportTerms,
   SupportPrivacy,
   SupportContact,
@@ -55,10 +51,6 @@ function App() {
             <Route index element={<SupportOverview />} />
             <Route path="faq" element={<SupportFaq />} />
             <Route path="shipping" element={<SupportShipping />} />
-            <Route path="returns" element={<SupportReturns />} />
-            <Route path="payment" element={<SupportPayment />} />
-            <Route path="sizing" element={<SupportSizing />} />
-            <Route path="care" element={<SupportCare />} />
             <Route path="terms" element={<SupportTerms />} />
             <Route path="privacy" element={<SupportPrivacy />} />
             <Route path="contact" element={<SupportContact />} />

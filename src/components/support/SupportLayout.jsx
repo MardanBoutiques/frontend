@@ -5,11 +5,7 @@ import "./Support.css";
 const NAV_ITEMS = [
   { to: "/support", label: "Обзор", end: true },
   { to: "/support/faq", label: "Частые вопросы" },
-  { to: "/support/shipping", label: "Доставка" },
-  { to: "/support/returns", label: "Возврат и обмен" },
-  { to: "/support/payment", label: "Оплата" },
-  { to: "/support/sizing", label: "Размеры" },
-  { to: "/support/care", label: "Уход за изделием" },
+  { to: "/support/shipping", label: "Доставка и возврат" },
   { to: "/support/terms", label: "Условия использования" },
   { to: "/support/privacy", label: "Конфиденциальность" },
   { to: "/support/contact", label: "Связаться с нами" },
