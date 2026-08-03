@@ -65,7 +65,7 @@ const About = () => {
             <p className="about-label">Философия бренда</p>
           </div>
           <div className="about-split-right">
-            <p className="about-body">
+            <p className="about-body about-philosophy-lead">
               MARDAN верит: стиль не должен быть жертвой комфорта, а комфорт — скучным.
             </p>
             <p className="about-body">

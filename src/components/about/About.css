@@ -105,19 +105,19 @@
 /* ── Key idea ── */
 .about-keyidea {
   padding: 80px;
-  background: #f8f7f5;
+  background: var(--color-navy);
 }
 
 .about-keyidea-line {
   height: 1px;
-  background: var(--color-outline);
+  background: rgba(255, 255, 255, 0.25);
   margin: 28px 0;
 }
 
 .about-keyidea-text {
   font-size: clamp(1.25rem, 2.5vw, 2rem);
   font-weight: var(--font-weight-regular);
-  color: var(--color-navy);
+  color: #fff;
   text-align: center;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -134,18 +134,27 @@
 }
 
 .about-split-left {
-  padding-top: 4px;
+  padding-top: 0;
+}
+
+.about-philosophy-lead {
+  font-weight: 700 !important;
 }
 
 /* ── Name meaning section ── */
 .about-meaning-section {
-  background: #f8f7f5;
+  background: var(--color-navy);
+}
+
+.about-meaning-section .about-label,
+.about-meaning-desc {
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .about-meaning-headline {
   font-size: clamp(3rem, 7vw, 6rem);
   font-weight: var(--font-weight-regular);
-  color: var(--color-navy);
+  color: #fff;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   line-height: 1;
@@ -243,30 +252,39 @@
 
 /* ── Mission ── */
 .about-mission {
-  background: var(--color-navy);
+  background: #fff;
 }
 
 .about-mission .about-label {
-  color: rgba(255,255,255,0.4);
+  color: var(--color-secondary);
 }
 
 .about-mission-text {
   font-size: clamp(1.4rem, 2.8vw, 2.2rem);
   font-weight: var(--font-weight-regular);
-  color: #fff;
+  color: var(--color-navy);
   line-height: 1.45;
   letter-spacing: 0.02em;
   margin: 0 0 24px;
 }
 
 .about-mission .about-body {
-  color: rgba(255,255,255,0.65);
+  color: #111;
 }
 
 /* ── Brands ── */
+.about-brands {
+  background: var(--color-navy);
+}
+
+.about-brands .about-label {
+  color: rgba(255, 255, 255, 0.7);
+}
+
 .about-brands-intro {
   max-width: 540px;
   margin-bottom: 40px !important;
+  color: #fff;
 }
 
 .about-brands-grid {
@@ -280,13 +298,13 @@
   justify-content: space-between;
   align-items: center;
   padding: 36px 32px;
-  background: #f8f7f5;
+  background: #fff;
   text-decoration: none;
   transition: background 0.2s;
 }
 
 .about-brand-card:hover {
-  background: #efefed;
+  background: #f0f0f0;
 }
 
 .about-brand-name {
