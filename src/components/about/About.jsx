@@ -58,19 +58,15 @@ const About = () => {
       </section>
 
       {/* Philosophy */}
-      <section className="about-section">
-        <div className="about-container about-container--split">
-          <div className="about-split-left">
-            <p className="about-label">Философия бренда</p>
-          </div>
-          <div className="about-split-right">
-            <p className="about-body about-philosophy-lead">
-              MARDAN верит: стиль не должен быть жертвой комфорта, а комфорт — скучным.
-            </p>
-            <p className="about-body">
-              Наша одежда создаётся для реальной жизни — для работы, встреч, движения и роста. Мы проектируем вещи, которые служат каждый день: продуманная посадка, качество материалов, функциональные детали и безупречная отделка.
-            </p>
-          </div>
+      <section className="about-section about-intro">
+        <div className="about-container about-container--narrow">
+          <p className="about-label">Философия бренда</p>
+          <h2 className="about-quote">
+            MARDAN верит: стиль не должен быть жертвой комфорта, а комфорт — скучным.
+          </h2>
+          <p className="about-body">
+            Наша одежда создаётся для реальной жизни — для работы, встреч, движения и роста. Мы проектируем вещи, которые служат каждый день: продуманная посадка, качество материалов, функциональные детали и безупречная отделка.
+          </p>
         </div>
       </section>
 

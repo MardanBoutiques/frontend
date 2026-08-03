@@ -125,21 +125,6 @@
   margin: 0;
 }
 
-/* ── Split layout ── */
-.about-container--split {
-  display: grid;
-  grid-template-columns: 220px 1fr;
-  gap: 64px;
-  align-items: start;
-}
-
-.about-split-left {
-  padding-top: 0;
-}
-
-.about-philosophy-lead {
-  font-weight: 700 !important;
-}
 
 /* ── Name meaning section ── */
 .about-meaning-section {
@@ -336,11 +321,6 @@
   .about-keyidea {
     padding-left: 40px;
     padding-right: 40px;
-  }
-
-  .about-container--split {
-    grid-template-columns: 1fr;
-    gap: 16px;
   }
 
   .about-founders-grid,
