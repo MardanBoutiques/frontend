@@ -55,6 +55,7 @@
   padding: 14px 48px;
   background: transparent;
   border: 1px solid #fff;
+  border-radius: 0;
   color: #fff;
   font-size: 0.8125rem;
   font-weight: var(--font-weight-regular);

@@ -6,12 +6,12 @@ const VACANCY_DATA = {
   almaty: {
     title: 'Стилист-менеджер в бутик',
     city: 'Алматы',
-    email: 'hr@mardanboutiques.com',
+    email: 'mardan.essential@mail.ru',
   },
   astana: {
     title: 'Стилист-менеджер в бутик',
     city: 'Астана',
-    email: 'hr@mardanboutiques.com',
+    email: 'mardan.essential@mail.ru',
   },
 };
 
