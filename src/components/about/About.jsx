@@ -107,11 +107,16 @@ const About = () => {
       <section className="about-section about-founders">
         <div className="about-container">
           <p className="about-label">Команда и основатели</p>
-          <p className="about-body about-founders-desc">
+          <p className="about-quote about-founders-desc">
             В 2023 году они объединили опыт классического костюма и современного кэжуала, создав бренд, где одежда служит образу жизни, а не витрине.
           </p>
           <div className="about-founders-grid">
-            <div className="about-founder-card">
+            <a
+              href="https://www.instagram.com/mardanqs/"
+              target="_blank"
+              rel="noreferrer"
+              className="about-founder-card"
+            >
               <div className="about-founder-photo-wrap">
                 <div
                   className="about-founder-photo"
@@ -119,18 +124,16 @@ const About = () => {
                 />
               </div>
               <div className="about-founder-info">
-                <a
-                  href="https://www.instagram.com/mardanqs/"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="about-founder-name"
-                >
-                  Мардан Алихан
-                </a>
+                <span className="about-founder-name">Мардан Алихан</span>
                 <p className="about-founder-role">Сo-founder</p>
               </div>
-            </div>
-            <div className="about-founder-card">
+            </a>
+            <a
+              href="https://www.instagram.com/eklive13/"
+              target="_blank"
+              rel="noreferrer"
+              className="about-founder-card"
+            >
               <div className="about-founder-photo-wrap">
                 <div
                   className="about-founder-photo"
@@ -138,17 +141,10 @@ const About = () => {
                 />
               </div>
               <div className="about-founder-info">
-                <a
-                  href="https://www.instagram.com/eklive13/"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="about-founder-name"
-                >
-                  Хабидуллин Еркебулан
-                </a>
+                <span className="about-founder-name">Хабидуллин Еркебулан</span>
                 <p className="about-founder-role">Сo-founder</p>
               </div>
-            </div>
+            </a>
           </div>
         </div>
       </section>
