@@ -26,7 +26,6 @@ const About = () => {
         style={heroImageUrl ? { backgroundImage: `url(${heroImageUrl})` } : undefined}
       >
         <div className="about-hero-inner">
-          <p className="about-hero-eyebrow">Премиальная мужская одежда</p>
           <h1 className="about-hero-title">MARDAN</h1>
           <p className="about-hero-tagline">
             Твой ежедневный комфорт — классика, мастерство и свобода движений.
