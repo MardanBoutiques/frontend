@@ -17,6 +17,7 @@ import {
   SupportFaq,
   SupportShipping,
   SupportTerms,
+  SupportOffer,
   SupportPrivacy,
   SupportContact,
 } from "./components/support/SupportPages";
@@ -51,6 +52,7 @@ function App() {
             <Route path="faq" element={<SupportFaq />} />
             <Route path="shipping" element={<SupportShipping />} />
             <Route path="terms" element={<SupportTerms />} />
+            <Route path="offer" element={<SupportOffer />} />
             <Route path="privacy" element={<SupportPrivacy />} />
             <Route path="contact" element={<SupportContact />} />
           </Route>

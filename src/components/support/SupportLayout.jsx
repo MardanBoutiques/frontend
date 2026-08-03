@@ -6,6 +6,7 @@ const NAV_ITEMS = [
   { to: "/support/faq", label: "Частые вопросы" },
   { to: "/support/shipping", label: "Доставка и возврат" },
   { to: "/support/terms", label: "Условия использования" },
+  { to: "/support/offer", label: "Публичная оферта" },
   { to: "/support/privacy", label: "Конфиденциальность" },
   { to: "/support/contact", label: "Связаться с нами" },
 ];

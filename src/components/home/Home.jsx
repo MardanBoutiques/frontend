@@ -169,12 +169,37 @@ const HeroPictures = ({ images }) => {
   );
 };
 
+const AboutTeaser = ({ image }) => (
+  <section className="about-teaser">
+    <div
+      className="about-teaser-image"
+      style={{
+        backgroundImage: image ? `url(${image})` : 'none',
+        backgroundColor: image ? 'transparent' : '#1a1a1a',
+      }}
+    >
+      <div className="about-teaser-overlay">
+        <p className="about-teaser-label">О компании</p>
+        <h2 className="about-teaser-quote">
+          MARDAN — бренд, рождённый на грани классики и кэжуала.
+        </h2>
+        <Link to="/about" className="about-teaser-link">Узнать больше</Link>
+      </div>
+    </div>
+  </section>
+);
+
 export default function Home() {
   const [images, setImages] = useState([]);
 
   const getHeroImage = () => {
     const heroImg = images.find(img => img.image_type === 'hero');
     return heroImg ? getImageUrl(heroImg.image) : null;
+  };
+
+  const getAboutImage = () => {
+    const aboutImg = images.find(img => img.image_type === 'about_hero');
+    return aboutImg ? getImageUrl(aboutImg.image) : null;
   };
 
   useEffect(() => {
@@ -215,6 +240,7 @@ export default function Home() {
         <Link to="/giftcard">Подарочная карта</Link>
       </HeroSection>
       <HeroPictures images={images} />
+      <AboutTeaser image={getAboutImage()} />
     </>
   );
 }
