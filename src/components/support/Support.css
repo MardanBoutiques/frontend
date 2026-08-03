@@ -1,48 +1,114 @@
-/* ── Hero ── */
-.support-hero {
+/* ── Shell: sidebar + content ── */
+.support-shell {
   margin-top: 70px;
-  padding: 64px 80px 56px;
-  background: #f8f7f5;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: calc(100vh - 70px);
 }
 
-.support-eyebrow {
+.support-sidebar {
+  border-right: 1px solid var(--color-outline);
+  padding: 64px 32px;
+}
+
+.support-sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: sticky;
+  top: 96px;
+}
+
+.support-sidebar-link {
+  padding: 10px 0;
+  font-size: 0.9375rem;
+  color: var(--color-secondary);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.support-sidebar-link:hover {
+  color: var(--color-navy);
+}
+
+.support-sidebar-link.active {
+  color: var(--color-navy);
+  font-weight: 700;
+}
+
+.support-content {
+  padding: 64px 80px;
+  max-width: 820px;
+}
+
+/* ── Shared content styles ── */
+.support-label {
   font-size: 0.6875rem;
   font-weight: var(--font-weight-regular);
   color: var(--color-secondary);
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  margin: 0 0 16px;
+  margin: 0 0 24px;
 }
 
 .support-title {
-  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
   font-weight: var(--font-weight-regular);
   color: var(--color-navy);
   text-transform: uppercase;
-  letter-spacing: 0.03em;
-  line-height: 1.05;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
   margin: 0 0 40px;
 }
 
+.support-quote {
+  font-size: clamp(1.25rem, 2.4vw, 1.75rem);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-navy);
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  margin: 0 0 32px;
+}
+
+.support-body {
+  font-size: 0.9375rem;
+  font-weight: 100;
+  color: #111;
+  line-height: 1.8;
+  margin: 0;
+}
+
+.support-placeholder {
+  color: var(--color-secondary);
+  font-style: italic;
+}
+
+.support-inline-link {
+  color: var(--color-navy);
+  font-weight: 700;
+}
+
+/* ── Contact cards ── */
 .support-contact-cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 2px;
   border: 1px solid var(--color-outline);
+  max-width: 620px;
 }
 
 .support-contact-card {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 24px 28px;
+  padding: 22px 24px;
   background: #fff;
   text-decoration: none;
   transition: background 0.2s;
 }
 
 .support-contact-card:hover {
-  background: #f0f0f0;
+  background: #f8f7f5;
 }
 
 .support-contact-label {
@@ -54,115 +120,13 @@
 }
 
 .support-contact-value {
-  font-size: 1rem;
-  font-weight: 100;
-  color: var(--color-navy);
-}
-
-.support-contact-cards--dark {
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-.support-contact-cards--dark .support-contact-card {
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.support-contact-cards--dark .support-contact-card:hover {
-  background: rgba(255, 255, 255, 0.12);
-}
-
-.support-contact-cards--dark .support-contact-label {
-  color: rgba(255, 255, 255, 0.55);
-}
-
-.support-contact-cards--dark .support-contact-value {
-  color: #fff;
-}
-
-/* ── Quick nav ── */
-.support-quicknav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 24px 80px;
-  background: #fff;
-  border-bottom: 1px solid var(--color-outline);
-  position: sticky;
-  top: 70px;
-  z-index: 5;
-}
-
-.support-quicknav button {
-  padding: 8px 16px;
-  border-radius: 9999px;
-  border: 1px solid var(--color-outline);
-  background: #fff;
-  color: var(--color-secondary);
-  font-size: 0.8125rem;
-  font-family: inherit;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-.support-quicknav button:hover {
-  border-color: var(--color-navy);
-  color: var(--color-navy);
-}
-
-/* ── Sections ── */
-.support-section {
-  padding: 72px 80px;
-  background: #fff;
-}
-
-.support-section--soft {
-  background: #f8f7f5;
-}
-
-.support-container {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.support-container--narrow {
-  max-width: 780px;
-}
-
-.support-label {
-  font-size: 0.6875rem;
-  font-weight: var(--font-weight-regular);
-  color: var(--color-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  margin: 0 0 28px;
-}
-
-.support-body {
   font-size: 0.9375rem;
   font-weight: 100;
-  color: #111;
-  line-height: 1.8;
-  margin: 0;
-  max-width: 720px;
-}
-
-.support-placeholder {
-  color: var(--color-secondary);
-  font-style: italic;
-}
-
-.support-quote {
-  font-size: clamp(1.4rem, 2.8vw, 2.2rem);
-  font-weight: var(--font-weight-regular);
-  color: #fff;
-  line-height: 1.4;
-  letter-spacing: 0.01em;
-  margin: 0 0 32px;
+  color: var(--color-navy);
 }
 
 /* ── FAQ ── */
 .support-faq-list {
-  max-width: 780px;
   border-top: 1px solid var(--color-outline);
 }
 
@@ -176,18 +140,18 @@
   justify-content: space-between;
   align-items: center;
   gap: 16px;
-  padding: 22px 0;
+  padding: 20px 0;
   background: none;
   border: none;
   cursor: pointer;
   text-align: left;
   font-family: inherit;
-  font-size: 1rem;
+  font-size: 0.9375rem;
   color: var(--color-navy);
 }
 
 .support-faq-icon {
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   color: var(--color-secondary);
   flex-shrink: 0;
 }
@@ -197,8 +161,7 @@
   font-weight: 100;
   color: #111;
   line-height: 1.8;
-  margin: 0 0 22px;
-  max-width: 640px;
+  margin: 0 0 20px;
 }
 
 /* ── Delivery / payment grids ── */
@@ -211,7 +174,7 @@
 }
 
 .support-delivery-grid {
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
 }
 
 .support-payment-grid {
@@ -221,7 +184,7 @@
 
 .support-delivery-item,
 .support-payment-item {
-  padding: 24px 28px;
+  padding: 20px 24px;
   background: #fff;
   display: flex;
   flex-direction: column;
@@ -230,7 +193,7 @@
 
 .support-delivery-name,
 .support-payment-name {
-  font-size: 1rem;
+  font-size: 0.9375rem;
   font-weight: var(--font-weight-regular);
   color: var(--color-navy);
   text-transform: uppercase;
@@ -238,68 +201,67 @@
 }
 
 .support-delivery-note {
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   font-weight: 100;
   color: var(--color-secondary);
 }
 
-/* ── Contact section (dark) ── */
-.support-mission {
-  background: var(--color-navy);
-}
-
-.support-mission .support-label {
-  color: rgba(255, 255, 255, 0.4);
-}
-
 /* ── Tablet ── */
 @media (max-width: 1024px) {
-  .support-hero,
-  .support-quicknav,
-  .support-section {
-    padding-left: 40px;
-    padding-right: 40px;
+  .support-content {
+    padding: 48px 40px;
   }
 
-  .support-contact-cards,
-  .support-delivery-grid,
-  .support-payment-grid {
-    grid-template-columns: 1fr 1fr;
+  .support-sidebar {
+    padding: 48px 24px;
   }
 }
 
-/* ── Mobile ── */
-@media (max-width: 640px) {
-  .support-hero {
-    padding-top: 40px;
-    padding-bottom: 40px;
+/* ── Mobile: sidebar becomes a horizontal scroll strip above content ── */
+@media (max-width: 768px) {
+  .support-shell {
+    grid-template-columns: 1fr;
   }
 
-  .support-hero,
-  .support-quicknav,
-  .support-section {
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-
-  .support-section {
-    padding-top: 48px;
-    padding-bottom: 48px;
-  }
-
-  .support-quicknav {
+  .support-sidebar {
+    border-right: none;
+    border-bottom: 1px solid var(--color-outline);
+    padding: 20px;
+    position: sticky;
     top: 70px;
-    gap: 6px;
+    background: #fff;
+    z-index: 5;
   }
 
-  .support-quicknav button {
-    font-size: 0.75rem;
-    padding: 6px 12px;
+  .support-sidebar nav {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 8px;
+    position: static;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .support-sidebar-link {
+    padding: 8px 14px;
+    white-space: nowrap;
+    border-radius: 9999px;
+    border: 1px solid var(--color-outline);
+    font-size: 0.8125rem;
+  }
+
+  .support-sidebar-link.active {
+    background: var(--color-navy);
+    border-color: var(--color-navy);
+    color: #fff;
+  }
+
+  .support-content {
+    padding: 32px 20px;
   }
 
   .support-contact-cards,
-  .support-delivery-grid,
-  .support-payment-grid {
+  .support-delivery-grid {
     grid-template-columns: 1fr;
   }
 }
