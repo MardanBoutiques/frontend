@@ -105,26 +105,38 @@ const About = () => {
           <p className="about-label">Команда и основатели</p>
           <div className="about-founders-grid">
             <div className="about-founder-card">
-              <a
-                href="https://www.instagram.com/mardanqs/"
-                target="_blank"
-                rel="noreferrer"
-                className="about-founder-name"
-              >
-                Мардан Алихан
-              </a>
-              <p className="about-founder-role">Сo-founder</p>
+              <div
+                className="about-founder-photo"
+                style={{ backgroundImage: "url('/photos/founder-alikhan.jpg')" }}
+              />
+              <div className="about-founder-info">
+                <a
+                  href="https://www.instagram.com/mardanqs/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="about-founder-name"
+                >
+                  Мардан Алихан
+                </a>
+                <p className="about-founder-role">Сo-founder</p>
+              </div>
             </div>
             <div className="about-founder-card">
-              <a
-                href="https://www.instagram.com/eklive13/"
-                target="_blank"
-                rel="noreferrer"
-                className="about-founder-name"
-              >
-                Хабидуллин Еркебулан
-              </a>
-              <p className="about-founder-role">Сo-founder</p>
+              <div
+                className="about-founder-photo"
+                style={{ backgroundImage: "url('/photos/founder-erkebulan.jpg')" }}
+              />
+              <div className="about-founder-info">
+                <a
+                  href="https://www.instagram.com/eklive13/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="about-founder-name"
+                >
+                  Хабидуллин Еркебулан
+                </a>
+                <p className="about-founder-role">Сo-founder</p>
+              </div>
             </div>
           </div>
           <p className="about-body about-founders-desc">
@@ -160,8 +172,14 @@ const About = () => {
               rel="noreferrer"
               className="about-brand-card"
             >
-              <span className="about-brand-name">114 Avenue</span>
-              <span className="about-brand-arrow">↗</span>
+              <div
+                className="about-brand-photo"
+                style={{ backgroundImage: "url('/photos/brand-114avenue.jpg')" }}
+              />
+              <div className="about-brand-info">
+                <span className="about-brand-name">114 Avenue</span>
+                <span className="about-brand-arrow">↗</span>
+              </div>
             </a>
             <a
               href="https://www.instagram.com/inspira.kz/"
@@ -169,8 +187,14 @@ const About = () => {
               rel="noreferrer"
               className="about-brand-card"
             >
-              <span className="about-brand-name">INSPIRA</span>
-              <span className="about-brand-arrow">↗</span>
+              <div
+                className="about-brand-photo"
+                style={{ backgroundImage: "url('/photos/brand-inspira.jpg')" }}
+              />
+              <div className="about-brand-info">
+                <span className="about-brand-name">INSPIRA</span>
+                <span className="about-brand-arrow">↗</span>
+              </div>
             </a>
           </div>
         </div>

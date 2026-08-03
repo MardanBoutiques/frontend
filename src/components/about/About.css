@@ -198,13 +198,23 @@
 }
 
 .about-founder-card {
-  padding: 56px 36px;
   background: #fff;
   display: flex;
   flex-direction: column;
+}
+
+.about-founder-photo {
+  aspect-ratio: 3 / 4;
+  background-color: #f0efec;
+  background-size: cover;
+  background-position: center;
+}
+
+.about-founder-info {
+  padding: 24px 28px 32px;
+  display: flex;
+  flex-direction: column;
   gap: 8px;
-  min-height: 200px;
-  justify-content: flex-end;
 }
 
 .about-founder-name {
@@ -280,9 +290,7 @@
 
 .about-brand-card {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 36px 32px;
+  flex-direction: column;
   background: #f8f7f5;
   text-decoration: none;
   transition: background 0.2s;
@@ -290,6 +298,20 @@
 
 .about-brand-card:hover {
   background: #f0f0f0;
+}
+
+.about-brand-photo {
+  aspect-ratio: 3 / 4;
+  background-color: #e8e7e3;
+  background-size: cover;
+  background-position: center;
+}
+
+.about-brand-info {
+  padding: 24px 28px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .about-brand-name {
@@ -359,7 +381,8 @@
     grid-template-columns: 1fr;
   }
 
-  .about-founder-card {
-    padding: 28px 20px;
+  .about-founder-info,
+  .about-brand-info {
+    padding: 20px;
   }
 }
