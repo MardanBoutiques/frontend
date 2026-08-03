@@ -352,6 +352,32 @@
   color: #000;
 }
 
+.checkbox-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #fff;
+  border: 1px solid var(--color-outline);
+  cursor: pointer;
+}
+
+.checkbox-option input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  cursor: pointer;
+  accent-color: var(--color-navy);
+}
+
+.checkbox-option span {
+  font-size: 0.8125rem;
+  font-weight: 100;
+  color: #000;
+  line-height: 1.5;
+}
+
 .payment-logos {
   display: flex;
   align-items: center;

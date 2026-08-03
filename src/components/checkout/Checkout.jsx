@@ -40,6 +40,7 @@ const Checkout = () => {
     address: '',
     deliveryMethod: 'yandex',
     paymentMethod: 'card',
+    marketingConsent: false,
   });
   const [errors, setErrors] = useState({});
   const [turnstileToken, setTurnstileToken] = useState(null);
@@ -143,9 +144,10 @@ const Checkout = () => {
   };
 
   const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: type === 'checkbox' ? checked : value
     });
   };
 
@@ -159,6 +161,11 @@ const Checkout = () => {
 
     if (!validateForm()) {
       alert('Пожалуйста, исправьте ошибки в форме');
+      return;
+    }
+
+    if (!turnstileToken) {
+      alert('Пожалуйста, подтвердите, что вы не робот');
       return;
     }
 
@@ -183,6 +190,7 @@ const Checkout = () => {
       })),
       total_amount: getTotalPrice(),
       turnstile_token: turnstileToken,
+      marketing_consent: formData.marketingConsent,
     };
 
     try {
@@ -434,6 +442,21 @@ const Checkout = () => {
               </div>
 
               <div className="form-section">
+                <label className="checkbox-option">
+                  <input
+                    type="checkbox"
+                    name="marketingConsent"
+                    checked={formData.marketingConsent}
+                    onChange={handleChange}
+                  />
+                  <span>
+                    Хочу получать новости о новых коллекциях, акциях и специальных предложениях Mardan по
+                    email и WhatsApp. Согласие можно отозвать в любой момент.
+                  </span>
+                </label>
+              </div>
+
+              <div className="form-section">
                 <Turnstile
                   siteKey={TURNSTILE_SITE_KEY}
                   onSuccess={setTurnstileToken}
@@ -444,7 +467,7 @@ const Checkout = () => {
                 <button
                   type="submit"
                   className="btn-submit-order"
-                  disabled={loading}
+                  disabled={loading || !turnstileToken}
                 >
                   {loading ? 'Оформление...' : 'Подтвердить заказ'}
                 </button>
