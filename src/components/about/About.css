@@ -254,6 +254,9 @@
 
 .about-founders-desc {
   max-width: 620px;
+  margin-bottom: 40px !important;
+  font-weight: 700;
+  color: var(--color-navy);
 }
 
 /* ── Mission ── */

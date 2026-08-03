@@ -107,6 +107,9 @@ const About = () => {
       <section className="about-section about-founders">
         <div className="about-container">
           <p className="about-label">Команда и основатели</p>
+          <p className="about-body about-founders-desc">
+            В 2023 году они объединили опыт классического костюма и современного кэжуала, создав бренд, где одежда служит образу жизни, а не витрине.
+          </p>
           <div className="about-founders-grid">
             <div className="about-founder-card">
               <div className="about-founder-photo-wrap">
@@ -147,9 +150,6 @@ const About = () => {
               </div>
             </div>
           </div>
-          <p className="about-body about-founders-desc">
-            В 2023 году они объединили опыт классического костюма и современного кэжуала, создав бренд, где одежда служит образу жизни, а не витрине.
-          </p>
         </div>
       </section>
 
