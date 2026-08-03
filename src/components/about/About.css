@@ -201,7 +201,7 @@
 
 /* ── Founders ── */
 .about-founders {
-  background: #f8f7f5;
+  background: #fff;
 }
 
 .about-founders-grid {
@@ -252,39 +252,39 @@
 
 /* ── Mission ── */
 .about-mission {
-  background: #fff;
+  background: var(--color-navy);
 }
 
 .about-mission .about-label {
-  color: var(--color-secondary);
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .about-mission-text {
   font-size: clamp(1.4rem, 2.8vw, 2.2rem);
   font-weight: var(--font-weight-regular);
-  color: var(--color-navy);
+  color: #fff;
   line-height: 1.45;
   letter-spacing: 0.02em;
   margin: 0 0 24px;
 }
 
 .about-mission .about-body {
-  color: #111;
+  color: rgba(255, 255, 255, 0.65);
 }
 
 /* ── Brands ── */
 .about-brands {
-  background: var(--color-navy);
+  background: #fff;
 }
 
 .about-brands .about-label {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--color-secondary);
 }
 
 .about-brands-intro {
   max-width: 540px;
   margin-bottom: 40px !important;
-  color: #fff;
+  color: #111;
 }
 
 .about-brands-grid {
@@ -298,7 +298,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 36px 32px;
-  background: #fff;
+  background: #f8f7f5;
   text-decoration: none;
   transition: background 0.2s;
 }
