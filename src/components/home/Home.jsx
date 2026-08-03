@@ -169,21 +169,44 @@ const HeroPictures = ({ images }) => {
   );
 };
 
-const AboutTeaser = ({ image }) => (
-  <section className="about-teaser">
-    <div
-      className="about-teaser-image"
-      style={{
-        backgroundImage: image ? `url(${image})` : 'none',
-        backgroundColor: image ? 'transparent' : '#1a1a1a',
-      }}
-    >
-      <div className="about-teaser-overlay">
-        <p className="about-teaser-label">О компании</p>
-      </div>
-    </div>
-  </section>
-);
+const InfoTeaser = ({ images }) => {
+  const getImageByType = (imageType) => {
+    const image = images.find((img) => img.image_type === imageType);
+    return image ? getImageUrl(image.image) : null;
+  };
+
+  return (
+    <section className="info-teaser-container">
+      <Link to="/about" className="collection-section">
+        <div
+          className="collection-image-full"
+          style={{
+            backgroundImage: getImageByType('about_hero') ? `url(${getImageByType('about_hero')})` : 'none',
+            backgroundColor: getImageByType('about_hero') ? 'transparent' : '#1a1a1a',
+          }}
+        >
+          <div className="collection-overlay">
+            <div className="collection-cta">О компании</div>
+          </div>
+        </div>
+      </Link>
+
+      <Link to="/vacancies" className="collection-section">
+        <div
+          className="collection-image-full"
+          style={{
+            backgroundImage: getImageByType('vacancies_hero') ? `url(${getImageByType('vacancies_hero')})` : 'none',
+            backgroundColor: getImageByType('vacancies_hero') ? 'transparent' : '#1a1a1a',
+          }}
+        >
+          <div className="collection-overlay">
+            <div className="collection-cta">Вакансии</div>
+          </div>
+        </div>
+      </Link>
+    </section>
+  );
+};
 
 export default function Home() {
   const [images, setImages] = useState([]);
@@ -191,11 +214,6 @@ export default function Home() {
   const getHeroImage = () => {
     const heroImg = images.find(img => img.image_type === 'hero');
     return heroImg ? getImageUrl(heroImg.image) : null;
-  };
-
-  const getAboutImage = () => {
-    const aboutImg = images.find(img => img.image_type === 'about_hero');
-    return aboutImg ? getImageUrl(aboutImg.image) : null;
   };
 
   useEffect(() => {
@@ -236,7 +254,7 @@ export default function Home() {
         <Link to="/giftcard">Подарочная карта</Link>
       </HeroSection>
       <HeroPictures images={images} />
-      <AboutTeaser image={getAboutImage()} />
+      <InfoTeaser images={images} />
     </>
   );
 }

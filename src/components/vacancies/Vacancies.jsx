@@ -1,6 +1,8 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../navbar/NavBar';
+import openAxios from '../../api/axios';
+import { getImageUrl } from '../../utils/imageUrl';
 import './Vacancies.css';
 
 const BENEFITS = [
@@ -38,6 +40,16 @@ const VACANCIES = [
 const Vacancies = () => {
   const navigate = useNavigate();
   const vacanciesRef = useRef(null);
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    openAxios.get('/api/homepage-images/')
+      .then((response) => setImages(response.data))
+      .catch((error) => console.error('Ошибка загрузки изображений:', error));
+  }, []);
+
+  const heroImg = images.find((i) => i.image_type === 'vacancies_hero');
+  const heroImageUrl = heroImg ? getImageUrl(heroImg.image) : null;
 
   const scrollToVacancies = () => {
     vacanciesRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -48,7 +60,10 @@ const Vacancies = () => {
       <NavBar />
 
       {/* Hero */}
-      <div className="vac-hero">
+      <div
+        className="vac-hero"
+        style={heroImageUrl ? { backgroundImage: `url(${heroImageUrl})` } : undefined}
+      >
         <div className="vac-hero-overlay">
           <h1 className="vac-hero-title">
             Построй карьеру<br />в сфере моды

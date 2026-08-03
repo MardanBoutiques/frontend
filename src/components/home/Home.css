@@ -227,71 +227,18 @@ body {
   }
 }
 
-/* ── About teaser (full width, under the three collections) ── */
-.about-teaser {
-  width: 100%;
-}
-
-.about-teaser-image {
+/* ── Info teaser (О компании / Вакансии, full width under the three collections) ── */
+.info-teaser-container {
   width: 100%;
   height: 60vh;
-  background-size: cover;
-  background-position: center;
-  position: relative;
   display: flex;
-  align-items: flex-end;
-}
-
-.about-teaser-overlay {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  padding: var(--spacing-10);
-  background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 65%);
-}
-
-.about-teaser-label {
-  font-size: 0.75rem;
-  font-weight: var(--font-weight-regular);
-  color: rgba(255,255,255,0.8);
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  margin: 0 0 16px;
-}
-
-.about-teaser-quote {
-  font-size: clamp(1.5rem, 3vw, 2.25rem);
-  font-weight: var(--font-weight-regular);
-  color: #fff;
-  line-height: 1.35;
-  letter-spacing: 0.01em;
-  max-width: 640px;
-  margin: 0 0 24px;
-}
-
-.about-teaser-link {
-  display: inline-block;
-  font-size: 0.8125rem;
-  font-weight: var(--font-weight-regular);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #fff;
-  text-decoration: none;
-  border-bottom: 1px solid rgba(255,255,255,0.6);
-  padding-bottom: 4px;
-  transition: opacity 0.2s;
-}
-
-.about-teaser-link:hover {
-  opacity: 0.75;
+  flex-direction: row;
+  overflow: hidden;
 }
 
 @media (max-width: 768px) {
-  .about-teaser-image {
-    height: 70vh;
-  }
-
-  .about-teaser-overlay {
-    padding: var(--spacing-06);
+  .info-teaser-container {
+    height: auto;
+    flex-direction: column;
   }
 }
