@@ -2,13 +2,13 @@
 .support-shell {
   margin-top: 70px;
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 320px 1fr;
   min-height: calc(100vh - 70px);
 }
 
 .support-sidebar {
   border-right: 2px solid var(--color-outline);
-  padding: 64px 32px;
+  padding: 64px 56px 64px 32px;
 }
 
 .support-sidebar nav {
