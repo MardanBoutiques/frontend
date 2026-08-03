@@ -192,22 +192,33 @@
 .about-founders-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2px;
+  gap: 32px;
   margin-bottom: 48px;
-  border: 1px solid var(--color-outline);
 }
 
 .about-founder-card {
   background: #fff;
   display: flex;
   flex-direction: column;
+  border: 1px solid var(--color-outline);
+}
+
+.about-founder-photo-wrap {
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
 }
 
 .about-founder-photo {
-  aspect-ratio: 3 / 4;
+  width: 100%;
+  height: 100%;
   background-color: #f0efec;
   background-size: cover;
   background-position: center;
+  transition: transform var(--tr-duration-in) var(--tr-timing-in);
+}
+
+.about-founder-card:hover .about-founder-photo {
+  transform: scale(1.03);
 }
 
 .about-founder-info {
@@ -285,7 +296,7 @@
 .about-brands-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2px;
+  gap: 32px;
 }
 
 .about-brand-card {
@@ -300,18 +311,37 @@
   background: #f0f0f0;
 }
 
-.about-brand-photo {
+.about-brand-photo-wrap {
   aspect-ratio: 3 / 4;
+  overflow: hidden;
+}
+
+.about-brand-photo {
+  width: 100%;
+  height: 100%;
   background-color: #e8e7e3;
   background-size: cover;
   background-position: center;
+  transition: transform var(--tr-duration-in) var(--tr-timing-in);
+}
+
+.about-brand-card:hover .about-brand-photo {
+  transform: scale(1.03);
 }
 
 .about-brand-info {
   padding: 24px 28px 28px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.about-brand-category {
+  font-size: 0.75rem;
+  font-weight: 100;
+  color: var(--color-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 
 .about-brand-name {
@@ -320,16 +350,6 @@
   color: var(--color-navy);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-}
-
-.about-brand-arrow {
-  font-size: 1.25rem;
-  color: var(--color-secondary);
-  transition: transform 0.2s;
-}
-
-.about-brand-card:hover .about-brand-arrow {
-  transform: translate(3px, -3px);
 }
 
 /* ── Tablet ── */

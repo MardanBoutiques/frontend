@@ -109,10 +109,12 @@ const About = () => {
           <p className="about-label">Команда и основатели</p>
           <div className="about-founders-grid">
             <div className="about-founder-card">
-              <div
-                className="about-founder-photo"
-                style={getImageByType('founder_alikhan') ? { backgroundImage: `url(${getImageByType('founder_alikhan')})` } : undefined}
-              />
+              <div className="about-founder-photo-wrap">
+                <div
+                  className="about-founder-photo"
+                  style={getImageByType('founder_alikhan') ? { backgroundImage: `url(${getImageByType('founder_alikhan')})` } : undefined}
+                />
+              </div>
               <div className="about-founder-info">
                 <a
                   href="https://www.instagram.com/mardanqs/"
@@ -126,10 +128,12 @@ const About = () => {
               </div>
             </div>
             <div className="about-founder-card">
-              <div
-                className="about-founder-photo"
-                style={getImageByType('founder_erkebulan') ? { backgroundImage: `url(${getImageByType('founder_erkebulan')})` } : undefined}
-              />
+              <div className="about-founder-photo-wrap">
+                <div
+                  className="about-founder-photo"
+                  style={getImageByType('founder_erkebulan') ? { backgroundImage: `url(${getImageByType('founder_erkebulan')})` } : undefined}
+                />
+              </div>
               <div className="about-founder-info">
                 <a
                   href="https://www.instagram.com/eklive13/"
@@ -176,13 +180,15 @@ const About = () => {
               rel="noreferrer"
               className="about-brand-card"
             >
-              <div
-                className="about-brand-photo"
-                style={getImageByType('brand_114avenue') ? { backgroundImage: `url(${getImageByType('brand_114avenue')})` } : undefined}
-              />
+              <div className="about-brand-photo-wrap">
+                <div
+                  className="about-brand-photo"
+                  style={getImageByType('brand_114avenue') ? { backgroundImage: `url(${getImageByType('brand_114avenue')})` } : undefined}
+                />
+              </div>
               <div className="about-brand-info">
                 <span className="about-brand-name">114 Avenue</span>
-                <span className="about-brand-arrow">↗</span>
+                <span className="about-brand-category">Очки</span>
               </div>
             </a>
             <a
@@ -191,13 +197,15 @@ const About = () => {
               rel="noreferrer"
               className="about-brand-card"
             >
-              <div
-                className="about-brand-photo"
-                style={getImageByType('brand_inspira') ? { backgroundImage: `url(${getImageByType('brand_inspira')})` } : undefined}
-              />
+              <div className="about-brand-photo-wrap">
+                <div
+                  className="about-brand-photo"
+                  style={getImageByType('brand_inspira') ? { backgroundImage: `url(${getImageByType('brand_inspira')})` } : undefined}
+                />
+              </div>
               <div className="about-brand-info">
                 <span className="about-brand-name">INSPIRA</span>
-                <span className="about-brand-arrow">↗</span>
+                <span className="about-brand-category">Женская одежда</span>
               </div>
             </a>
           </div>
