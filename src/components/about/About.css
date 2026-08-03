@@ -202,11 +202,11 @@
   flex-direction: column;
   border: 1px solid var(--color-outline);
   text-decoration: none;
-  transition: border-color 0.2s;
+  transition: background 0.2s;
 }
 
 .about-founder-card:hover {
-  border-color: var(--color-navy);
+  background: #f0f0f0;
 }
 
 .about-founder-photo-wrap {
@@ -255,6 +255,7 @@
 .about-founders-desc {
   max-width: 620px;
   margin-bottom: 40px;
+  font-size: clamp(1.1rem, 1.8vw, 1.4rem);
 }
 
 /* ── Mission ── */
