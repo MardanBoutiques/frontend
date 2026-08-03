@@ -13,8 +13,12 @@ const About = () => {
       .catch((error) => console.error('Ошибка загрузки изображений:', error));
   }, []);
 
-  const heroImg = images.find((img) => img.image_type === 'about_hero');
-  const heroImageUrl = heroImg ? getImageUrl(heroImg.image) : null;
+  const getImageByType = (imageType) => {
+    const img = images.find((i) => i.image_type === imageType);
+    return img ? getImageUrl(img.image) : null;
+  };
+
+  const heroImageUrl = getImageByType('about_hero');
 
   return (
     <>
@@ -107,7 +111,7 @@ const About = () => {
             <div className="about-founder-card">
               <div
                 className="about-founder-photo"
-                style={{ backgroundImage: "url('/photos/founder-alikhan.jpg')" }}
+                style={getImageByType('founder_alikhan') ? { backgroundImage: `url(${getImageByType('founder_alikhan')})` } : undefined}
               />
               <div className="about-founder-info">
                 <a
@@ -124,7 +128,7 @@ const About = () => {
             <div className="about-founder-card">
               <div
                 className="about-founder-photo"
-                style={{ backgroundImage: "url('/photos/founder-erkebulan.jpg')" }}
+                style={getImageByType('founder_erkebulan') ? { backgroundImage: `url(${getImageByType('founder_erkebulan')})` } : undefined}
               />
               <div className="about-founder-info">
                 <a
@@ -174,7 +178,7 @@ const About = () => {
             >
               <div
                 className="about-brand-photo"
-                style={{ backgroundImage: "url('/photos/brand-114avenue.jpg')" }}
+                style={getImageByType('brand_114avenue') ? { backgroundImage: `url(${getImageByType('brand_114avenue')})` } : undefined}
               />
               <div className="about-brand-info">
                 <span className="about-brand-name">114 Avenue</span>
@@ -189,7 +193,7 @@ const About = () => {
             >
               <div
                 className="about-brand-photo"
-                style={{ backgroundImage: "url('/photos/brand-inspira.jpg')" }}
+                style={getImageByType('brand_inspira') ? { backgroundImage: `url(${getImageByType('brand_inspira')})` } : undefined}
               />
               <div className="about-brand-info">
                 <span className="about-brand-name">INSPIRA</span>
