@@ -1,13 +1,30 @@
+import { useEffect, useState } from 'react';
 import NavBar from '../navbar/NavBar';
+import openAxios from '../../api/axios';
+import { getImageUrl } from '../../utils/imageUrl';
 import './About.css';
 
 const About = () => {
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    openAxios.get('/api/homepage-images/')
+      .then((response) => setImages(response.data))
+      .catch((error) => console.error('Ошибка загрузки изображений:', error));
+  }, []);
+
+  const heroImg = images.find((img) => img.image_type === 'about_hero');
+  const heroImageUrl = heroImg ? getImageUrl(heroImg.image) : null;
+
   return (
     <>
       <NavBar />
 
       {/* Hero */}
-      <div className="about-hero">
+      <div
+        className="about-hero"
+        style={heroImageUrl ? { backgroundImage: `url(${heroImageUrl})` } : undefined}
+      >
         <div className="about-hero-inner">
           <p className="about-hero-eyebrow">Премиальная мужская одежда</p>
           <h1 className="about-hero-title">MARDAN</h1>
