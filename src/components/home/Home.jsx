@@ -180,10 +180,6 @@ const AboutTeaser = ({ image }) => (
     >
       <div className="about-teaser-overlay">
         <p className="about-teaser-label">О компании</p>
-        <h2 className="about-teaser-quote">
-          MARDAN — бренд, рождённый на грани классики и кэжуала.
-        </h2>
-        <Link to="/about" className="about-teaser-link">Узнать больше</Link>
       </div>
     </div>
   </section>

@@ -254,6 +254,7 @@ export const SupportOffer = () => (
       Покупателем для согласования новых условий доставки.
     </p>
 
+    {/* Временно скрыто по просьбе — раздел "6. Возврат и обмен товара"
     <p className="support-label support-subsection-label">6. Возврат и обмен товара</p>
     <p className="support-body">
       6.1. Покупатель вправе отказаться от товара надлежащего качества в течение 10 (десяти) календарных
@@ -267,6 +268,7 @@ export const SupportOffer = () => (
       <br /><br />
       6.4. Расходы по возврату товара надлежащего качества несёт Покупатель.
     </p>
+    */}
 
     <p className="support-label support-subsection-label">7. Права и обязанности сторон</p>
     <p className="support-body">
