@@ -2,7 +2,7 @@
 .support-shell {
   margin-top: 70px;
   display: grid;
-  grid-template-columns: 340px 1fr;
+  grid-template-columns: 280px 1fr;
   min-height: calc(100vh - 70px);
 }
 
@@ -20,8 +20,8 @@
 }
 
 .support-sidebar-link {
-  padding: 10px 0;
-  font-size: 1.5rem;
+  padding: 8px 0;
+  font-size: 1.0625rem;
   font-weight: var(--font-weight-regular);
   text-transform: uppercase;
   letter-spacing: 0.06em;
