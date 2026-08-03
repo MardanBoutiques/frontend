@@ -23,6 +23,7 @@ import {
 } from "./components/support/SupportPages";
 import Vacancies from "./components/vacancies/Vacancies";
 import VacancyDetail from "./components/vacancies/VacancyDetail";
+import ScrollToTop from "./components/ScrollToTop";
 
 const Checkout = lazy(() => import("./components/checkout/Checkout"));
 
@@ -37,6 +38,7 @@ function App() {
   return (
     <CartProvider>
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/catalogue" element={<CatalogueGuard />} />
