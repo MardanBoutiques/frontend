@@ -290,9 +290,9 @@
 }
 
 .about-brands-intro {
-  max-width: 540px;
-  margin-bottom: 40px !important;
-  color: #111;
+  max-width: 620px;
+  margin-bottom: 40px;
+  font-size: clamp(1.1rem, 1.8vw, 1.4rem);
 }
 
 .about-brands-grid {

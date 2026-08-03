@@ -166,7 +166,7 @@ const About = () => {
       <section className="about-section about-brands">
         <div className="about-container">
           <p className="about-label">Дочерние компании</p>
-          <p className="about-body about-brands-intro">
+          <p className="about-quote about-brands-intro">
             MARDAN развивает экосистему брендов, дополняющих основной ассортимент и усиливающих ценностное предложение.
           </p>
           <div className="about-brands-grid">
