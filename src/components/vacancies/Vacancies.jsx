@@ -43,6 +43,7 @@ const Vacancies = () => {
   const [images, setImages] = useState([]);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     openAxios.get('/api/homepage-images/')
       .then((response) => setImages(response.data))
       .catch((error) => console.error('Ошибка загрузки изображений:', error));

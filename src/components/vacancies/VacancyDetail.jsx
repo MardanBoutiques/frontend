@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import NavBar from '../navbar/NavBar';
 import './Vacancies.css';
@@ -42,6 +43,10 @@ const VacancyDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const vacancy = VACANCY_DATA[id];
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
 
   if (!vacancy) {
     navigate('/vacancies');
