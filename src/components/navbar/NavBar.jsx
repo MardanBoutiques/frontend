@@ -76,14 +76,14 @@ const NavBar = ({ children, forHome }) => {
             <a
               href="#"
               className={outerwearOpen ? "active" : ""}
-              onClick={(e) => { e.preventDefault(); setOuterwearOpen(true); }}
+              onClick={(e) => { e.preventDefault(); setOuterwearOpen(true); setAccessoriesOpen(false); }}
             >
               Верхняя одежда
             </a>
             <a
               href="#"
               className={accessoriesOpen ? "active" : ""}
-              onClick={(e) => { e.preventDefault(); setAccessoriesOpen(true); }}
+              onClick={(e) => { e.preventDefault(); setAccessoriesOpen(true); setOuterwearOpen(false); }}
             >
               Аксессуары
             </a>
