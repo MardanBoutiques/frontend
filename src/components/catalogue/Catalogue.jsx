@@ -141,7 +141,9 @@ const Catalogue = () => {
           filtered = filtered.filter(product => product.category === category);
         }
         if (subcategory) {
-          filtered = filtered.filter(product => product.accessory_type === subcategory);
+          filtered = filtered.filter(product =>
+            product.accessory_type === subcategory || product.outerwear_type === subcategory
+          );
         }
 
         setProducts(filtered);
@@ -188,16 +190,21 @@ const Catalogue = () => {
     'wallets': 'Портмоне',
   };
 
+  const outerwearTypeTitles = {
+    'coats': 'Пальто',
+    'trench': 'Тренчи',
+    'jackets': 'Куртки',
+    'vests': 'Жилеты',
+  };
+
   const getCategoryTitle = () => {
-    if (subcategory) return accessoryTypeTitles[subcategory] || '';
+    if (subcategory) return accessoryTypeTitles[subcategory] || outerwearTypeTitles[subcategory] || '';
 
     const categoryTitles = {
       'suits': 'Костюмы',
       'shirts': 'Рубашки',
       'cardigans': 'Кардиганы',
-      'coats': 'Пальто',
-      'trench': 'Тренчи',
-      'jackets': 'Куртки',
+      'outerwear': 'Верхняя одежда',
       'accessories': 'Аксессуары',
       'giftbox': 'Подарочный бокс и карта'
     };
@@ -210,9 +217,7 @@ const Catalogue = () => {
       'suits': 'Наши костюмы — идеальный баланс современного силуэта и легкости, обеспечивающий комфорт в любой ситуации.',
       'shirts': 'Рубашки, созданные для рабочих дней, путешествий и летних вечеров, чтобы вы выглядели элегантно в любой обстановке.',
       'cardigans': 'Кардиганы из премиальных материалов для завершённого образа в любое время года.',
-      'coats': 'Пальто из шерсти и кашемира — элегантность и защита от холода для настоящего джентльмена.',
-      'trench': 'Тренчи классического кроя, вдохновлённые британской традицией и адаптированные для современного гардероба.',
-      'jackets': 'Стильные решения для прохладных дней и путешествий. Легкость в движении и эстетика в каждой детали вашего образа.',
+      'outerwear': 'Верхняя одежда для прохладных дней — от классики до современных силуэтов, для комфорта в любом ритме дня.',
       'accessories': 'Детали, которые делают образ завершенным. От классических акцентов до функциональных аксессуаров на каждый день.',
       'giftbox': 'Подарочные боксы и карты — идеальный подарок для ценителей качественной одежды.'
     };

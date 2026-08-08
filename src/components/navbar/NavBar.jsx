@@ -9,16 +9,19 @@ const NavBar = ({ children, forHome }) => {
   const { getTotalItems } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
   const [accessoriesOpen, setAccessoriesOpen] = useState(false);
+  const [outerwearOpen, setOuterwearOpen] = useState(false);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
     setAccessoriesOpen(false);
+    setOuterwearOpen(false);
   };
 
   const goTo = (path) => {
     navigate(path);
     setMenuOpen(false);
     setAccessoriesOpen(false);
+    setOuterwearOpen(false);
   };
 
   const accessorySubcategories = [
@@ -29,6 +32,11 @@ const NavBar = ({ children, forHome }) => {
     { label: 'Клатчи', value: 'clutches' },
     { label: 'Дипломаты', value: 'briefcases' },
     { label: 'Портмоне', value: 'wallets' },
+  ];
+
+  // Пальто/тренчи/куртки пока не выводим — товаров ещё нет
+  const outerwearSubcategories = [
+    { label: 'Жилеты', value: 'vests' },
   ];
 
   return (
@@ -50,10 +58,13 @@ const NavBar = ({ children, forHome }) => {
       </div>
 
       {/* Fullscreen Menu */}
-      <div className={`sidebar-menu ${menuOpen ? "open" : ""} ${accessoriesOpen ? "drilled" : ""}`}>
+      <div className={`sidebar-menu ${menuOpen ? "open" : ""} ${(accessoriesOpen || outerwearOpen) ? "drilled" : ""}`}>
         <div className="sidebar-topbar">
-          {accessoriesOpen && (
-            <button className="back-btn" onClick={() => setAccessoriesOpen(false)}>&lt;</button>
+          {(accessoriesOpen || outerwearOpen) && (
+            <button
+              className="back-btn"
+              onClick={() => { setAccessoriesOpen(false); setOuterwearOpen(false); }}
+            >&lt;</button>
           )}
           <button className="close-btn" onClick={toggleMenu}>✕</button>
         </div>
@@ -62,6 +73,13 @@ const NavBar = ({ children, forHome }) => {
             <a href="#" onClick={() => goTo("/catalogue?category=suits")}>Костюмы</a>
             <a href="#" onClick={() => goTo("/catalogue?category=shirts")}>Рубашки</a>
             <a href="#" onClick={() => goTo("/catalogue?category=pants")}>Брюки</a>
+            <a
+              href="#"
+              className={outerwearOpen ? "active" : ""}
+              onClick={(e) => { e.preventDefault(); setOuterwearOpen(true); }}
+            >
+              Верхняя одежда
+            </a>
             <a
               href="#"
               className={accessoriesOpen ? "active" : ""}
@@ -74,18 +92,35 @@ const NavBar = ({ children, forHome }) => {
             <a href="#" onClick={() => goTo("/stores")}>Адреса магазинов</a>
           </nav>
 
-          <nav className="sidebar-nav sidebar-nav-sub">
-            {accessorySubcategories.map((sub) => (
-              <a
-                key={sub.label}
-                href="#"
-                className={sub.value ? "sidebar-subnav-item" : "sidebar-subnav-all"}
-                onClick={() => goTo(sub.value ? `/catalogue?category=accessories&subcategory=${sub.value}` : '/catalogue?category=accessories')}
-              >
-                {sub.label}
-              </a>
-            ))}
-          </nav>
+          {accessoriesOpen && (
+            <nav className="sidebar-nav sidebar-nav-sub">
+              {accessorySubcategories.map((sub) => (
+                <a
+                  key={sub.label}
+                  href="#"
+                  className={sub.value ? "sidebar-subnav-item" : "sidebar-subnav-all"}
+                  onClick={() => goTo(sub.value ? `/catalogue?category=accessories&subcategory=${sub.value}` : '/catalogue?category=accessories')}
+                >
+                  {sub.label}
+                </a>
+              ))}
+            </nav>
+          )}
+
+          {outerwearOpen && (
+            <nav className="sidebar-nav sidebar-nav-sub">
+              {outerwearSubcategories.map((sub) => (
+                <a
+                  key={sub.label}
+                  href="#"
+                  className={sub.value ? "sidebar-subnav-item" : "sidebar-subnav-all"}
+                  onClick={() => goTo(sub.value ? `/catalogue?category=outerwear&subcategory=${sub.value}` : '/catalogue?category=outerwear')}
+                >
+                  {sub.label}
+                </a>
+              ))}
+            </nav>
+          )}
         </div>
       </div>
     </>
