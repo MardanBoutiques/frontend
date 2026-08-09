@@ -25,7 +25,6 @@ const NavBar = ({ children, forHome }) => {
   };
 
   const accessorySubcategories = [
-    { label: 'Все аксессуары', value: null },
     { label: 'Галстуки', value: 'ties' },
     { label: 'Платки', value: 'pocket_squares' },
     { label: 'Кардхолдеры', value: 'cardholders' },
@@ -95,12 +94,13 @@ const NavBar = ({ children, forHome }) => {
 
           {accessoriesOpen && (
             <nav className="sidebar-nav sidebar-nav-sub">
+              <p className="sidebar-subnav-heading">Все аксессуары</p>
               {accessorySubcategories.map((sub) => (
                 <a
                   key={sub.label}
                   href="#"
-                  className={sub.value ? "sidebar-subnav-item" : "sidebar-subnav-all"}
-                  onClick={() => goTo(sub.value ? `/catalogue?category=accessories&subcategory=${sub.value}` : '/catalogue?category=accessories')}
+                  className="sidebar-subnav-item"
+                  onClick={() => goTo(`/catalogue?category=accessories&subcategory=${sub.value}`)}
                 >
                   {sub.label}
                 </a>
@@ -110,12 +110,13 @@ const NavBar = ({ children, forHome }) => {
 
           {outerwearOpen && (
             <nav className="sidebar-nav sidebar-nav-sub">
+              <p className="sidebar-subnav-heading">Вся верхняя одежда</p>
               {outerwearSubcategories.map((sub) => (
                 <a
                   key={sub.label}
                   href="#"
-                  className={sub.value ? "sidebar-subnav-item" : "sidebar-subnav-all"}
-                  onClick={() => goTo(sub.value ? `/catalogue?category=outerwear&subcategory=${sub.value}` : '/catalogue?category=outerwear')}
+                  className="sidebar-subnav-item"
+                  onClick={() => goTo(`/catalogue?category=outerwear&subcategory=${sub.value}`)}
                 >
                   {sub.label}
                 </a>
