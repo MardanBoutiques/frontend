@@ -57,7 +57,7 @@ export const SupportFaq = () => {
   const [openFaq, setOpenFaq] = useState(0);
   return (
     <div>
-      <p className="support-label">Частые вопросы</p>
+      <h1 className="support-title">Частые вопросы</h1>
       <div className="support-faq-list">
         {FAQ_ITEMS.map((item, i) => (
           <Accordion
@@ -84,7 +84,7 @@ const DELIVERY_METHODS = [
 
 export const SupportShipping = () => (
   <div>
-    <p className="support-label">Доставка и возврат</p>
+    <h1 className="support-title">Доставка и возврат</h1>
     <p className="support-body">
       Мы отправляем заказы по Казахстану и на международные направления. Точные сроки и стоимость доставки
       менеджер уточнит при подтверждении заказа — они зависят от города и выбранного способа.
@@ -548,8 +548,8 @@ export const SupportPrivacy = () => (
 
 export const SupportContact = () => (
   <div>
-    <p className="support-label">Связаться с нами</p>
-    <h2 className="support-quote">Не нашли ответ? Напишите — ответим быстро.</h2>
+    <h1 className="support-title">Связаться с нами</h1>
+    <p className="support-quote">Не нашли ответ? Напишите — ответим быстро.</p>
     <ContactCards />
     <p className="support-body" style={{ marginTop: 32 }}>
       Или посмотрите <Link to="/stores" className="support-inline-link">адреса бутиков</Link> и запишитесь на примерку.
