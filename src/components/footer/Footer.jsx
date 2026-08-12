@@ -61,9 +61,7 @@ const Footer = () => {
         <span>© {new Date().getFullYear()} MardanBoutiques. Все права защищены.</span>
         <div className="footer-bottom-links">
           <Link to="/about">О компании</Link>
-          {/* Временно скрыто — страница "Поддержка"
           <Link to="/support">Поддержка</Link>
-          */}
           <Link to="/vacancies">Вакансии</Link>
         </div>
       </div>

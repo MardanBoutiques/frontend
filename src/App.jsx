@@ -12,16 +12,15 @@ import GiftCard from "./components/giftcard/GiftCard";
 import Stores from "./components/stores/Stores";
 import Footer from "./components/footer/Footer";
 import About from "./components/about/About";
-// Временно скрыта страница "Поддержка"
-// import SupportLayout from "./components/support/SupportLayout";
-// import {
-//   SupportFaq,
-//   SupportShipping,
-//   SupportTerms,
-//   SupportOffer,
-//   SupportPrivacy,
-//   SupportContact,
-// } from "./components/support/SupportPages";
+import SupportLayout from "./components/support/SupportLayout";
+import {
+  SupportFaq,
+  SupportShipping,
+  SupportTerms,
+  SupportOffer,
+  SupportPrivacy,
+  SupportContact,
+} from "./components/support/SupportPages";
 import Vacancies from "./components/vacancies/Vacancies";
 import VacancyDetail from "./components/vacancies/VacancyDetail";
 import ScrollToTop from "./components/ScrollToTop";
@@ -50,7 +49,6 @@ function App() {
           <Route path="/giftcard" element={<GiftCard />} />
           <Route path="/stores" element={<Stores />} />
           <Route path="/about" element={<About />} />
-          {/* Временно скрыта страница "Поддержка"
           <Route path="/support" element={<SupportLayout />}>
             <Route index element={<Navigate to="faq" replace />} />
             <Route path="faq" element={<SupportFaq />} />
@@ -60,8 +58,6 @@ function App() {
             <Route path="privacy" element={<SupportPrivacy />} />
             <Route path="contact" element={<SupportContact />} />
           </Route>
-          */}
-          <Route path="/support/*" element={<Navigate to="/" replace />} />
           <Route path="/vacancies" element={<Vacancies />} />
           <Route path="/vacancies/:id" element={<VacancyDetail />} />
         </Routes>
