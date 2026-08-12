@@ -179,35 +179,49 @@
   margin: 0 0 20px;
 }
 
-/* ── Delivery grid ── */
-.support-delivery-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2px;
-  margin-top: 32px;
-  border: 1px solid var(--color-outline);
+/* ── Shipping tables ── */
+.support-shipping-table-block {
+  margin-bottom: 8px;
 }
 
-.support-delivery-item {
-  padding: 20px 24px;
-  background: #fff;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+.support-shipping-table-scroll {
+  overflow-x: auto;
 }
 
-.support-delivery-name {
-  font-size: 0.9375rem;
+.support-shipping-table {
+  width: 100%;
+  min-width: 480px;
+  border-collapse: collapse;
+  margin-bottom: 8px;
+}
+
+.support-shipping-table th {
+  text-align: left;
+  padding: 0 24px 12px 0;
+  font-size: 0.6875rem;
   font-weight: var(--font-weight-regular);
-  color: var(--color-navy);
+  color: var(--color-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.1em;
+  border-bottom: 1px solid var(--color-outline);
 }
 
-.support-delivery-note {
-  font-size: 0.75rem;
+.support-shipping-table td {
+  padding: 16px 24px 16px 0;
+  font-size: 0.9375rem;
   font-weight: 100;
+  color: var(--color-navy);
+  vertical-align: top;
+}
+
+.support-shipping-table tr:not(:last-child) td {
+  border-bottom: 1px solid #f0efec;
+}
+
+.support-shipping-note {
+  font-size: 0.8125rem;
   color: var(--color-secondary);
+  margin: 16px 0 48px;
 }
 
 /* ── Tablet ── */
@@ -264,8 +278,13 @@
     padding: 32px 20px;
   }
 
-  .support-contact-cards,
-  .support-delivery-grid {
+  .support-contact-cards {
     grid-template-columns: 1fr;
+  }
+
+  .support-shipping-table th,
+  .support-shipping-table td {
+    padding-right: 16px;
+    font-size: 0.8125rem;
   }
 }

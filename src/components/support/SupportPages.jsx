@@ -73,14 +73,62 @@ export const SupportFaq = () => {
   );
 };
 
-const DELIVERY_METHODS = [
-  { name: "Яндекс Доставка", note: "Алматы и Астана" },
-  { name: "Самовывоз", note: "из бутика в Алматы или Астане" },
-  { name: "Казпочта", note: "по Казахстану" },
-  { name: "RIKA", note: "по Казахстану" },
-  { name: "СДЭК и KAZPOST", note: null },
-  { name: "Международная доставка", note: "СНГ, Турция, ОАЭ и другие страны" },
+const SHIPPING_TABLES = [
+  {
+    title: "Внутри города Алматы и Астана",
+    headers: ["Способ", "Стоимость", "Срок"],
+    rows: [
+      ["Яндекс Доставка", "По тарифу Яндекса", "День в день"],
+      ["Самовывоз", "Бесплатно", "В рабочее время магазина"],
+    ],
+  },
+  {
+    title: "Внутри Казахстана",
+    headers: ["Способ", "Стоимость", "Срок"],
+    rows: [
+      ["Казпочта", "2 000 ₸", "5–9 рабочих дней (до пункта выдачи)"],
+      ["RIKA", "от 3 500 ₸", "2–4 дня (до двери, включая посёлки)"],
+    ],
+  },
+  {
+    title: "СНГ",
+    headers: ["Регион", "Стоимость", "Срок"],
+    rows: [
+      ["СНГ", "По тарифу СДЭК и KAZPOST", "7–14 рабочих дней (до пункта выдачи)"],
+    ],
+  },
+  {
+    title: "Европа и Америка",
+    headers: ["Регион", "Стоимость", "Срок"],
+    rows: [
+      ["Европа", "По тарифу СДЭК и KAZPOST", "от 2 недель (до пункта выдачи)"],
+      ["Америка", "По тарифу СДЭК и KAZPOST", "от 2 недель (до пункта выдачи)"],
+      ["Остальные страны", "По тарифу СДЭК и KAZPOST", "от 2 недель (до пункта выдачи)"],
+    ],
+  },
 ];
+
+const ShippingTable = ({ title, headers, rows }) => (
+  <div className="support-shipping-table-block">
+    <p className="support-label support-subsection-label">{title}</p>
+    <div className="support-shipping-table-scroll">
+      <table className="support-shipping-table">
+        <thead>
+          <tr>
+            {headers.map((h) => <th key={h}>{h}</th>)}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row, i) => (
+            <tr key={i}>
+              {row.map((cell, j) => <td key={j}>{cell}</td>)}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+);
 
 export const SupportShipping = () => (
   <div>
@@ -89,20 +137,20 @@ export const SupportShipping = () => (
       Мы отправляем заказы по Казахстану и на международные направления. Точные сроки и стоимость доставки
       менеджер уточнит при подтверждении заказа — они зависят от города и выбранного способа.
     </p>
-    <div className="support-delivery-grid">
-      {DELIVERY_METHODS.map((m) => (
-        <div key={m.name} className="support-delivery-item">
-          <span className="support-delivery-name">{m.name}</span>
-          {m.note && <span className="support-delivery-note">{m.note}</span>}
-        </div>
-      ))}
-    </div>
+
+    {SHIPPING_TABLES.map((t) => (
+      <ShippingTable key={t.title} title={t.title} headers={t.headers} rows={t.rows} />
+    ))}
+
+    <p className="support-body support-shipping-note">
+      * Возврат в течение 14 дней при сохранении чека, товарного вида и этикеток.
+    </p>
 
     <p className="support-label support-subsection-label">Возврат и обмен</p>
     <p className="support-body">
-      Вы можете отказаться от товара надлежащего качества в течение 10 календарных дней с момента получения
+      Вы можете отказаться от товара надлежащего качества в течение 14 календарных дней с момента получения
       — при условии, что сохранены товарный вид, потребительские свойства, фабричные ярлыки и упаковка.
-      Деньги возвращаются тем же способом, которым была произведена оплата, в течение 10 рабочих дней с
+      Деньги возвращаются тем же способом, которым была произведена оплата, в течение 5 рабочих дней с
       момента получения нами возвращённого товара. Расходы по возврату товара надлежащего качества несёт
       покупатель. Подробные условия — в{" "}
       <Link to="/support/offer" className="support-inline-link">«Публичной оферте»</Link>. Чтобы оформить
