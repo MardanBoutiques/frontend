@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const CONTACT_CARDS = [
-  { label: "Email", value: "mardan.essential@mail.ru", href: "mailto:mardan.essential@mail.ru" },
   { label: "WhatsApp — Алматы", value: "+7 707 165 18 62", href: "https://wa.me/77071651862" },
   { label: "WhatsApp — Астана", value: "+7 771 269 96 45", href: "https://wa.me/77712699645" },
+  { label: "Email", value: "mardan.essential@mail.ru", href: "mailto:mardan.essential@mail.ru" },
 ];
 
 const ContactCards = () => (
