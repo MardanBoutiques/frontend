@@ -114,6 +114,9 @@ export const SupportShipping = () => (
 export const SupportTerms = () => (
   <div>
     <h1 className="support-title">Условия использования сайта</h1>
+    <p className="support-body" style={{ marginBottom: 32, fontSize: '0.8125rem', color: 'var(--color-secondary)' }}>
+      Редакция №1 от 08.08.2026.
+    </p>
 
     <p className="support-body">
       Сайт Mardan — каталог коллекций бутиков Mardan и форма для оформления заявки на заказ. Используя
@@ -168,12 +171,19 @@ export const SupportTerms = () => (
       Мы можем обновлять эти условия — актуальная версия всегда доступна на этой странице. По вопросам,
       связанным с уже подтверждённым заказом, применяются условия, действовавшие на момент подтверждения.
     </p>
+
+    <p className="support-body" style={{ marginTop: 24, fontSize: '0.8125rem', color: 'var(--color-secondary)' }}>
+      Редакция №1 от 08.08.2026.
+    </p>
   </div>
 );
 
 export const SupportOffer = () => (
   <div>
     <h1 className="support-title">Договор публичной оферты</h1>
+    <p className="support-body" style={{ marginBottom: 32, fontSize: '0.8125rem', color: 'var(--color-secondary)' }}>
+      Редакция №1 от 08.08.2026.
+    </p>
     <p className="support-body">
       О продаже товаров дистанционным способом. Республика Казахстан.
     </p>
@@ -464,7 +474,7 @@ export const SupportOffer = () => (
     </p>
 
     <p className="support-body" style={{ marginTop: 24, fontSize: '0.8125rem', color: 'var(--color-secondary)' }}>
-      Редакция от 08.08.2026.
+      Редакция №1 от 08.08.2026.
     </p>
   </div>
 );
@@ -472,6 +482,9 @@ export const SupportOffer = () => (
 export const SupportPrivacy = () => (
   <div>
     <h1 className="support-title">Политика конфиденциальности</h1>
+    <p className="support-body" style={{ marginBottom: 32, fontSize: '0.8125rem', color: 'var(--color-secondary)' }}>
+      Редакция №1 от 08.08.2026.
+    </p>
 
     <p className="support-body">
       Конфиденциальность ваших данных важна для Mardan. Здесь мы объясняем, какие данные собираем при
@@ -525,6 +538,10 @@ export const SupportPrivacy = () => (
     <p className="support-label support-subsection-label">Изменения политики</p>
     <p className="support-body">
       Мы можем время от времени обновлять эту страницу. Актуальная версия всегда доступна здесь.
+    </p>
+
+    <p className="support-body" style={{ marginTop: 24, fontSize: '0.8125rem', color: 'var(--color-secondary)' }}>
+      Редакция №1 от 08.08.2026.
     </p>
   </div>
 );
