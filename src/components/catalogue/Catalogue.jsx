@@ -188,6 +188,7 @@ const Catalogue = () => {
     'clutches': 'Клатчи',
     'briefcases': 'Дипломаты',
     'wallets': 'Портмоне',
+    'belts': 'Ремни',
   };
 
   const outerwearTypeTitles = {
