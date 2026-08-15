@@ -32,6 +32,7 @@ const NavBar = ({ children, forHome }) => {
     { label: 'Дипломаты', value: 'briefcases' },
     { label: 'Портмоне', value: 'wallets' },
     { label: 'Ремни', value: 'belts' },
+    { label: 'Носки', value: 'socks' },
   ];
 
   // Пальто/тренчи/куртки пока не выводим — товаров ещё нет
