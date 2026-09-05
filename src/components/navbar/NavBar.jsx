@@ -35,9 +35,10 @@ const NavBar = ({ children, forHome }) => {
     { label: 'Носки', value: 'socks' },
   ];
 
-  // Пальто/тренчи/куртки пока не выводим — товаров ещё нет
+  // Пальто/тренчи пока не выводим — товаров ещё нет
   const outerwearSubcategories = [
     { label: 'Жилеты', value: 'vests' },
+    { label: 'Куртки', value: 'jackets' },
   ];
 
   return (
