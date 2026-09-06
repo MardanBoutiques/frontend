@@ -22,7 +22,7 @@ const ProductCard = ({ product, variants }) => {
     navigate(`/product/${product.id}`);
   };
 
-  // variants = all products with the same name (including this one)
+  // variants = other color options of this same product (matched by article; see caller)
   const dots = variants
     .map(v => ({ id: v.id, hex: getColorCode(v.colors), label: v.colors }))
     .filter(d => d.hex);
@@ -263,7 +263,12 @@ const Catalogue = () => {
         onClick={() => setFilterChosen(false)}
       >
         {sortedProducts.map((product, index) => {
-          const variants = products.filter(p => p.name === product.name);
+          // Same article = same design in different colors. Matching by name alone
+          // would wrongly group unrelated products that happen to share a name but
+          // have different articles (and are therefore different products).
+          const variants = product.article
+            ? products.filter(p => p.article === product.article)
+            : products.filter(p => p.name === product.name && !p.article);
           return <ProductCard product={product} variants={variants} key={index} />;
         })}
       </Grid>
