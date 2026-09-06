@@ -39,6 +39,7 @@ const NavBar = ({ children, forHome }) => {
   const outerwearSubcategories = [
     { label: 'Жилеты', value: 'vests' },
     { label: 'Куртки', value: 'jackets' },
+    { label: 'Пальто', value: 'coats' },
   ];
 
   return (
