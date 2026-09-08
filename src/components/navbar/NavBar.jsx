@@ -148,6 +148,7 @@ const NavBar = ({ children, forHome }) => {
 
           {suitsOpen && (
             <nav className="sidebar-nav sidebar-nav-sub">
+              <p className="sidebar-subnav-heading">Все костюмы</p>
               {suitMenuItems.map((sub) => (
                 <a
                   key={sub.label}
