@@ -10,11 +10,12 @@ const NavBar = ({ children, forHome }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [accessoriesOpen, setAccessoriesOpen] = useState(false);
   const [outerwearOpen, setOuterwearOpen] = useState(false);
-
+  const [suitsOpen, setSuitsOpen] = useState(false);
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
     setAccessoriesOpen(false);
     setOuterwearOpen(false);
+    setSuitsOpen(false);
   };
 
   const goTo = (path) => {
@@ -22,6 +23,7 @@ const NavBar = ({ children, forHome }) => {
     setMenuOpen(false);
     setAccessoriesOpen(false);
     setOuterwearOpen(false);
+    setSuitsOpen(false);
   };
 
   const accessorySubcategories = [
@@ -34,6 +36,16 @@ const NavBar = ({ children, forHome }) => {
     { label: 'Ремни', value: 'belts' },
     { label: 'Носки', value: 'socks' },
   ];
+
+
+  const suitSubcategories = [
+    { label: 'Комплекты', value: 'set' },
+  ];
+  const suitSeparates = [
+    { label: 'Пиджаки', value: 'jacket' },
+    { label: 'Брюки', value: 'trousers' },
+  ];
+
 
   // Пальто/тренчи пока не выводим — товаров ещё нет
   const outerwearSubcategories = [
@@ -61,33 +73,39 @@ const NavBar = ({ children, forHome }) => {
       </div>
 
       {/* Fullscreen Menu */}
-      <div className={`sidebar-menu ${menuOpen ? "open" : ""} ${(accessoriesOpen || outerwearOpen) ? "drilled" : ""}`}>
+      <div className={`sidebar-menu ${menuOpen ? "open" : ""} ${(accessoriesOpen || outerwearOpen || suitsOpen) ? "drilled" : ""}`}>
         <div className="sidebar-topbar">
-          {(accessoriesOpen || outerwearOpen) && (
+          {(accessoriesOpen || outerwearOpen || suitsOpen) && (
             <button
               className="back-btn"
-              onClick={() => { setAccessoriesOpen(false); setOuterwearOpen(false); }}
+              onClick={() => { setAccessoriesOpen(false); setOuterwearOpen(false); setSuitsOpen(false); }}
             >&lt;</button>
           )}
           <button className="close-btn" onClick={toggleMenu}>✕</button>
         </div>
         <div className="sidebar-columns">
           <nav className="sidebar-nav sidebar-nav-main">
-            <a href="#" onClick={() => goTo("/catalogue?category=suits")}>Костюмы</a>
+            <a
+              href="#"
+              className={suitsOpen ? "active" : ""}
+              onClick={(e) => { e.preventDefault(); setSuitsOpen(true); setAccessoriesOpen(false); setOuterwearOpen(false); }}
+            >
+              Костюмы
+            </a>
             <a href="#" onClick={() => goTo("/catalogue?category=shirts")}>Рубашки</a>
             <a href="#" onClick={() => goTo("/catalogue?category=pants")}>Брюки</a>
             <a href="#" onClick={() => goTo("/catalogue?category=knitwear")}>Трикотаж</a>
             <a
               href="#"
               className={outerwearOpen ? "active" : ""}
-              onClick={(e) => { e.preventDefault(); setOuterwearOpen(true); setAccessoriesOpen(false); }}
+              onClick={(e) => { e.preventDefault(); setOuterwearOpen(true); setAccessoriesOpen(false); setSuitsOpen(false); }}
             >
               Верхняя одежда
             </a>
             <a
               href="#"
               className={accessoriesOpen ? "active" : ""}
-              onClick={(e) => { e.preventDefault(); setAccessoriesOpen(true); setOuterwearOpen(false); }}
+              onClick={(e) => { e.preventDefault(); setAccessoriesOpen(true); setOuterwearOpen(false); setSuitsOpen(false); }}
             >
               Аксессуары
             </a>
@@ -121,6 +139,32 @@ const NavBar = ({ children, forHome }) => {
                   href="#"
                   className="sidebar-subnav-item"
                   onClick={() => goTo(`/catalogue?category=outerwear&subcategory=${sub.value}`)}
+                >
+                  {sub.label}
+                </a>
+              ))}
+            </nav>
+          )}
+
+          {suitsOpen && (
+            <nav className="sidebar-nav sidebar-nav-sub">
+              {suitSubcategories.map((sub) => (
+                <a
+                  key={sub.label}
+                  href="#"
+                  className="sidebar-subnav-item"
+                  onClick={() => goTo(`/catalogue?category=suits&subcategory=${sub.value}`)}
+                >
+                  {sub.label}
+                </a>
+              ))}
+              <p className="sidebar-subnav-heading">По отдельности</p>
+              {suitSeparates.map((sub) => (
+                <a
+                  key={sub.label}
+                  href="#"
+                  className="sidebar-subnav-item"
+                  onClick={() => goTo(`/catalogue?category=suits&subcategory=${sub.value}`)}
                 >
                   {sub.label}
                 </a>

@@ -142,7 +142,7 @@ const Catalogue = () => {
         }
         if (subcategory) {
           filtered = filtered.filter(product =>
-            product.accessory_type === subcategory || product.outerwear_type === subcategory
+            product.accessory_type === subcategory || product.outerwear_type === subcategory || product.suit_type === subcategory
           );
         }
 
@@ -199,8 +199,14 @@ const Catalogue = () => {
     'vests': 'Жилеты',
   };
 
+  const suitTypeTitles = {
+    'set': 'Комплекты',
+    'jacket': 'Пиджаки',
+    'trousers': 'Брюки',
+  };
+
   const getCategoryTitle = () => {
-    if (subcategory) return accessoryTypeTitles[subcategory] || outerwearTypeTitles[subcategory] || '';
+    if (subcategory) return accessoryTypeTitles[subcategory] || outerwearTypeTitles[subcategory] || suitTypeTitles[subcategory] || '';
 
     const categoryTitles = {
       'suits': 'Костюмы',
