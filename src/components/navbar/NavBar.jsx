@@ -38,12 +38,12 @@ const NavBar = ({ children, forHome }) => {
   ];
 
 
-  const suitSubcategories = [
-    { label: 'Комплекты', value: 'set' },
-  ];
-  const suitSeparates = [
-    { label: 'Пиджаки', value: 'jacket' },
-    { label: 'Брюки', value: 'trousers' },
+  const suitMenuItems = [
+    { label: 'Комплекты', path: '/catalogue?category=suits&subcategory=set' },
+    { label: 'Пиджаки', path: '/catalogue?category=suits&subcategory=jacket' },
+    // Брюки к костюмам уже есть в общей категории "Брюки" — ведём туда напрямую,
+    // а не в отдельный suit_type, чтобы не дублировать и не переносить товары.
+    { label: 'Брюки', path: '/catalogue?category=pants' },
   ];
 
 
@@ -148,12 +148,12 @@ const NavBar = ({ children, forHome }) => {
 
           {suitsOpen && (
             <nav className="sidebar-nav sidebar-nav-sub">
-              {[...suitSubcategories, ...suitSeparates].map((sub) => (
+              {suitMenuItems.map((sub) => (
                 <a
                   key={sub.label}
                   href="#"
                   className="sidebar-subnav-item"
-                  onClick={() => goTo(`/catalogue?category=suits&subcategory=${sub.value}`)}
+                  onClick={() => goTo(sub.path)}
                 >
                   {sub.label}
                 </a>
