@@ -148,18 +148,7 @@ const NavBar = ({ children, forHome }) => {
 
           {suitsOpen && (
             <nav className="sidebar-nav sidebar-nav-sub">
-              {suitSubcategories.map((sub) => (
-                <a
-                  key={sub.label}
-                  href="#"
-                  className="sidebar-subnav-item"
-                  onClick={() => goTo(`/catalogue?category=suits&subcategory=${sub.value}`)}
-                >
-                  {sub.label}
-                </a>
-              ))}
-              <p className="sidebar-subnav-heading">По отдельности</p>
-              {suitSeparates.map((sub) => (
+              {[...suitSubcategories, ...suitSeparates].map((sub) => (
                 <a
                   key={sub.label}
                   href="#"
