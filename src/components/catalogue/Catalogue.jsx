@@ -202,7 +202,6 @@ const Catalogue = () => {
   const suitTypeTitles = {
     'set': 'Комплекты',
     'jacket': 'Пиджаки',
-    'trousers': 'Брюки',
   };
 
   const getCategoryTitle = () => {

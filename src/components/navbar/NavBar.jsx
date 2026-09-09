@@ -93,7 +93,6 @@ const NavBar = ({ children, forHome }) => {
               Костюмы
             </a>
             <a href="#" onClick={() => goTo("/catalogue?category=shirts")}>Рубашки</a>
-            <a href="#" onClick={() => goTo("/catalogue?category=pants")}>Брюки</a>
             <a href="#" onClick={() => goTo("/catalogue?category=knitwear")}>Трикотаж</a>
             <a
               href="#"
