@@ -94,6 +94,7 @@ const NavBar = ({ children, forHome }) => {
             </a>
             <a href="#" onClick={() => goTo("/catalogue?category=shirts")}>Рубашки</a>
             <a href="#" onClick={() => goTo("/catalogue?category=knitwear")}>Трикотаж</a>
+            <a href="#" onClick={() => goTo("/catalogue?category=shoes")}>Обувь</a>
             <a
               href="#"
               className={outerwearOpen ? "active" : ""}
