@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import NavBar from "../navbar/NavBar";
+import openAxios from "../../api/axios";
+import { getImageUrl } from "../../utils/imageUrl";
 import "./Stores.css";
 
 
@@ -85,6 +87,19 @@ export default function Stores() {
   const [selected, setSelected] = useState(null);
   const today = getTodayName();
   const [, forceUpdate] = useState(0);
+  const [images, setImages] = useState([]);
+
+  // Фото бутиков из админки; если не загружено — остаётся файл из репозитория
+  useEffect(() => {
+    openAxios.get('/api/homepage-images/')
+      .then((response) => setImages(response.data))
+      .catch((error) => console.error('Ошибка загрузки изображений:', error));
+  }, []);
+
+  const photoFor = (store) => {
+    const uploaded = images.find((i) => i.image_type === `store_${store.id}`);
+    return uploaded ? getImageUrl(uploaded.image) : store.photo;
+  };
 
   // Обновляем статус каждую минуту
   useEffect(() => {
@@ -103,9 +118,9 @@ export default function Stores() {
       <>
         <NavBar forHome={false} />
         <div className="store-detail">
-          {store.photo && (
+          {photoFor(store) && (
             <div className="store-detail-photo">
-              <img src={store.photo} alt={store.city} />
+              <img src={photoFor(store)} alt={store.city} />
             </div>
           )}
 
@@ -169,7 +184,7 @@ export default function Stores() {
           {STORES.map((store) => (
             <div key={store.id} className="store-card" onClick={() => setSelected(store.id)}>
               <div className="store-card-photo">
-                <img src={store.photo} alt={store.city} />
+                <img src={photoFor(store)} alt={store.city} />
               </div>
               <div className="store-card-info">
                 <h2>{store.city}</h2>
