@@ -18,6 +18,22 @@
   display: block;
 }
 
+/* Dims the page behind the menu */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1001;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 /* Fullscreen Menu */
 .sidebar-menu {
   position: fixed;
@@ -88,6 +104,8 @@
   display: flex;
   gap: 40px;
   margin-top: 60px;
+  flex: 1;
+  min-height: 0;
 }
 
 .sidebar-nav {
@@ -101,12 +119,19 @@
   padding: 14px 0;
   color: var(--color-navy);
   text-decoration: none;
-  font-size: 1.5rem;
+  font-size: 1.1875rem;
   font-weight: var(--font-weight-regular);
   text-transform: uppercase;
   letter-spacing: 0.06em;
+  white-space: nowrap;
   transition: opacity 0.2s ease;
   margin: 0;
+}
+
+/* Keep the main column at its natural width so long labels don't wrap
+   when a submenu opens next to it */
+.sidebar-nav-main {
+  flex-shrink: 0;
 }
 
 .sidebar-nav .sidebar-subnav-heading {
@@ -124,12 +149,24 @@
 
 /* Second column (accessory subcategories) — hidden until drilled in */
 .sidebar-nav-sub {
+  position: relative;
   opacity: 0;
   pointer-events: none;
   transform: translateX(-8px);
   transition: opacity 0.25s ease, transform 0.25s ease;
   padding-left: 80px;
-  border-left: 1px solid #e0e0e0;
+}
+
+/* Divider runs the full height of the screen, not just the list.
+   Offsets cancel out .sidebar-menu's 40px padding and .sidebar-columns' 60px margin. */
+.sidebar-nav-sub::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: -100px;
+  bottom: -40px;
+  width: 1px;
+  background: #e0e0e0;
 }
 
 .sidebar-menu.drilled .sidebar-nav-sub {
@@ -139,13 +176,13 @@
 }
 
 .sidebar-nav-sub .sidebar-subnav-heading {
-  font-size: 1.5rem;
+  font-size: 1.1875rem;
   font-weight: var(--font-weight-regular);
   margin: 0 0 4px;
 }
 
 .sidebar-nav-sub a.sidebar-subnav-item {
-  font-size: 1.25rem;
+  font-size: 0.9375rem;
   font-weight: var(--font-weight-light);
 }
 
@@ -213,6 +250,39 @@
   width: 24px;
 }
 
+/* Right-side navbar links, sitting just left of the cart icon */
+.navbar-links {
+  position: absolute;
+  /* cart icon sits at right: 20px and is 24px wide, so 44px + the same 24px
+     gap used between the links themselves */
+  right: 68px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.navbar-links a {
+  font-size: 0.6875rem;
+  font-weight: var(--font-weight-regular);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-navy);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 0.2s ease;
+}
+
+.navbar-links a:hover {
+  opacity: 0.5;
+}
+
+/* Shown only in the burger menu on mobile, where .navbar-links is hidden */
+.sidebar-mobile-only {
+  display: none;
+}
+
 /* Cart Badge */
 .cart-icon {
   position: relative;
@@ -255,10 +325,25 @@
   z-index: 10;
 }
 
+/* Desktop: open as a half-width side panel instead of full screen */
+@media (min-width: 769px) {
+  .sidebar-menu {
+    width: 50vw;
+  }
+}
+
 /* Mobile responsive */
 @media (max-width: 768px) {
   .burger-menu {
     left: 15px;
+  }
+
+  .navbar-links {
+    display: none;
+  }
+
+  .sidebar-nav .sidebar-mobile-only {
+    display: block;
   }
 
   .back-btn {
@@ -270,15 +355,15 @@
   }
 
   .sidebar-nav a {
-    font-size: 1.125rem;
+    font-size: 1rem;
   }
 
   .sidebar-nav-sub .sidebar-subnav-heading {
-    font-size: 1.125rem;
+    font-size: 1rem;
   }
 
   .sidebar-nav-sub a.sidebar-subnav-item {
-    font-size: 0.95rem;
+    font-size: 0.825rem;
   }
 
   /* Not enough width for two columns side by side — drill down instead:
@@ -304,6 +389,10 @@
     inset: 0;
     transform: none;
     padding-left: 0;
-    border-left: none;
+  }
+
+  /* No divider in the mobile drill-down — the sub list replaces the main one */
+  .sidebar-nav-sub::before {
+    display: none;
   }
 }

@@ -10,33 +10,6 @@ import { getImageUrl } from "../../utils/imageUrl";
 //   return <div className="background-container">{element}</div>;
 // }
 
-const listener = () => {
-  const heroContentOverlayDarkening = document.querySelector(
-    ".hero-content-overlay-darkening"
-  );
-  const heroContentOverlay = document.querySelector(".hero-content-overlay");
-  const scrollPosition = window.scrollY;
-
-  if (scrollPosition > 500) {
-    heroContentOverlayDarkening.style.opacity = "0";
-    heroContentOverlay.style.opacity = "0";
-    setTimeout(() => {
-      heroContentOverlayDarkening.style.visibility = "hidden";
-      heroContentOverlay.style.visibility = "hidden";
-    }, 400);
-    return;
-  } else {
-    heroContentOverlayDarkening.style.visibility = "visible";
-    heroContentOverlay.style.visibility = "visible";
-    heroContentOverlayDarkening.style.opacity = "1";
-    heroContentOverlay.style.opacity = "1";
-  }
-
-  // Adjust the background darkness based on scroll
-  const darkenFactor = Math.min(scrollPosition / 700, 0.4);
-  heroContentOverlayDarkening.style.backgroundColor = `rgba(0, 0, 0, ${darkenFactor})`;
-};
-
 function iconsWhite() {
   const icons = document.querySelectorAll(".icon-1");
 
@@ -65,26 +38,12 @@ function iconsDark() {
   });
 }
 
-let lastScrollTop = 0;
-
-// Create an observer instance
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach((entry) => {
-    if (entry.isIntersecting) {
-      const homeSection = entry.target;
-
-      const pictures = homeSection.querySelector(".pictures");
-      pictures.style.animation = "darkenBackground 1s ease-in-out forwards";
-    }
-  });
-});
-
 const listener2 = () => {
-  const scrollPosition = window.scrollY;
-
   const navbar = document.querySelector("#navbar-home");
+  if (!navbar) return;
 
-  if (scrollPosition > 200) {
+  // Icons stay light while the pinned hero is on screen, then go dark
+  if (window.scrollY > HERO_COVER_START_PX()) {
     iconsDark();
   } else {
     iconsWhite();
@@ -93,128 +52,147 @@ const listener2 = () => {
   navbar.style.top = "0";
 };
 
-const HeroSection = ({ children, heroImage }) => {
+const HERO_CATEGORIES = [
+  { label: 'Новые поступления', path: '/catalogue?category=new' },
+  { label: 'Костюмы', path: '/catalogue?category=suits&subcategory=set' },
+  { label: 'Пиджаки', path: '/catalogue?category=suits&subcategory=jacket' },
+  { label: 'Рубашки', path: '/catalogue?category=shirts' },
+  { label: 'Брюки', path: '/catalogue?category=pants' },
+  { label: 'Обувь', path: '/catalogue?category=shoes' },
+  { label: 'Аксессуары', path: '/catalogue?category=accessories' },
+];
+
+// Hero timeline, in scroll pixels (keep in sync with .hero-pin-wrap height):
+//   0 … REVEAL        — список категорий разворачивается
+//   REVEAL … +HOLD    — hero держится на месте с полным списком
+//   затем             — следующий блок наезжает сверху
+const HERO_REVEAL_PX = () => window.innerHeight;
+const HERO_HOLD_PX = () => window.innerHeight * 0.5;
+const HERO_COVER_START_PX = () => HERO_REVEAL_PX() + HERO_HOLD_PX();
+const HERO_TOTAL_PX = () => HERO_COVER_START_PX() + window.innerHeight;
+
+const HeroSection = ({ heroImage, visibleCount, hidden }) => {
   const heroStyle = heroImage ? { backgroundImage: `url(${heroImage})` } : {};
-  
+
   return (
-    <>
-      <div className="hero-placeholder"></div>
-      <div className="hero-content-overlay" style={heroStyle}></div>
-      <div className="hero-content-overlay-darkening"></div>
-      <section className="hero-section">
+    <div className="hero-pin-wrap">
+      <div className={`hero-fixed ${hidden ? 'is-hidden' : ''}`}>
         <div className="hero-picture" style={heroStyle}></div>
         <div className="hero-picture-darkening"></div>
-        <div className="hero-section-menu">{children}</div>
+        <nav className="hero-section-menu">
+          {HERO_CATEGORIES.map((c, i) => (
+            <Link
+              key={c.label}
+              to={c.path}
+              className={`hero-nav-item ${i < visibleCount ? 'is-shown' : ''}`}
+            >
+              {c.label}
+            </Link>
+          ))}
+        </nav>
+      </div>
+    </div>
+  );
+};
+
+const CollectionTile = ({ to, label, image }) => (
+  <Link to={to} className="collection-section">
+    <div
+      className="collection-image-full"
+      style={{
+        backgroundImage: image ? `url(${image})` : 'none',
+        backgroundColor: image ? 'transparent' : '#1a1a1a',
+      }}
+    >
+      <div className="collection-overlay">
+        <div className="collection-cta">{label}</div>
+      </div>
+    </div>
+  </Link>
+);
+
+const HomeSections = ({ images }) => {
+  const img = (imageType) => {
+    const image = images.find((i) => i.image_type === imageType);
+    return image ? getImageUrl(image.image) : null;
+  };
+
+  // Reveal each block once it scrolls into view
+  useEffect(() => {
+    const targets = document.querySelectorAll('[data-reveal]');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    targets.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [images]);
+
+  return (
+    <div className="home-stack">
+      <section className="home-row" data-reveal>
+        <CollectionTile to="/catalogue?category=suits" label="Костюмы" image={img('section1')} />
+        <CollectionTile to="/catalogue?category=outerwear" label="Верхняя одежда" image={img('section2')} />
       </section>
-    </>
-  );
-};
 
-const HeroPictures = ({ images }) => {
-  const getImageByType = (imageType) => {
-    const image = images.find(img => img.image_type === imageType);
-    return image ? getImageUrl(image.image) : null;
-  };
+      <section className="home-row" data-reveal>
+        <CollectionTile to="/catalogue?category=polo" label="Поло и футболки" image={img('section4')} />
+        <CollectionTile to="/giftbox" label="Подарочный гид" image={img('section5')} />
+      </section>
 
-  return (
-    <section className="collections-container">
-      <Link to="/catalogue?category=suits" className="collection-section">
-        <div
-          className="collection-image-full"
-          style={{
-            backgroundImage: getImageByType('section1') ? `url(${getImageByType('section1')})` : 'none',
-            backgroundColor: getImageByType('section1') ? 'transparent' : '#1a1a1a',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
-          }}
-        >
-          <div className="collection-overlay">
-            <div className="collection-cta">Костюмы</div>
-          </div>
+      <Link to="/stores" className="home-row home-stores" data-reveal>
+        <div className="home-statement">
+          <h2 className="home-statement-title">Your Daily Comfort</h2>
+          <p className="home-statement-text">
+            Ждем вас в наших бутиках для примерки, подбора идеального размера и консультации стилистов.
+          </p>
         </div>
-      </Link>
-
-      <Link to="/catalogue?category=pants" className="collection-section">
         <div
-          className="collection-image-full"
+          className="home-stores-photo"
           style={{
-            backgroundImage: getImageByType('section2') ? `url(${getImageByType('section2')})` : 'none',
-            backgroundColor: getImageByType('section2') ? 'transparent' : '#1a1a1a',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
+            backgroundImage: img('section6') ? `url(${img('section6')})` : 'none',
+            backgroundColor: img('section6') ? 'transparent' : '#1a1a1a',
           }}
-        >
-          <div className="collection-overlay">
-            <div className="collection-cta">Брюки</div>
-          </div>
-        </div>
+        />
       </Link>
-
-      <Link to="/catalogue?category=shirts" className="collection-section">
-        <div
-          className="collection-image-full"
-          style={{
-            backgroundImage: getImageByType('section3') ? `url(${getImageByType('section3')})` : 'none',
-            backgroundColor: getImageByType('section3') ? 'transparent' : '#1a1a1a',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
-          }}
-        >
-          <div className="collection-overlay">
-            <div className="collection-cta">Рубашки</div>
-          </div>
-        </div>
-      </Link>
-    </section>
-  );
-};
-
-const InfoTeaser = ({ images }) => {
-  const getImageByType = (imageType) => {
-    const image = images.find((img) => img.image_type === imageType);
-    return image ? getImageUrl(image.image) : null;
-  };
-
-  return (
-    <section className="info-teaser-container">
-      <Link to="/about" className="collection-section">
-        <div
-          className="collection-image-full"
-          style={{
-            backgroundImage: getImageByType('about_hero') ? `url(${getImageByType('about_hero')})` : 'none',
-            backgroundColor: getImageByType('about_hero') ? 'transparent' : '#1a1a1a',
-          }}
-        >
-          <div className="collection-overlay">
-            <div className="collection-cta">О компании</div>
-          </div>
-        </div>
-      </Link>
-
-      <Link to="/vacancies" className="collection-section">
-        <div
-          className="collection-image-full"
-          style={{
-            backgroundImage: getImageByType('vacancies_hero') ? `url(${getImageByType('vacancies_hero')})` : 'none',
-            backgroundColor: getImageByType('vacancies_hero') ? 'transparent' : '#1a1a1a',
-          }}
-        >
-          <div className="collection-overlay">
-            <div className="collection-cta">Вакансии</div>
-          </div>
-        </div>
-      </Link>
-    </section>
+    </div>
   );
 };
 
 export default function Home() {
   const [images, setImages] = useState([]);
+  // Hero держит экран, пока прокрутка разворачивает список категорий:
+  // 1 категория в самом верху → все к концу закреплённого участка.
+  const [visibleCount, setVisibleCount] = useState(1);
+  const [heroHidden, setHeroHidden] = useState(false);
 
   const getHeroImage = () => {
     const heroImg = images.find(img => img.image_type === 'hero');
     return heroImg ? getImageUrl(heroImg.image) : null;
   };
+
+  useEffect(() => {
+    const onScroll = () => {
+      const progress = Math.min(1, Math.max(0, window.scrollY / HERO_REVEAL_PX()));
+      setVisibleCount(1 + Math.round(progress * (HERO_CATEGORIES.length - 1)));
+      // Once the next block has fully covered the hero, drop it from the paint
+      setHeroHidden(window.scrollY > HERO_TOTAL_PX());
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, []);
 
   useEffect(() => {
     // Загружаем изображения с API
@@ -230,11 +208,10 @@ export default function Home() {
 
     fetchImages();
 
-    window.addEventListener("scroll", listener);
     window.addEventListener("scroll", listener2);
+    listener2();
 
     return () => {
-      window.removeEventListener("scroll", listener);
       window.removeEventListener("scroll", listener2);
     };
   }, []);
@@ -245,16 +222,8 @@ export default function Home() {
         <span></span>
         <span></span>
       </NavBar>
-      <HeroSection heroImage={getHeroImage()}>
-        <Link to="/catalogue?category=suits">Костюмы</Link>
-        <Link to="/catalogue?category=shirts">Рубашки</Link>
-        <Link to="/catalogue?category=pants">Брюки</Link>
-        <Link to="/catalogue?category=accessories">Аксессуары</Link>
-        <Link to="/giftbox">Подарочный бокс</Link>
-        <Link to="/giftcard">Подарочная карта</Link>
-      </HeroSection>
-      <HeroPictures images={images} />
-      <InfoTeaser images={images} />
+      <HeroSection heroImage={getHeroImage()} visibleCount={visibleCount} hidden={heroHidden} />
+      <HomeSections images={images} />
     </>
   );
 }

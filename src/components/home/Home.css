@@ -8,11 +8,25 @@ body {
   overflow-x: hidden;
 }
 
-.hero-section {
+/* Spacer reserving the scroll the pinned hero consumes (see Home.jsx):
+   100vh reveal + 50vh hold + 100vh for the next block to cover it */
+.hero-pin-wrap {
   position: relative;
   width: 100%;
-  height: 100vh;
+  height: 250vh;
+}
+
+.hero-fixed {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
   overflow: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.hero-fixed.is-hidden {
+  opacity: 0;
+  visibility: hidden;
 }
 
 .hero-picture {
@@ -38,6 +52,8 @@ body {
   transition: background-color var(--tr-duration-in) var(--tr-timing-in);
 }
 
+/* Category list over the hero: anchored to the bottom, so items unfolding
+   below "Новинки" push the whole list upward. */
 .hero-section-menu {
   position: absolute;
   bottom: var(--spacing-10);
@@ -45,53 +61,123 @@ body {
   z-index: 10;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-04);
+  gap: 0;
 }
 
 .hero-section-menu a {
   color: var(--color-surface);
-  font-size: 0.8125rem;
+  font-size: clamp(1.25rem, 2vw, 1.875rem);
   font-weight: var(--font-weight-regular);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.01em;
+  line-height: 1.3;
+  padding: 3px 0;
   text-decoration: none;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  transition: opacity var(--tr-duration-out) var(--tr-timing-out);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  transition: opacity 0.45s ease, max-height 0.45s ease, transform 0.45s ease;
+}
+
+/* Items unfold one by one as the pinned hero is scrolled through */
+.hero-nav-item {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transform: translateY(10px);
+}
+
+.hero-nav-item.is-shown {
+  max-height: 3.5rem;
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-nav-item {
+    transition: none;
+  }
 }
 
 .hero-section-menu a:hover {
   opacity: 0.7;
 }
 
-.hero-content-overlay,
-.hero-content-overlay-darkening {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  z-index: 3;
-  pointer-events: none;
-  transition: opacity var(--tr-duration-in) var(--tr-timing-in), 
-              visibility var(--tr-duration-in) var(--tr-timing-in);
+/* Content scrolls up over the pinned hero */
+.home-stack {
+  position: relative;
+  z-index: 2;
+  background: #fff;
 }
 
-.hero-content-overlay {
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-.hero-placeholder {
-  display: none;
-}
-
-.collections-container {
+/* Each row of homepage tiles is exactly as tall as the hero */
+.home-row {
   width: 100%;
   height: 100vh;
   display: flex;
   flex-direction: row;
   overflow: hidden;
+}
+
+/* Scroll reveal: blocks fade and rise into place as they enter the viewport */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(48px);
+  transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal],
+  [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+
+/* Last row: one solid block — white statement to the exact middle, store photo right */
+.home-stores {
+  text-decoration: none;
+}
+
+.home-statement {
+  flex: 0 0 50%;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--spacing-10);
+}
+
+.home-statement-title {
+  font-size: clamp(2rem, 4.5vw, 4.5rem);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-navy);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1.05;
+  margin: 0 0 24px;
+}
+
+.home-statement-text {
+  font-size: 1rem;
+  font-weight: 100;
+  color: var(--color-navy);
+  opacity: 0.7;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+  margin: 0;
+  max-width: 420px;
+}
+
+.home-stores-photo {
+  flex: 0 0 50%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .collection-section {
@@ -130,15 +216,17 @@ body {
   background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 60%);
 }
 
+/* Same type treatment as the hero category list */
 .collection-cta {
   position: absolute;
   bottom: var(--spacing-10);
   left: var(--spacing-10);
-  font-size: 0.8125rem;
+  font-size: clamp(1.25rem, 2vw, 1.875rem);
   font-weight: var(--font-weight-regular);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.01em;
+  line-height: 1.3;
   color: var(--color-surface);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
   pointer-events: none;
   z-index: 10;
 }
@@ -198,11 +286,24 @@ body {
 }
 
 @media (max-width: 768px) {
-  .collections-container {
+  .home-row {
     height: auto;
     flex-direction: column;
   }
-  
+
+  .home-statement {
+    flex: none;
+    width: 100%;
+    padding: var(--spacing-08) var(--spacing-06);
+    min-height: 60vh;
+  }
+
+  .home-stores-photo {
+    flex: none;
+    width: 100%;
+    height: 70vh;
+  }
+
   .collection-section {
     height: auto;
   }
@@ -212,7 +313,7 @@ body {
   }
   
   .collection-cta {
-    font-size: 0.8125rem;
+    font-size: 1.125rem;
     bottom: var(--spacing-06);
     left: var(--spacing-06);
   }
@@ -223,22 +324,7 @@ body {
   }
 
   .hero-section-menu a {
-    font-size: 0.8125rem;
+    font-size: 1.125rem;
   }
 }
 
-/* ── Info teaser (О компании / Вакансии, full width under the three collections) ── */
-.info-teaser-container {
-  width: 100%;
-  height: 60vh;
-  display: flex;
-  flex-direction: row;
-  overflow: hidden;
-}
-
-@media (max-width: 768px) {
-  .info-teaser-container {
-    height: auto;
-    flex-direction: column;
-  }
-}
