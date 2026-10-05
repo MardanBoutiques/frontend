@@ -68,11 +68,6 @@ const ProductCard = ({ product, variants }) => {
             >
               ›
             </button>
-            <div className="product-photo-dots">
-              {photos.map((_, i) => (
-                <span key={i} className={i === photoIndex ? 'is-active' : ''} />
-              ))}
-            </div>
           </>
         )}
       </div>

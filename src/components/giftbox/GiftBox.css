@@ -181,7 +181,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2px;
-  background: #ebebeb;
+  background: #fff;
 }
 
 .giftbox-product-card {
