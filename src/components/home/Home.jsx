@@ -111,7 +111,7 @@ const CollectionTile = ({ to, label, image }) => (
   </Link>
 );
 
-const HomeSections = ({ images }) => {
+const HomeSections = ({ images, giftBoxImage }) => {
   const img = (imageType) => {
     const image = images.find((i) => i.image_type === imageType);
     return image ? getImageUrl(image.image) : null;
@@ -144,7 +144,8 @@ const HomeSections = ({ images }) => {
 
       <section className="home-row" data-reveal>
         <CollectionTile to="/catalogue?category=polo" label="Поло и футболки" image={img('section4')} />
-        <CollectionTile to="/giftbox" label="Подарочный гид" image={img('section5')} />
+        {/* Берём вторую карточку подарочного бокса; отдельный слот — запасной вариант */}
+        <CollectionTile to="/giftbox" label="Подарочный гид" image={giftBoxImage || img('section5')} />
       </section>
 
       <Link to="/stores" className="home-row home-stores" data-reveal>
@@ -168,6 +169,7 @@ const HomeSections = ({ images }) => {
 
 export default function Home() {
   const [images, setImages] = useState([]);
+  const [giftBoxImage, setGiftBoxImage] = useState(null);
   // Hero держит экран, пока прокрутка разворачивает список категорий:
   // 1 категория в самом верху → все к концу закреплённого участка.
   const [visibleCount, setVisibleCount] = useState(1);
@@ -206,7 +208,19 @@ export default function Home() {
       }
     };
 
+    // Фото для блока «Подарочный гид» — вторая карточка подарочного бокса
+    const fetchGiftBox = async () => {
+      try {
+        const response = await openAxios.get('/api/giftboxes/');
+        const box = response.data.find((b) => b.image2);
+        if (box) setGiftBoxImage(getImageUrl(box.image2));
+      } catch (error) {
+        console.error('Ошибка загрузки подарочного бокса:', error);
+      }
+    };
+
     fetchImages();
+    fetchGiftBox();
 
     window.addEventListener("scroll", listener2);
     listener2();
@@ -223,7 +237,7 @@ export default function Home() {
         <span></span>
       </NavBar>
       <HeroSection heroImage={getHeroImage()} visibleCount={visibleCount} hidden={heroHidden} />
-      <HomeSections images={images} />
+      <HomeSections images={images} giftBoxImage={giftBoxImage} />
     </>
   );
 }
