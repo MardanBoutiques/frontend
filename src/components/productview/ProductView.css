@@ -41,10 +41,6 @@
   transition: transform var(--tr-duration-in) var(--tr-timing-in);
 }
 
-.product-main-image:hover {
-  transform: scale(1.02);
-}
-
 .product-image-placeholder {
   width: 100%;
   height: 100%;

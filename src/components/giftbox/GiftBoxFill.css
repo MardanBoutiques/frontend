@@ -82,10 +82,6 @@
   transition: transform 0.4s ease;
 }
 
-.giftboxfill-card:hover .giftboxfill-card-image img {
-  transform: scale(1.03);
-}
-
 .giftboxfill-card-placeholder {
   width: 100%;
   height: 100%;

@@ -223,10 +223,6 @@
   transition: transform var(--tr-duration-in) var(--tr-timing-in);
 }
 
-.about-founder-card:hover .about-founder-photo {
-  transform: scale(1.03);
-}
-
 .about-founder-info {
   padding: 24px 28px 32px;
   display: flex;
@@ -325,10 +321,6 @@
   background-size: cover;
   background-position: center;
   transition: transform var(--tr-duration-in) var(--tr-timing-in);
-}
-
-.about-brand-card:hover .about-brand-photo {
-  transform: scale(1.03);
 }
 
 .about-brand-info {
