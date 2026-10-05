@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import NavBar from "../navbar/NavBar";
 import "./Catalogue.css";
 import api from "../../api/axios";
@@ -25,11 +25,23 @@ const ProductCard = ({ product, variants }) => {
 
   // Главное фото + дополнительные из галереи товара
   const photos = [product.image, ...(product.images || []).map((i) => i.image)].filter(Boolean);
-  const currentPhoto = photos[photoIndex] || product.image;
+
+  // Галерея — горизонтальная прокрутка: на мобильных листается свайпом,
+  // на десктопе её же прокручивают стрелки.
+  const scrollerRef = useRef(null);
+
+  const handleScroll = () => {
+    const el = scrollerRef.current;
+    if (!el || !el.clientWidth) return;
+    setPhotoIndex(Math.round(el.scrollLeft / el.clientWidth));
+  };
 
   const stepPhoto = (e, delta) => {
     e.stopPropagation();
-    setPhotoIndex((i) => (i + delta + photos.length) % photos.length);
+    const el = scrollerRef.current;
+    if (!el) return;
+    const next = Math.min(photos.length - 1, Math.max(0, photoIndex + delta));
+    el.scrollTo({ left: next * el.clientWidth, behavior: 'smooth' });
   };
 
   // variants = other color options of this same product (matched by article; see caller)
@@ -40,15 +52,21 @@ const ProductCard = ({ product, variants }) => {
   return (
     <div className="product-card" onClick={handleCardClick} style={{cursor: 'pointer'}}>
       <div className="product-image-container">
-        <div className="product-image">
-          {currentPhoto ? (
-            <img src={getImageUrl(currentPhoto)} alt={product.name} className="product-img" />
-          ) : (
+        {photos.length > 0 ? (
+          <div className="product-photos" ref={scrollerRef} onScroll={handleScroll}>
+            {photos.map((photo, i) => (
+              <div className="product-photo" key={i}>
+                <img src={getImageUrl(photo)} alt={product.name} className="product-img" />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="product-image">
             <div className="image-placeholder">
               <span>👔</span>
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
         {photos.length > 1 && (
           <>
@@ -68,6 +86,15 @@ const ProductCard = ({ product, variants }) => {
             >
               ›
             </button>
+            {/* Полоса-индикатор под фото — показывается на мобильных */}
+            <div className="product-progress">
+              <span
+                style={{
+                  width: `${100 / photos.length}%`,
+                  left: `${(100 / photos.length) * photoIndex}%`,
+                }}
+              />
+            </div>
           </>
         )}
       </div>

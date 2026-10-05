@@ -92,6 +92,48 @@
   overflow: hidden;
 }
 
+/* Horizontal photo gallery: native swipe on touch, arrows scroll it on desktop */
+.product-photos {
+  display: flex;
+  width: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.product-photos::-webkit-scrollbar {
+  display: none;
+}
+
+.product-photo {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  aspect-ratio: 3 / 4;
+  background: var(--color-background-light);
+  overflow: hidden;
+}
+
+/* Position indicator under the photo (mobile) */
+.product-progress {
+  display: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  z-index: 3;
+}
+
+.product-progress span {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: var(--color-navy);
+  transition: left 0.25s ease;
+}
+
 /* Photo prev/next, sitting at the left and right edge of the card */
 .product-nav {
   position: absolute;
@@ -132,10 +174,14 @@
   right: 16px;
 }
 
-/* Touch devices have no hover — keep the arrows visible */
-@media (hover: none) {
+/* On mobile the gallery is swiped, so the arrows give way to the progress bar */
+@media (max-width: 768px) {
   .product-nav {
-    opacity: 1;
+    display: none;
+  }
+
+  .product-progress {
+    display: block;
   }
 }
 
