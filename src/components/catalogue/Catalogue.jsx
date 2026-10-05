@@ -17,9 +17,19 @@ const Grid = ({ children, onClick, className }) => {
 
 const ProductCard = ({ product, variants }) => {
   const navigate = useNavigate();
+  const [photoIndex, setPhotoIndex] = useState(0);
 
   const handleCardClick = () => {
     navigate(`/product/${product.id}`);
+  };
+
+  // Главное фото + дополнительные из галереи товара
+  const photos = [product.image, ...(product.images || []).map((i) => i.image)].filter(Boolean);
+  const currentPhoto = photos[photoIndex] || product.image;
+
+  const stepPhoto = (e, delta) => {
+    e.stopPropagation();
+    setPhotoIndex((i) => (i + delta + photos.length) % photos.length);
   };
 
   // variants = other color options of this same product (matched by article; see caller)
@@ -31,14 +41,40 @@ const ProductCard = ({ product, variants }) => {
     <div className="product-card" onClick={handleCardClick} style={{cursor: 'pointer'}}>
       <div className="product-image-container">
         <div className="product-image">
-          {product.image ? (
-            <img src={getImageUrl(product.image)} alt={product.name} className="product-img" />
+          {currentPhoto ? (
+            <img src={getImageUrl(currentPhoto)} alt={product.name} className="product-img" />
           ) : (
             <div className="image-placeholder">
               <span>👔</span>
             </div>
           )}
         </div>
+
+        {photos.length > 1 && (
+          <>
+            <button
+              type="button"
+              className="product-nav prev"
+              aria-label="Предыдущее фото"
+              onClick={(e) => stepPhoto(e, -1)}
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              className="product-nav next"
+              aria-label="Следующее фото"
+              onClick={(e) => stepPhoto(e, 1)}
+            >
+              ›
+            </button>
+            <div className="product-photo-dots">
+              {photos.map((_, i) => (
+                <span key={i} className={i === photoIndex ? 'is-active' : ''} />
+              ))}
+            </div>
+          </>
+        )}
       </div>
       <div className="product-info">
         <div className="product-header">
