@@ -107,12 +107,6 @@ input, textarea, select,
     box-shadow 0.25s ease;
 }
 
-/* Product card lift on hover */
-.product-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(18, 48, 85, 0.08);
-}
-
 /* Nav icons fade */
 .icon:hover,
 .icon-1:hover,
