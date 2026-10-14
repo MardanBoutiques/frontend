@@ -202,8 +202,9 @@ const HomeSections = ({ images, giftBoxImage }) => {
 
       <section className="home-row">
         <CollectionTile to="/catalogue?category=polo" label="Поло и футболки" image={img('section4')} />
-        {/* Берём вторую карточку подарочного бокса; отдельный слот — запасной вариант */}
-        <CollectionTile to="/gift-guide" label="Подарочный гид" image={giftBoxImage || img('section5')} />
+        {/* Слот из админки главнее: иначе фото бокса перебивало бы то, что
+            загрузили в «Главная: Подарочный гид» */}
+        <CollectionTile to="/gift-guide" label="Подарочный гид" image={img('section5') || giftBoxImage} />
       </section>
 
       <section className="home-motto">
