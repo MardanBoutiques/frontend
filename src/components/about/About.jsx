@@ -66,8 +66,15 @@ const About = () => {
       <section className="about-section about-keyidea">
         <div className="about-container">
           <div className="about-keyidea-line" />
+          {/* Фраза ломается по-разному: на узком экране первая строка короче
+              и без тире. Показывается всегда одна из двух. */}
           <p className="about-keyidea-text">
-            Ежедневный комфорт — не компромисс,<br />а основа хорошего стиля.
+            <span className="about-keyidea-wide">
+              Ежедневный комфорт — не компромисс,<br />а основа хорошего стиля.
+            </span>
+            <span className="about-keyidea-narrow">
+              Ежедневный комфорт<br />не компромисс, а основа хорошего стиля.
+            </span>
           </p>
           <div className="about-keyidea-line" />
         </div>

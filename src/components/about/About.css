@@ -158,6 +158,20 @@
 }
 
 /* ── Key idea ── */
+.about-keyidea-narrow {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .about-keyidea-wide {
+    display: none;
+  }
+
+  .about-keyidea-narrow {
+    display: inline;
+  }
+}
+
 .about-keyidea {
   padding: 80px;
   background: var(--color-navy);
