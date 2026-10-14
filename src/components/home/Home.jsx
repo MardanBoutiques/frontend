@@ -6,6 +6,7 @@ import NavBar from "../navbar/NavBar";
 import openAxios from "../../api/axios";
 import { getImageUrl } from "../../utils/imageUrl";
 import StoreVisitCta from "../storescta/StoreVisitCta";
+import Stories from "../stories/Stories";
 // eslint-disable-next-line react/prop-types
 // function Surrounding({ element }) {
 //   return <div className="background-container">{element}</div>;
@@ -195,6 +196,9 @@ const HomeSections = ({ images, giftBoxImage }) => {
 
   return (
     <div className="home-stack">
+      {/* Лента сторис; если их нет, компонент ничего не рисует */}
+      <Stories />
+
       <section className="home-row">
         <CollectionTile to="/catalogue?category=suits&subcategory=set" label="Костюмы" image={img('section1')} />
         <CollectionTile submenu="outerwear" label="Верхняя одежда" image={img('section2')} />
