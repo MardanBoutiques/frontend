@@ -9,6 +9,7 @@ import ProductView from "./components/productview/ProductView";
 import Cart from "./components/cart/Cart";
 import GiftBox from "./components/giftbox/GiftBox";
 import GiftCard from "./components/giftcard/GiftCard";
+import GiftGuide from "./components/giftguide/GiftGuide";
 import Stores from "./components/stores/Stores";
 import Footer from "./components/footer/Footer";
 import About from "./components/about/About";
@@ -24,6 +25,7 @@ import {
 import Vacancies from "./components/vacancies/Vacancies";
 import VacancyDetail from "./components/vacancies/VacancyDetail";
 import ScrollToTop from "./components/ScrollToTop";
+import RouteVeil from "./components/transition/RouteVeil";
 
 const Checkout = lazy(() => import("./components/checkout/Checkout"));
 
@@ -39,7 +41,11 @@ function App() {
     <CartProvider>
       <BrowserRouter>
         <ScrollToTop />
-        <Routes>
+        <RouteVeil />
+        {/* Страница всегда занимает экран целиком, иначе на короткой или ещё
+            не загруженной странице футер подъезжает под шапку */}
+        <div className="page-shell">
+          <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/catalogue" element={<CatalogueGuard />} />
           <Route path="/product/:id" element={<ProductView />} />
@@ -47,7 +53,9 @@ function App() {
           <Route path="/checkout" element={<Suspense fallback={<div style={{marginTop:'70px',minHeight:'calc(100vh - 70px)',background:'#fff'}} />}><Checkout /></Suspense>} />
           <Route path="/giftbox" element={<GiftBox />} />
           <Route path="/giftcard" element={<GiftCard />} />
+          <Route path="/gift-guide" element={<GiftGuide />} />
           <Route path="/stores" element={<Stores />} />
+          <Route path="/stores/:storeId" element={<Stores />} />
           <Route path="/about" element={<About />} />
           <Route path="/support" element={<SupportLayout />}>
             <Route index element={<Navigate to="faq" replace />} />
@@ -60,7 +68,8 @@ function App() {
           </Route>
           <Route path="/vacancies" element={<Vacancies />} />
           <Route path="/vacancies/:id" element={<VacancyDetail />} />
-        </Routes>
+          </Routes>
+        </div>
         <Footer />
       </BrowserRouter>
     </CartProvider>

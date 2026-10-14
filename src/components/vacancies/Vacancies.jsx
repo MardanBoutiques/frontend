@@ -27,12 +27,12 @@ const BENEFITS = [
 const VACANCIES = [
   {
     id: 'almaty',
-    title: 'Стилист-менеджер в бутик',
+    title: 'Стилист-менеджер',
     city: 'Алматы',
   },
   {
     id: 'astana',
-    title: 'Стилист-менеджер в бутик',
+    title: 'Стилист-менеджер',
     city: 'Астана',
   },
 ];
@@ -80,7 +80,12 @@ const Vacancies = () => {
       {/* Benefits */}
       <div className="vac-section">
         <div className="vac-section-inner">
-          <h2 className="vac-section-title">Какой опыт тебе даст работа в компании</h2>
+          <h2 className="vac-section-title">
+            {/* Пробел нужен сам по себе: на десктопе <br> скрыт */}
+            Какой опыт тебе даст{" "}
+            <br className="vac-title-br" />
+            работа в Mardan Boutiques
+          </h2>
           <div className="vac-benefits">
             {BENEFITS.map((b, i) => (
               <div key={i} className="vac-benefit-row">
@@ -103,16 +108,19 @@ const Vacancies = () => {
           <h2 className="vac-section-title">Открытые вакансии</h2>
           <div className="vac-list">
             {VACANCIES.map((v) => (
-              <div
-                key={v.id}
-                className="vac-card"
-                onClick={() => navigate(`/vacancies/${v.id}`)}
-              >
+              <div key={v.id} className="vac-card">
                 <div className="vac-card-left">
                   <p className="vac-card-city">{v.city}</p>
                   <h3 className="vac-card-title">{v.title}</h3>
                 </div>
-                <span className="vac-card-arrow">→</span>
+                {/* Кликабельна только кнопка, поэтому карточка не ссылка */}
+                <button
+                  type="button"
+                  className="vac-card-apply"
+                  onClick={() => navigate(`/vacancies/${v.id}`)}
+                >
+                  Откликнуться
+                </button>
               </div>
             ))}
           </div>

@@ -184,6 +184,9 @@ const Checkout = () => {
       items: cartItems.map(item => ({
         product_id: item.id,
         product_name: item.name,
+        // Артикул пишем в сам заказ: товар могут переименовать или удалить,
+        // а менеджеру он нужен для сборки
+        article: item.article || '',
         size: item.size,
         quantity: item.quantity,
         price: item.price

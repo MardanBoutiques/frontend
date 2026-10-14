@@ -4,12 +4,12 @@ import './Vacancies.css';
 
 const VACANCY_DATA = {
   almaty: {
-    title: 'Стилист-менеджер в бутик',
+    title: 'Стилист-менеджер',
     city: 'Алматы',
     email: 'mardan.essential@mail.ru',
   },
   astana: {
-    title: 'Стилист-менеджер в бутик',
+    title: 'Стилист-менеджер',
     city: 'Астана',
     email: 'mardan.essential@mail.ru',
   },
@@ -54,10 +54,6 @@ const VacancyDetail = () => {
     <>
       <NavBar />
       <div className="vac-detail-container">
-        <button className="vac-back-btn" onClick={() => navigate('/vacancies')}>
-          ← Все вакансии
-        </button>
-
         <div className="vac-detail-header">
           <p className="vac-detail-city">{vacancy.city}</p>
           <h1 className="vac-detail-title">{vacancy.title}</h1>

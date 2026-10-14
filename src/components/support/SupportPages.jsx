@@ -49,7 +49,11 @@ const Accordion = ({ q, a, open, onToggle }) => (
       <span>{q}</span>
       <span className="support-faq-icon">{open ? "−" : "+"}</span>
     </button>
-    {open && <p className="support-faq-answer">{a}</p>}
+    <div className="support-faq-wrap">
+      <div className="support-faq-clip">
+        <p className="support-faq-answer">{a}</p>
+      </div>
+    </div>
   </div>
 );
 

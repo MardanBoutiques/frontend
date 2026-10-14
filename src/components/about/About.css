@@ -6,7 +6,7 @@
   background-image: url('/photos/about-hero.jpg');
   background-size: cover;
   background-position: center;
-  background-color: #0c1521;
+  background-color: #fff;
   position: relative;
   display: flex;
   align-items: flex-end;
@@ -155,16 +155,21 @@
 .about-meaning-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 2px;
+  gap: 10px;
   margin-top: 48px;
 }
 
 .about-meaning-card {
-  padding: 36px 28px;
-  background: #fff;
+  padding: 28px 24px;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  border-radius: var(--radius-md);
+  background: rgba(242, 241, 238, 0.65);
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: var(--glass-sheen);
 }
 
 .about-meaning-title {
@@ -196,22 +201,27 @@
   margin-bottom: 48px;
 }
 
+/* Серая стеклянная подложка — та же, что у блоков на страницах магазинов
+   и поддержки. Фото лежит внутри неё с отступом, поэтому стекло читается
+   рамкой вокруг снимка. */
 .about-founder-card {
-  background: #fff;
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--color-outline);
+  padding: 10px;
+  border-radius: var(--radius-md);
+  background: rgba(242, 241, 238, 0.65);
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: var(--glass-sheen);
   text-decoration: none;
   transition: background 0.2s;
-}
-
-.about-founder-card:hover {
-  background: #f0f0f0;
 }
 
 .about-founder-photo-wrap {
   aspect-ratio: 3 / 4;
   overflow: hidden;
+  border-radius: 6px;
 }
 
 .about-founder-photo {
@@ -224,10 +234,40 @@
 }
 
 .about-founder-info {
-  padding: 24px 28px 32px;
+  padding: 20px 18px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.about-founder-text {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-width: 0;
+}
+
+/* Кнопка справа от имени — такая же, как «Посетить» у брендов */
+.about-founder-visit {
+  flex-shrink: 0;
+  padding: 9px 18px;
+  border-radius: var(--radius-md);
+  background: var(--color-navy);
+  border: 1px solid var(--color-navy);
+  color: #fff;
+  font-size: var(--fs-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--lh-tight);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 0.2s ease;
+}
+
+.about-founder-visit:hover {
+  opacity: 0.85;
 }
 
 .about-founder-name {
@@ -300,18 +340,23 @@
 .about-brand-card {
   display: flex;
   flex-direction: column;
-  background: #fff;
+  padding: 10px;
+  border-radius: var(--radius-md);
+  background: rgba(242, 241, 238, 0.65);
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: var(--glass-sheen);
   text-decoration: none;
   transition: background 0.2s;
 }
 
-.about-brand-card:hover {
-  background: #f0f0f0;
-}
+
 
 .about-brand-photo-wrap {
   aspect-ratio: 3 / 4;
   overflow: hidden;
+  border-radius: 6px;
 }
 
 .about-brand-photo {
@@ -324,10 +369,40 @@
 }
 
 .about-brand-info {
-  padding: 24px 28px 28px;
+  padding: 20px 18px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.about-brand-text {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  min-width: 0;
+}
+
+/* Кнопка справа от названия — синяя, как остальные кнопки на сайте */
+.about-brand-visit {
+  flex-shrink: 0;
+  padding: 9px 18px;
+  border-radius: var(--radius-md);
+  background: var(--color-navy);
+  border: 1px solid var(--color-navy);
+  color: #fff;
+  font-size: var(--fs-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--lh-tight);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 0.2s ease;
+}
+
+.about-brand-visit:hover {
+  opacity: 0.85;
 }
 
 .about-brand-category {
@@ -416,7 +491,7 @@
 
   .about-founder-info,
   .about-brand-info {
-    padding: 20px;
+    padding: 16px 12px 10px;
   }
 
   .about-founders-desc,

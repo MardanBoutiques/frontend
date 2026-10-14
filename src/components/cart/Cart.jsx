@@ -5,15 +5,30 @@ import { useCart } from '../../context/CartContext';
 import { getImageUrl } from '../../utils/imageUrl';
 import './Cart.css';
 
+const TrashIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+       strokeWidth="1.4" strokeLinecap="round" aria-hidden="true">
+    <path d="M4 7h16M10 7V5h4v2M6 7l1 13h10l1-13" />
+  </svg>
+);
+
 const Cart = () => {
   const navigate = useNavigate();
   const { cartItems, removeFromCart, updateQuantity, getTotalPrice, getTotalItems } = useCart();
 
+  // «Перейти в каталог» — в тот же раздел, где покупатель был, с подкатегорией
+  const goToCatalogue = () => {
+    navigate(sessionStorage.getItem('lastCataloguePath') || '/');
+  };
+
+  // «Продолжить покупки» — на карточку товара, с которой пришли в корзину
   const goBackToCatalogue = () => {
-    const lastCategory = sessionStorage.getItem('lastCatalogueCategory');
-    if (lastCategory === '__giftbox__') navigate('/giftbox');
-    else if (lastCategory === '__giftcard__') navigate('/giftcard');
-    else navigate(lastCategory ? `/catalogue?category=${lastCategory}` : '/');
+    const lastProduct = sessionStorage.getItem('lastProductPath');
+    if (lastProduct) {
+      navigate(lastProduct);
+      return;
+    }
+    goToCatalogue();
   };
 
   if (cartItems.length === 0) {
@@ -24,7 +39,7 @@ const Cart = () => {
           <div className="cart-empty">
             <h2>Ваша корзина пуста</h2>
             <p>Добавьте товары из каталога</p>
-            <button className="btn-continue-shopping" onClick={goBackToCatalogue}>
+            <button className="btn-continue-shopping" onClick={goToCatalogue}>
               Перейти в каталог
             </button>
           </div>
@@ -38,7 +53,16 @@ const Cart = () => {
       <NavBar />
       <div className="cart-container">
         <div className="cart-content">
-<div className="cart-layout">
+          <button
+            type="button"
+            className="cart-close"
+            onClick={goBackToCatalogue}
+            aria-label="Закрыть корзину"
+          >
+            <img src="/close.png" alt="" />
+          </button>
+          <h1 className="cart-title">Ваша корзина</h1>
+          <div className="cart-layout">
             {/* Левая часть - список товаров */}
             <div className="cart-items">
               {cartItems.map((item, index) => (
@@ -54,36 +78,35 @@ const Cart = () => {
                   <div className="cart-item-details">
                     <h3 className="cart-item-name">{item.name}</h3>
                     <p className="cart-item-size">Размер: {item.size}</p>
-                    <p className="cart-item-price">{Math.round(item.price).toLocaleString('ru-RU')} KZT</p>
-                  </div>
+                    <p className="cart-item-delivery">Доставка: 3–6 рабочих дней</p>
 
-                  <div className="cart-item-quantity">
-                    <button 
-                      className="qty-btn"
-                      onClick={() => updateQuantity(item.id, item.size, item.quantity - 1)}
-                    >
-                      −
-                    </button>
-                    <span className="qty-value">{item.quantity}</span>
-                    <button 
-                      className="qty-btn"
-                      onClick={() => updateQuantity(item.id, item.size, item.quantity + 1)}
-                    >
-                      +
-                    </button>
-                  </div>
+                    <div className="cart-item-row">
+                      <div className="cart-item-quantity">
+                        {/* На единице «минус» превращается в удаление — как в референсе */}
+                        <button
+                          className="qty-btn"
+                          onClick={() => (item.quantity > 1
+                            ? updateQuantity(item.id, item.size, item.quantity - 1)
+                            : removeFromCart(item.id, item.size))}
+                          aria-label={item.quantity > 1 ? 'Уменьшить количество' : 'Удалить из корзины'}
+                        >
+                          {item.quantity > 1 ? '−' : <TrashIcon />}
+                        </button>
+                        <span className="qty-value">{item.quantity}</span>
+                        <button
+                          className="qty-btn"
+                          onClick={() => updateQuantity(item.id, item.size, item.quantity + 1)}
+                          aria-label="Увеличить количество"
+                        >
+                          +
+                        </button>
+                      </div>
 
-                  <div className="cart-item-total">
-                    {Math.round(item.price * item.quantity).toLocaleString('ru-RU')} KZT
+                      <div className="cart-item-total">
+                        {Math.round(item.price * item.quantity).toLocaleString('ru-RU')} KZT
+                      </div>
+                    </div>
                   </div>
-
-                  <button 
-                    className="cart-item-remove"
-                    onClick={() => removeFromCart(item.id, item.size)}
-                    title="Удалить"
-                  >
-                    ✕
-                  </button>
                 </div>
               ))}
             </div>
@@ -99,7 +122,7 @@ const Cart = () => {
 
               <div className="summary-row">
                 <span>Доставка</span>
-                <span>Рассчитывается при оформлении</span>
+                <span>При оформлении</span>
               </div>
 
               <div className="summary-divider"></div>
@@ -111,7 +134,7 @@ const Cart = () => {
 
               <button 
                 className="btn-checkout"
-                onClick={() => navigate('/checkout')}
+                onClick={() => navigate('/checkout', { state: { noVeil: true } })}
               >
                 Оформить заказ
               </button>

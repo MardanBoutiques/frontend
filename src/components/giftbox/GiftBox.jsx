@@ -14,7 +14,8 @@ export default function GiftBox() {
   const { addToCart } = useCart();
 
   useEffect(() => {
-    sessionStorage.setItem('lastCatalogueCategory', '__giftbox__');
+    sessionStorage.setItem('lastCataloguePath', '/giftbox');
+    sessionStorage.removeItem('lastProductPath');
     openAxios.get('/api/giftboxes/')
       .then((res) => setGiftboxes(res.data))
       .catch((err) => console.error('Ошибка загрузки:', err))
@@ -25,7 +26,7 @@ export default function GiftBox() {
     return (
       <>
         <NavBar />
-        <div className="giftbox-loading">Загрузка...</div>
+        <div className="giftbox-loading" />
       </>
     );
   }

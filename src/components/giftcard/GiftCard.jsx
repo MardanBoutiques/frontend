@@ -17,7 +17,8 @@ function GiftCard() {
   const { addToCart } = useCart();
 
   useEffect(() => {
-    sessionStorage.setItem('lastCatalogueCategory', '__giftcard__');
+    sessionStorage.setItem('lastCataloguePath', '/giftcard');
+    sessionStorage.removeItem('lastProductPath');
   }, []);
 
   useEffect(() => {
@@ -55,7 +56,7 @@ function GiftCard() {
   };
 
   if (loading) {
-    return <div className="giftcard-loading">Загрузка...</div>;
+    return <div className="giftcard-loading" />;
   }
 
   if (!giftcard) {

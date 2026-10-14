@@ -9,6 +9,63 @@ html, body, #root {
   height: 100%;
 }
 
+/* ── Стеклянная панель ──
+   Один класс на все поверхности: навбар, закреплённый блок покупки,
+   список разделов поддержки. Блик рисуется псевдоэлементом, чтобы не
+   конфликтовать с собственными тенями элемента. */
+.glass-panel {
+  position: relative;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur-deep);
+  -webkit-backdrop-filter: var(--glass-blur-deep);
+  box-shadow: var(--glass-sheen), var(--glass-shadow);
+}
+
+.glass-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--glass-veil);
+}
+
+/* Содержимое поверх блика */
+.glass-panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Ничто не вылезает за ширину экрана ──
+   overflow-x: hidden на body не годится: он ломает position: sticky, на
+   котором держатся колонка товара, блок покупки и лента разделов поддержки.
+   Поэтому убираем сами причины переполнения. */
+
+/* Картинки, видео и таблицы не шире своего места */
+:where(img, svg, video, iframe, table) {
+  max-width: 100%;
+}
+
+/* Ячейки сеток и флексов по умолчанию не ужимаются уже содержимого
+   (min-width: auto). Из-за этого горизонтальные прокрутки внутри —
+   галереи фото, ленты оттенков, списки разделов — растягивали страницу. */
+.pv-layout > *,
+.cart-layout > *,
+.grid > *,
+.home-row > * {
+  min-width: 0;
+}
+
+/* Длинные документы (оферта, политика) листаются плавно */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 :root {
   /* Цветовая палитра Mardan Boutique */
   --color-primary: #333333;        /* Dark Grey */
@@ -51,6 +108,25 @@ html, body, #root {
   --tr-timing-out: cubic-bezier(0.6, 0, 0.2, 1);
   
   /* Typography */
+  /* Единая шкала размеров текста. В каталоге и на странице товара она
+     одинакова на desktop и мобильном — переопределений под телефон там нет.
+     Исключение — крупный блок на главной, где заголовок на телефоне мельче.
+       --fs-xl   32px — заголовки-акценты на главной (desktop)
+       --fs-lg   16px — крупные акценты, заголовки блоков, иконки-глифы
+       --fs-base 13px — весь текст: название и цена (и в каталоге, и на
+                        странице товара), кнопки, заголовки блоков,
+                        фильтры, строки «поле / значение»
+       --fs-sm   12px — мелкое: описания, примечания, подписи под цветами */
+  --fs-xl: 2rem;
+  --fs-lg: 1rem;
+  --fs-base: 0.8125rem;
+  --fs-sm: 0.75rem;
+  --lh-text: 1.6;
+  --lh-tight: 1.4;
+
+  /* Скругление кнопок и карточек */
+  --radius-md: 8px;
+
   --font-weight-light: 300;
   --font-weight-regular: 400;
   --font-weight-medium: 500;
@@ -70,6 +146,25 @@ html, body, #root {
   --glass-blur-light: blur(12px) saturate(140%);
   --glass-border: 1px solid rgba(255, 255, 255, 0.55);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.07), 0 1.5px 6px rgba(0,0,0,0.04);
+
+  /* Объём стекла. Преломление, как у Apple, средствами CSS недостижимо, но
+     три детали дают почти тот же эффект:
+       --glass-sheen  — внутренний блик по верхней кромке и подсветка нижней,
+                        будто панель имеет толщину;
+       --glass-veil   — мягкий световой градиент поверх, читается как отблеск;
+       --glass-blur-deep — больше размытия и насыщенности, чем у базового. */
+  --glass-sheen:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.2),
+    inset 1px 0 0 rgba(255, 255, 255, 0.25),
+    inset -1px 0 0 rgba(255, 255, 255, 0.25);
+  --glass-veil: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.45) 0%,
+    rgba(255, 255, 255, 0.12) 42%,
+    rgba(255, 255, 255, 0.28) 100%
+  );
+  --glass-blur-deep: blur(30px) saturate(190%);
 
   color-scheme: light;
   color: var(--color-primary);
@@ -131,7 +226,10 @@ body {
   min-width: 320px;
   font-size: 16px;
   font-weight: var(--font-weight-light);
-  word-break: keep-all;
+  /* keep-all запрещает перенос внутри слова. Длинные русские слова
+     («КОНФИДЕНЦИАЛЬНОСТИ») из-за этого растягивали страницу шире экрана.
+     break-word разрывает только то, что иначе не помещается. */
+  overflow-wrap: break-word;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #ffffff;

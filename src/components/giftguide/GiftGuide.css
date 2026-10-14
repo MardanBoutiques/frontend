@@ -1,0 +1,242 @@
+.gg-page {
+  margin-top: 70px;
+  background: #fff;
+}
+
+/* ── Блоки «карта» и «бокс» ── */
+.gg-hero,
+.gg-section {
+  padding: 64px 16px 0;
+  text-align: center;
+}
+
+.gg-section {
+  margin-top: 96px;
+  padding-bottom: 96px;
+  background: var(--color-background-light);
+}
+
+.gg-intro {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.gg-title {
+  margin: 0 0 32px;
+  /* На 2px крупнее шкалы: считаем от токена, чтобы связь с ней не терялась */
+  font-size: calc(var(--fs-xl) + 2px);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-navy);
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+/* Вторая половина фразы — тоньше, чтобы ударение падало на первую */
+.gg-title-soft {
+  font-weight: var(--font-weight-light);
+}
+
+.gg-btn {
+  min-height: 44px;
+  padding: 0 24px;
+  background: var(--color-navy);
+  color: #fff;
+  border: 1px solid var(--color-navy);
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.gg-btn:hover {
+  opacity: 0.85;
+}
+
+/* Картинка под текстом: без подложки, без тени и без увеличения */
+.gg-visual {
+  margin: 48px auto 0;
+  width: 100%;
+}
+
+.gg-visual img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.gg-visual-box {
+  width: min(460px, 88vw);
+}
+
+/* Карта лежит с наклоном вверх. Она заметно меньше бокса: из-за поворота
+   её габарит на экране крупнее собственной ширины. */
+.gg-visual-card {
+  width: min(400px, 84vw);
+  transform: rotate(-20deg);
+}
+
+@media (min-width: 768px) {
+  .gg-hero,
+  .gg-section {
+    padding-top: 96px;
+  }
+
+  .gg-section {
+    padding-bottom: 120px;
+  }
+
+  .gg-visual {
+    width: 48.4375%;
+  }
+
+  .gg-visual-box {
+    width: min(520px, 36%);
+    margin-top: 104px;
+  }
+
+  .gg-visual-card {
+    width: min(420px, 30%);
+    margin-top: 104px;
+  }
+}
+
+/* ── Вопросы ── */
+.gg-faq {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 96px 16px;
+}
+
+.gg-faq-title {
+  margin: 0 0 48px;
+  font-size: calc(var(--fs-xl) + 2px);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-navy);
+  letter-spacing: -0.01em;
+  text-align: center;
+}
+
+.gg-faq-item {
+  border-bottom: 1px solid var(--color-outline);
+}
+
+.gg-faq-head {
+  width: 100%;
+  padding: 24px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-navy);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-align: left;
+}
+
+.gg-faq-icon {
+  font-size: var(--fs-lg);
+  color: var(--color-navy);
+  flex-shrink: 0;
+}
+
+.gg-faq-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.gg-faq-item.open .gg-faq-wrap {
+  grid-template-rows: 1fr;
+}
+
+.gg-faq-clip {
+  overflow: hidden;
+}
+
+.gg-faq-body {
+  padding-bottom: 24px;
+}
+
+.gg-faq-body p {
+  margin: 0;
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-light);
+  color: #111;
+  line-height: var(--lh-text);
+}
+
+.gg-link {
+  padding: 0;
+  background: none;
+  border: none;
+  font: inherit;
+  color: var(--color-navy);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.gg-link:hover {
+  opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+  .gg-page {
+    margin-top: 60px;
+  }
+
+  /* На телефоне перенос задаёт ширина блока, а не тег */
+  .gg-br {
+    display: none;
+  }
+
+  .gg-title {
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 28px;
+    font-size: calc(var(--fs-xl) - 9px);
+    line-height: 1.25;
+  }
+
+  .gg-faq-title {
+    font-size: calc(var(--fs-xl) - 9px);
+  }
+
+  /* Картинки мельче и ниже — только на телефоне */
+  .gg-visual {
+    margin-top: 72px;
+  }
+
+  .gg-visual-card {
+    width: min(300px, 66vw);
+  }
+
+  .gg-visual-box {
+    width: min(340px, 74vw);
+  }
+
+  .gg-btn {
+    min-height: 40px;
+    padding: 0 20px;
+    font-size: var(--fs-sm);
+  }
+
+  .gg-faq {
+    padding: 64px 20px;
+  }
+
+  .gg-faq-title {
+    margin-bottom: 32px;
+  }
+}

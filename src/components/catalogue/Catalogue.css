@@ -14,7 +14,7 @@
 }
 
 .category-title {
-  font-size: 0.8125rem;
+  font-size: var(--fs-base);
   font-weight: var(--font-weight-regular);
   color: var(--color-navy);
   text-transform: uppercase;
@@ -23,12 +23,12 @@
 }
 
 .category-description {
-  font-size: 10px;
-  font-weight: 100;
+  font-size: var(--fs-sm);
+  font-weight: var(--font-weight-light);
   color: #000;
   margin: 6px 0 0;
   max-width: 75%;
-  line-height: 1.6;
+  line-height: var(--lh-text);
   padding: 0 30px;
   white-space: pre-line;
 }
@@ -37,15 +37,16 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.8125rem;
-  font-weight: var(--font-weight-regular);
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--lh-tight);
   color: var(--color-navy);
   cursor: pointer;
   padding: 4px 0;
   user-select: none;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  transition: opacity 0.2s;
+  letter-spacing: 0.06em;
+  transition: opacity 0.2s ease;
 }
 
 .filter-btn:hover {
@@ -53,7 +54,7 @@
 }
 
 .filter-icon {
-  font-size: 0.9rem;
+  font-size: var(--fs-base);
 }
 
 /* ── Grid ── */
@@ -96,6 +97,8 @@
 .product-photos {
   display: flex;
   width: 100%;
+  /* Между фото такой же зазор, как в галерее на странице товара */
+  gap: 8px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
@@ -223,17 +226,17 @@
 }
 
 .product-name {
-  font-size: 0.8125rem;
+  font-size: var(--fs-base);
   font-weight: var(--font-weight-regular);
   color: var(--color-navy);
   text-transform: uppercase;
   margin: 0;
-  line-height: 1.4;
+  line-height: var(--lh-tight);
   flex: 1;
 }
 
 .product-price {
-  font-size: 0.8125rem;
+  font-size: var(--fs-base);
   font-weight: var(--font-weight-regular);
   color: var(--color-navy);
   margin: 0;
@@ -241,10 +244,10 @@
 }
 
 .product-desc {
-  font-size: 0.75rem;
+  font-size: var(--fs-sm);
   color: var(--color-secondary);
   margin: 0;
-  line-height: 1.4;
+  line-height: var(--lh-tight);
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
@@ -279,7 +282,7 @@
 }
 
 .color-more {
-  font-size: 0.7rem;
+  font-size: var(--fs-sm);
   color: var(--color-secondary, #888);
   line-height: 12px;
   height: 12px;
@@ -311,18 +314,19 @@
   transform: translateX(0);
 }
 
+/* Разделительных линий нет: блоки разводит воздух */
 .filter-header {
-  padding: 80px 24px 24px;
-  border-bottom: 1px solid var(--color-outline);
+  padding: 80px 24px 8px;
 }
 
 .filter-header h2 {
-  font-size: 0.875rem;
+  font-size: var(--fs-base);
   font-weight: var(--font-weight-medium);
-  color: var(--color-primary);
+  line-height: var(--lh-tight);
+  color: var(--color-navy);
   margin: 0;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
 }
 
 .filter-section {
@@ -330,47 +334,63 @@
 }
 
 .filter-section h3 {
-  font-size: 0.75rem;
-  font-weight: var(--font-weight-medium);
+  font-size: var(--fs-sm);
+  font-weight: var(--font-weight-light);
+  line-height: var(--lh-tight);
   color: var(--color-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   margin: 0 0 12px 0;
 }
 
 .filter-options {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 6px;
 }
 
 .filter-option {
-  font-size: 0.875rem;
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-light);
+  line-height: var(--lh-text);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   color: var(--color-primary);
-  padding: 10px 0;
+  padding: 8px 0;
   cursor: pointer;
-  border-bottom: 1px solid var(--color-outline);
-  transition: color var(--tr-duration-out) var(--tr-timing-out);
+  transition: color var(--tr-duration-out) var(--tr-timing-out),
+    font-weight var(--tr-duration-out) var(--tr-timing-out);
 }
 
-.filter-option:hover,
+.filter-option:hover {
+  color: var(--color-navy);
+}
+
+/* Выбранная сортировка — синяя и плотнее, как активный пункт в меню */
 .filter-option.active {
-  color: var(--color-secondary);
+  color: var(--color-navy);
+  font-weight: var(--font-weight-medium);
 }
 
 /* ── States ── */
-.loading,
+.catalogue-loading {
+  min-height: calc(100vh - 140px);
+  background: #fff;
+}
+
 .no-products {
   text-align: center;
   padding: 80px 20px;
-  font-size: 0.875rem;
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-light);
+  line-height: var(--lh-text);
   color: var(--color-secondary);
 }
 
 .error {
   text-align: center;
   padding: 80px 20px;
-  font-size: 0.875rem;
+  font-size: var(--fs-base);
   color: #c33333;
 }
 
@@ -380,14 +400,6 @@
     margin-top: 60px;
   }
 
-  .category-title {
-    font-size: 0.8125rem;
-  }
-
-  .category-description {
-    font-size: 10px;
-  }
-
   .grid {
     grid-template-columns: 1fr;
     gap: 8px;
@@ -395,10 +407,5 @@
 
   .product-info {
     padding: 8px 8px 12px;
-  }
-
-  .product-name,
-  .product-price {
-    font-size: 0.75rem;
   }
 }

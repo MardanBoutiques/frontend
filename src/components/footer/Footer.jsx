@@ -1,28 +1,65 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Footer.css";
 
+/**
+ * Секция подвала: заголовок со знаком «+», подпункты под ним.
+ * Открытая секция всегда одна — состояние живёт в подвале целиком.
+ */
+const FooterSection = ({ title, className = "", open, onToggle, children }) => {
+  return (
+    <div className={`footer-col ${className} ${open ? "open" : ""}`}>
+      <button
+        type="button"
+        className="footer-col-head"
+        onClick={onToggle}
+        aria-expanded={open}
+      >
+        <span>{title}</span>
+        <span className="footer-col-icon" aria-hidden="true">{open ? "−" : "+"}</span>
+      </button>
+
+      <div className="footer-col-body">
+        <div className="footer-col-list">{children}</div>
+      </div>
+    </div>
+  );
+};
+
 const Footer = () => {
+  const [openSection, setOpenSection] = useState(null);
+
+  // Повторное нажатие на открытую секцию закрывает её
+  const toggle = (key) => setOpenSection((prev) => (prev === key ? null : key));
+
   return (
     <footer className="footer">
       <div className="footer-content">
 
-        <div className="footer-col">
-          <h4>Каталог</h4>
-          <Link to="/catalogue?category=suits">Костюмы</Link>
-          <Link to="/catalogue?category=shirts">Рубашки</Link>
-          <Link to="/catalogue?category=pants">Брюки</Link>
-          <Link to="/catalogue?category=accessories">Аксессуары</Link>
+        {/* Каталог не раскрывается: по нажатию открывается главное меню,
+            чтобы не держать второй список разделов, который разъедется
+            с меню при первом же изменении. */}
+        <div className="footer-col footer-col-catalogue">
+          <button
+            type="button"
+            className="footer-col-head"
+            onClick={() => window.dispatchEvent(new CustomEvent("mardan:open-menu"))}
+          >
+            <span>Каталог</span>
+          </button>
         </div>
 
-        <div className="footer-col">
-          <h4>Сервис</h4>
-          <Link to="/giftbox">Подарочный бокс</Link>
-          <Link to="/giftcard">Подарочная карта</Link>
+        <FooterSection title="Сервис" open={openSection === "service"} onToggle={() => toggle("service")}>
+          <Link to="/gift-guide">Подарочный гид</Link>
           <Link to="/stores">Запись на примерку</Link>
-        </div>
+        </FooterSection>
 
-        <div className="footer-col footer-col-contacts">
-          <h4>Контакты</h4>
+        <FooterSection
+          title="Контакты"
+          className="footer-col-contacts"
+          open={openSection === "contacts"}
+          onToggle={() => toggle("contacts")}
+        >
           <Link to="/stores">Адреса магазинов</Link>
           <a
             href={`https://wa.me/77071651862?text=${encodeURIComponent('Здравствуйте! Хочу записаться на примерку в бутик Mardan (г. Алматы).')}`}
@@ -31,7 +68,7 @@ const Footer = () => {
             className="footer-phone-link"
           >
             <img src="/whatsapp-icon.png" alt="WhatsApp" className="footer-phone-icon" />
-            +7 707 165 18 62 (ALM)
+            +7 707 165 18 62 — ALMATY
           </a>
           <a
             href={`https://wa.me/77712699645?text=${encodeURIComponent('Здравствуйте! Хочу записаться на примерку в бутик Mardan (г. Астана).')}`}
@@ -40,27 +77,29 @@ const Footer = () => {
             className="footer-phone-link"
           >
             <img src="/whatsapp-icon.png" alt="WhatsApp" className="footer-phone-icon" />
-            +7 771 269 96 45 (AST)
+            +7 771 269 96 45 — ASTANA
           </a>
-          <div className="footer-social">
-            <a href="https://www.instagram.com/mardan.boutiques/" target="_blank" rel="noreferrer">
-              <img src="/instagram-icon.png" alt="Instagram" />
-            </a>
-            <a href="https://www.tiktok.com/@mardan.boutiques" target="_blank" rel="noreferrer">
-              <img src="/tiktok-icon.png" alt="TikTok" />
-            </a>
-            <a href="mailto:mardan.essential@mail.ru" title="mardan.essential@mail.ru">
-              <img src="/email_icon.png" alt="Email" className="footer-email-icon" />
-            </a>
-          </div>
-        </div>
-
+        </FooterSection>
 
       </div>
+
+      <div className="footer-social">
+        <a href="https://www.instagram.com/mardan.boutiques/" target="_blank" rel="noreferrer">
+          <img src="/instagram-icon.png" alt="Instagram" />
+        </a>
+        <a href="https://www.tiktok.com/@mardan.boutiques" target="_blank" rel="noreferrer">
+          <img src="/tiktok-icon.png" alt="TikTok" />
+        </a>
+        <a href="mailto:mardan.essential@mail.ru" title="mardan.essential@mail.ru">
+          <img src="/email_icon.png" alt="Email" className="footer-email-icon" />
+        </a>
+      </div>
+
       <div className="footer-bottom">
         <span>© {new Date().getFullYear()} MardanBoutiques. Все права защищены.</span>
         <div className="footer-bottom-links">
           <Link to="/support/offer">Публичная оферта</Link>
+          <span className="footer-bottom-sep" aria-hidden="true">|</span>
           <Link to="/support">Поддержка</Link>
         </div>
       </div>

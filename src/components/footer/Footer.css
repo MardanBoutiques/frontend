@@ -9,32 +9,126 @@
   max-width: 900px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
+  grid-template-columns: repeat(2, max-content);
+  justify-content: center;
+  gap: 32px 80px;
   padding-bottom: 40px;
-  justify-items: center;
+}
+
+/* Левая колонка: «Каталог», под ним «Сервис».
+   Правая: «Контакты» — начинается на одной строке с «Каталогом». */
+.footer-col-catalogue {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.footer-col-contacts {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: start;
 }
 
 .footer-col {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 10px;
+  width: 100%;
 }
 
-.footer-col h4 {
-  font-size: 0.8125rem;
-  font-weight: var(--font-weight-regular);
+.footer-col-head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-medium);
   color: #ffffff;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin: 0 0 6px 0;
+  letter-spacing: 0.06em;
+  text-align: left;
+}
+
+/* Знак раскрытия нужен только телефону: на десктопе места хватает */
+.footer-col-icon {
+  display: none;
+  font-size: var(--fs-lg);
+  flex-shrink: 0;
+}
+
+/* Синяя рамка — это браузерная подсветка фокуса у кнопки.
+   Убираем её при щелчке мышью, но оставляем для клавиатуры. */
+.footer-col-head:focus {
+  outline: none;
+}
+
+.footer-col-head:focus-visible {
+  outline: 1px solid rgba(255, 255, 255, 0.6);
+  outline-offset: 4px;
+}
+
+/* На десктопе подпункты видны всегда. Нажимается только «Каталог» —
+   остальные заголовки там ничего не делают и фокус не принимают. */
+@media (min-width: 641px) {
+  .footer-col-head {
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .footer-col-catalogue .footer-col-head {
+    cursor: pointer;
+    pointer-events: auto;
+  }
+
+  .footer-col-body {
+    grid-template-rows: 1fr !important;
+  }
+}
+
+/* Телефон: подпункты свёрнуты, пока секцию не раскроют.
+   min-height: 0 обязателен: это флекс-элемент внутри колонки, а такие по
+   умолчанию не сжимаются ниже своего содержимого — из-за чего первый пункт
+   оставался виден. overflow: hidden страхует от того же на других движках. */
+.footer-col-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  width: 100%;
+  min-height: 0;
+  overflow: hidden;
+  transition: grid-template-rows 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.footer-col.open .footer-col-body {
+  grid-template-rows: 1fr;
+}
+
+.footer-col-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  overflow: hidden;
+  padding: 0;
+}
+
+.footer-col-list > :first-child {
+  margin-top: 12px;
+}
+
+.footer-col-list > :last-child {
+  margin-bottom: 4px;
 }
 
 .footer-col a,
-.footer-col span {
-  font-size: 0.8125rem;
-  font-weight: 100;
+.footer-col-list span {
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-light);
   color: #ffffff;
   text-decoration: none;
   line-height: 1.5;
@@ -59,12 +153,14 @@
   flex-shrink: 0;
 }
 
+/* Иконки соцсетей — отдельной строкой по центру, под всеми секциями */
 .footer-social {
   display: flex;
   flex-direction: row;
-  gap: 16px;
+  gap: 24px;
   align-items: center;
-  margin-top: 4px;
+  justify-content: center;
+  margin: 8px 0 0;
 }
 
 .footer-social a {
@@ -111,7 +207,8 @@
 .footer-bottom {
   max-width: 1400px;
   margin: 24px auto 0;
-  font-size: 0.75rem;
+  /* на 2px мельче мелкой ступени шкалы — как и ссылки под ним */
+  font-size: calc(var(--fs-sm) - 2px);
   color: #ffffff;
   text-align: center;
   border-top: none;
@@ -127,21 +224,30 @@
 }
 
 .footer-bottom-links a {
-  font-size: 0.75rem;
-  color: rgba(255,255,255,0.5);
+  /* на 2px мельче мелкой ступени шкалы */
+  font-size: calc(var(--fs-sm) - 2px);
+  font-weight: var(--font-weight-medium);
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   text-decoration: none;
-  transition: color 0.2s;
+  transition: opacity 0.2s;
 }
 
 .footer-bottom-links a:hover {
+  opacity: 0.6;
+}
+
+.footer-bottom-sep {
+  font-size: calc(var(--fs-sm) - 2px);
+  font-weight: var(--font-weight-medium);
   color: #ffffff;
 }
 
 /* ── Tablet ── */
 @media (max-width: 1024px) {
   .footer-content {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 32px;
+    gap: 28px 48px;
   }
 }
 
@@ -151,14 +257,39 @@
     padding: 32px 16px 20px;
   }
 
+  /* Секции идут одна под другой, во всю ширину */
   .footer-content {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
+    grid-template-columns: 1fr;
+    justify-content: stretch;
+    gap: 0;
     justify-items: start;
+    padding-bottom: 24px;
+  }
+
+  .footer-col-catalogue,
+  .footer-col-contacts {
+    grid-column: auto;
+    grid-row: auto;
+    justify-self: stretch;
   }
 
   .footer-col-contacts {
-    grid-column: span 2;
-    margin-top: 16px;
+    margin-top: 0;
+  }
+
+  .footer-col-head {
+    padding: 14px 0;
+  }
+
+  .footer-col-icon {
+    display: block;
+  }
+
+  .footer-col-list > :last-child {
+    margin-bottom: 14px;
+  }
+
+  .footer-social {
+    margin: 16px 0 8px;
   }
 }

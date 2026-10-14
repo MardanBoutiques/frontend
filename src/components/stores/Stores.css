@@ -1,20 +1,11 @@
-/* ── Page ── */
+/* ── Страница ── */
+/* Отступ под шапку — именно padding: margin схлопнулся бы наружу через
+   .page-shell и добавил бы к его 100vh ещё 70px пустоты под сеткой. */
 .stores-page {
-  margin-top: 70px;
-  padding: 0;
+  padding-top: 70px;
 }
 
-.stores-title {
-  font-size: 0.8125rem;
-  font-weight: var(--font-weight-regular);
-  color: var(--color-navy);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin: 0 0 40px 0;
-  padding: 0 30px;
-}
-
-/* ── Desktop grid ── */
+/* ── Сетка ── */
 .stores-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -29,10 +20,9 @@
   }
 }
 
-/* ── Card (overlay style like home collection blocks) ── */
+/* ── Карточка бутика ── */
 .store-card {
   position: relative;
-  cursor: pointer;
   overflow: hidden;
   display: block;
   height: 100%;
@@ -50,15 +40,22 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.5s ease;
 }
 
-/* gradient overlay */
+/* Затемнение, чтобы текст читался поверх фото. Плотная часть держится до
+   трети высоты: на десктопе карточка высокая и растянутый градиент внизу
+   не успевал набрать плотность. */
 .store-card::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.15) 50%, transparent 100%);
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.78) 0%,
+    rgba(0, 0, 0, 0.55) 18%,
+    rgba(0, 0, 0, 0.2) 42%,
+    transparent 70%
+  );
   pointer-events: none;
 }
 
@@ -72,27 +69,41 @@
   padding: 0 28px 32px;
   z-index: 1;
   text-align: center;
+  /* Кликабельна только кнопка внутри, не вся подложка */
+  pointer-events: none;
+}
+
+/* Город и время держит мягкая тень, а не плашка — фото остаётся чистым */
+.store-card-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.9),
+    0 2px 18px rgba(0, 0, 0, 0.7);
 }
 
 .store-card-info h2 {
-  font-size: 0.8125rem;
+  font-size: var(--fs-base);
   font-weight: var(--font-weight-regular);
+  line-height: var(--lh-tight);
   color: #fff;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   margin: 0 0 2px 0;
 }
-
 
 .store-card-status {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  font-size: 0.8125rem;
-  font-weight: 100;
-  color: rgba(255, 255, 255, 0.75);
-  margin-bottom: 20px;
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-light);
+  line-height: var(--lh-tight);
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
 }
 
 .status-dot {
@@ -108,47 +119,62 @@
   background: #f87171;
 }
 
+/* Кнопка на фото — такая же, как на странице бокса */
 .store-card-book {
-  background: none;
-  border: none;
-  padding: 0;
-  font-size: 0.75rem;
-  font-weight: var(--font-weight-regular);
-  color: rgba(255, 255, 255, 0.9);
-  cursor: pointer;
-  font-family: inherit;
+  pointer-events: auto;
   display: inline-block;
+  padding: 9px 18px;
+  background: #fff;
+  border: 1px solid #fff;
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--lh-tight);
+  color: var(--color-navy);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  transition: opacity 0.2s;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
 }
 
 .store-card-book:hover {
-  opacity: 0.6;
+  opacity: 0.85;
 }
 
-/* ── Detail view ── */
+/* ── Страница бутика ── */
 .store-detail {
+  padding-top: 70px;
+}
+
+/* Шапка по центру, без разделительной линии */
+.store-detail-header {
   max-width: 680px;
-  margin: 70px auto 0;
-  padding: 32px 20px 80px;
+  margin: 0 auto 24px;
+  padding: 56px 20px 0;
+  text-align: center;
 }
 
-.store-back {
-  background: none;
-  border: none;
-  font-size: 0.8125rem;
+.store-detail-city {
+  font-size: var(--fs-lg);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--lh-tight);
+  color: var(--color-navy);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 8px 0;
+}
+
+.store-detail-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-light);
+  line-height: var(--lh-text);
   color: var(--color-secondary);
-  cursor: pointer;
-  padding: 0;
-  margin-bottom: 32px;
-  font-family: inherit;
-  transition: color 0.2s;
-  display: block;
-}
-
-.store-back:hover {
-  color: var(--color-primary);
+  margin: 0;
 }
 
 .store-detail-photo {
@@ -165,32 +191,21 @@
   display: block;
 }
 
-.store-detail-header {
-  margin-bottom: 40px;
-  padding-bottom: 32px;
-  border-bottom: 1px solid var(--color-outline);
-}
-
-.store-detail-city {
-  font-size: 0.8125rem;
-  font-weight: var(--font-weight-regular);
-  color: var(--color-navy);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin: 0 0 10px 0;
-}
-
-.store-detail-status {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.8125rem;
-  font-weight: 100;
-  color: var(--color-secondary);
-  margin: 0;
+/* На десктопе фото остаётся в колонке с текстом; во всю ширину — только на
+   телефоне, где колонка и так занимает экран. */
+@media (min-width: 769px) {
+  .store-detail-photo {
+    width: calc(100% - 40px);
+    max-width: 640px;
+    margin: 0 auto 32px;
+    border-radius: var(--radius-md);
+  }
 }
 
 .store-detail-body {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
   display: flex;
   flex-direction: column;
   gap: 32px;
@@ -203,27 +218,34 @@
 }
 
 .store-detail-section h3 {
-  font-size: 0.8125rem;
-  font-weight: var(--font-weight-regular);
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--lh-tight);
   color: var(--color-navy);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   margin: 0;
 }
 
 .store-detail-section p {
-  font-size: 0.8125rem;
-  font-weight: 100;
-  color: #000;
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-light);
+  line-height: var(--lh-text);
+  color: var(--color-primary);
   margin: 0;
-  line-height: 1.6;
+}
+
+/* Ручной перенос адреса — только на телефоне */
+.store-address-br {
+  display: none;
 }
 
 .store-detail-section a {
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-light);
+  line-height: var(--lh-text);
   color: var(--color-navy);
   text-decoration: none;
-  font-size: 0.8125rem;
-  font-weight: 100;
 }
 
 .store-detail-section a:hover {
@@ -233,75 +255,170 @@
 .store-map-embed {
   width: 100%;
   overflow: hidden;
-  margin: 12px 0 10px;
+  border-radius: var(--radius-md);
+  margin: 4px 0;
 }
 
 .store-map-embed iframe {
   display: block;
 }
 
+/* Ссылка на карту — капсом, жирная и подчёркнутая */
 .store-map-link {
-  font-size: 0.8125rem !important;
-  color: var(--color-navy) !important;
+  align-self: flex-start;
+  margin-top: 4px;
+  font-weight: var(--font-weight-medium) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-decoration: underline !important;
+  text-underline-offset: 3px;
 }
 
-/* ── Hours ── */
+.store-map-link:hover {
+  opacity: 0.6;
+}
+
+/* Серая стеклянная подложка — одна на часы работы, остановки и парковку */
+.store-panel {
+  padding: 16px 24px;
+  border-radius: var(--radius-md);
+  background: rgba(242, 241, 238, 0.65);
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: var(--glass-sheen);
+}
+
+/* ── Остановки и парковка внутри блока адреса ── */
+.store-subblock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.store-subblock h4 {
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--lh-tight);
+  color: var(--color-navy);
+  letter-spacing: 0.06em;
+  margin: 0;
+}
+
+.store-stops {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+}
+
+.store-stops li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-light);
+  line-height: var(--lh-text);
+  color: var(--color-primary);
+}
+
+.store-stop-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: var(--color-navy);
+  stroke-width: 1.2;
+  stroke-linecap: round;
+}
+
+.store-detail-section p.store-parking-place {
+  margin: 0 0 10px 0;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-navy);
+}
+
+.store-parking {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+}
+
+.store-parking-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: var(--fs-base);
+  line-height: var(--lh-text);
+}
+
+.store-parking-row dt {
+  font-weight: var(--font-weight-light);
+  color: var(--color-secondary);
+}
+
+.store-parking-row dd {
+  margin: 0;
+  text-align: right;
+  font-weight: var(--font-weight-light);
+  color: var(--color-primary);
+}
+
+/* ── Часы работы: без разделительных линий ── */
 .store-hours-list {
   display: flex;
   flex-direction: column;
+  gap: 6px;
 }
 
 .store-hours-row {
   display: flex;
   justify-content: space-between;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--color-outline);
-  font-size: 0.8125rem;
-  font-weight: 100;
-  color: #000;
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-light);
+  line-height: var(--lh-text);
+  color: var(--color-primary);
 }
 
 .store-hours-row.today {
   color: var(--color-navy);
-  font-weight: var(--font-weight-regular);
+  font-weight: var(--font-weight-medium);
 }
 
 .store-hours-day { flex: 1; }
 .store-hours-time { text-align: right; }
 
-/* ── Book button ── */
+/* ── Кнопка записи ── */
 .store-booking-btn {
-  width: 100%;
-  padding: var(--spacing-04);
+  align-self: center;
+  min-height: 40px;
+  padding: 0 20px;
   background: var(--color-navy);
   color: #fff;
-  border: none;
-  border-radius: 0;
-  font-size: 0.75rem;
-  font-weight: var(--font-weight-regular);
-  letter-spacing: 0.08em;
+  border: 1px solid var(--color-navy);
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--lh-tight);
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   cursor: pointer;
-  font-family: inherit;
-  transition: background 0.2s;
+  transition: opacity 0.2s ease;
   margin-top: 8px;
 }
 
 .store-booking-btn:hover {
-  background: #0d2a4a;
+  opacity: 0.85;
 }
 
-/* ── Mobile ── */
+/* ── Мобильная ── */
 @media (max-width: 768px) {
   .stores-page {
-    margin-top: 60px;
-    padding: 0;
-  }
-
-  .stores-title {
-    font-size: 1.375rem;
-    margin-bottom: 24px;
-    padding: 32px 16px 0;
+    padding-top: 60px;
   }
 
   .stores-grid {
@@ -314,23 +431,30 @@
   }
 
   .store-card-info {
-    padding: 24px 20px;
+    padding: 0 20px 24px;
   }
 
-  .store-card-info h2 {
-    font-size: 1.25rem;
+  .store-card-book {
+    padding: 7px 14px;
   }
 
   .store-detail {
-    margin-top: 60px;
-    padding: 20px 16px 60px;
+    padding-top: 60px;
+  }
+
+  .store-detail-header {
+    padding: 44px 16px 0;
+  }
+
+  .store-address-br {
+    display: inline;
+  }
+
+  .store-detail-body {
+    padding: 0 16px 60px;
   }
 
   .store-detail-photo {
     height: 220px;
-  }
-
-  .store-detail-city {
-    font-size: 1.5rem;
   }
 }

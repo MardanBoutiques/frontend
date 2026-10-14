@@ -41,15 +41,39 @@ body {
   z-index: 1;
 }
 
-.hero-picture-darkening {
+/* Затемнение только в левом нижнем углу, где стоит список категорий:
+   сплошная вуаль глушила бы весь кадр, а без неё белые пункты теряются
+   на светлых участках фото. */
+.hero-picture::after {
+  content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: var(--color-overlay);
-  z-index: 2;
-  transition: background-color var(--tr-duration-in) var(--tr-timing-in);
+  inset: 0;
+  background: radial-gradient(
+    70% 55% at 0% 100%,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(0, 0, 0, 0.4) 35%,
+    rgba(0, 0, 0, 0.15) 55%,
+    transparent 75%
+  );
+  pointer-events: none;
+}
+
+/* Подпись в левом верхнем углу hero — сезон или название кампании */
+.hero-caption {
+  position: absolute;
+  /* Ниже шапки: она фиксированная, высотой 70px */
+  top: calc(70px + var(--spacing-06));
+  left: var(--spacing-10);
+  z-index: 10;
+  margin: 0;
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--lh-tight);
+  color: var(--color-surface);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
 }
 
 /* Category list over the hero: anchored to the bottom, so items unfolding
@@ -64,24 +88,35 @@ body {
   gap: 0;
 }
 
-.hero-section-menu a {
-  color: var(--color-surface);
-  font-size: clamp(1.25rem, 2vw, 1.875rem);
-  font-weight: var(--font-weight-regular);
-  letter-spacing: 0.01em;
-  line-height: 1.3;
-  padding: 3px 0;
-  text-decoration: none;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
-  transition: opacity 0.45s ease, max-height 0.45s ease, transform 0.45s ease;
-}
+
 
 /* Items unfold one by one as the pinned hero is scrolled through */
+/* Пункт может быть и ссылкой, и кнопкой (когда открывает меню), поэтому
+   стили заданы на общем классе, а не на теге, и снимают с кнопки её
+   собственное оформление. */
 .hero-nav-item {
   max-height: 0;
   opacity: 0;
   overflow: hidden;
   transform: translateY(10px);
+
+  display: block;
+  width: fit-content;
+  padding: 3px 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+  font-family: inherit;
+  font-size: clamp(1.25rem, 2vw, 1.875rem);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-surface);
+  letter-spacing: 0.01em;
+  line-height: 1.3;
+  text-align: left;
+  text-decoration: none;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+  transition: opacity 0.45s ease, max-height 0.45s ease, transform 0.45s ease;
 }
 
 .hero-nav-item.is-shown {
@@ -96,7 +131,7 @@ body {
   }
 }
 
-.hero-section-menu a:hover {
+.hero-nav-item:hover {
   opacity: 0.7;
 }
 
@@ -116,70 +151,55 @@ body {
   overflow: hidden;
 }
 
-/* Scroll reveal: blocks fade and rise into place as they enter the viewport */
-[data-reveal] {
-  opacity: 0;
-  transform: translateY(48px);
-  transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+
+/* Девиз над блоком магазинов: вместе они занимают ровно экран (50vh + 50vh) */
+.home-motto {
+  width: 100%;
+  height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-10) var(--spacing-20);
+  background: #fff;
 }
 
-[data-reveal].is-visible {
+.home-motto-text {
+  margin: 0;
+  font-size: var(--fs-xl);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-navy);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.home-motto-line {
+  display: block;
+}
+
+/* Проявление строка за строкой: лёгкий подъём и фейд, задержка задаётся
+   в разметке, поэтому порядок всегда сверху вниз */
+.home-reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.in .home-reveal {
   opacity: 1;
   transform: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-reveal],
-  [data-reveal].is-visible {
+  .home-reveal {
     opacity: 1;
     transform: none;
     transition: none;
   }
 }
 
-
-/* Last row: one solid block — white statement to the exact middle, store photo right */
-.home-stores {
-  text-decoration: none;
-}
-
-.home-statement {
-  flex: 0 0 50%;
-  background: #fff;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: var(--spacing-10);
-}
-
-.home-statement-title {
-  font-size: clamp(2rem, 4.5vw, 4.5rem);
-  font-weight: var(--font-weight-regular);
-  color: var(--color-navy);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  line-height: 1.05;
-  margin: 0 0 24px;
-}
-
-.home-statement-text {
-  font-size: 1rem;
-  font-weight: 100;
-  color: var(--color-navy);
-  opacity: 0.7;
-  letter-spacing: 0.04em;
-  line-height: 1.6;
-  margin: 0;
-  max-width: 420px;
-}
-
-.home-stores-photo {
-  flex: 0 0 50%;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
+/* Белая кнопка на синем — как на карточках магазинов и на боксе */
 .collection-section {
   flex: 1;
   position: relative;
@@ -187,6 +207,15 @@ body {
   cursor: pointer;
   text-decoration: none;
   display: block;
+  /* Плитка тоже бывает кнопкой — обнуляем фон, рамку и отступы */
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  width: 100%;
   transition: opacity var(--tr-duration-out) var(--tr-timing-out);
 }
 
@@ -291,17 +320,14 @@ body {
     flex-direction: column;
   }
 
-  .home-statement {
-    flex: none;
-    width: 100%;
+  .home-motto {
+    height: 35vh;
     padding: var(--spacing-08) var(--spacing-06);
-    min-height: 60vh;
   }
 
-  .home-stores-photo {
-    flex: none;
-    width: 100%;
-    height: 70vh;
+  .home-motto-text {
+    font-size: var(--fs-lg);
+    line-height: 1.5;
   }
 
   .collection-section {
@@ -320,6 +346,11 @@ body {
 
   .hero-section-menu {
     bottom: var(--spacing-06);
+    left: var(--spacing-06);
+  }
+
+  .hero-caption {
+    top: calc(60px + var(--spacing-05));
     left: var(--spacing-06);
   }
 

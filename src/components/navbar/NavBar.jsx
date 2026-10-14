@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCart } from "../../context/CartContext";
 import "./NavBar.css";
 
@@ -11,14 +11,30 @@ const NavBar = ({ children, forHome }) => {
   const [clothingOpen, setClothingOpen] = useState(false);
   const [outerwearOpen, setOuterwearOpen] = useState(false);
   const [accessoriesOpen, setAccessoriesOpen] = useState(false);
-  const [giftGuideOpen, setGiftGuideOpen] = useState(false);
-
   const closeSubmenus = () => {
     setClothingOpen(false);
     setOuterwearOpen(false);
     setAccessoriesOpen(false);
-    setGiftGuideOpen(false);
   };
+
+  // Подвал и главная просят открыть меню — слушаем событие, чтобы не тянуть
+  // состояние меню через всё приложение ради пары кнопок. В detail.submenu
+  // можно передать раздел, который нужно сразу раскрыть.
+  useEffect(() => {
+    const open = (event) => {
+      setMenuOpen(true);
+      setClothingOpen(false);
+      setOuterwearOpen(false);
+      setAccessoriesOpen(false);
+
+      const submenu = event.detail && event.detail.submenu;
+      if (submenu === "clothing") setClothingOpen(true);
+      else if (submenu === "outerwear") setOuterwearOpen(true);
+      else if (submenu === "accessories") setAccessoriesOpen(true);
+    };
+    window.addEventListener("mardan:open-menu", open);
+    return () => window.removeEventListener("mardan:open-menu", open);
+  }, []);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -66,12 +82,7 @@ const NavBar = ({ children, forHome }) => {
     { label: 'Носки', path: '/catalogue?category=accessories&subcategory=socks' },
   ];
 
-  const giftGuideItems = [
-    { label: 'Подарочный бокс', path: '/giftbox' },
-    { label: 'Подарочная карта', path: '/giftcard' },
-  ];
-
-  const anySubmenuOpen = clothingOpen || outerwearOpen || accessoriesOpen || giftGuideOpen;
+  const anySubmenuOpen = clothingOpen || outerwearOpen || accessoriesOpen;
 
   return (
     <>
@@ -84,8 +95,8 @@ const NavBar = ({ children, forHome }) => {
           <img src="/icon.png" alt="Logo" />
         </div>
         <nav className="navbar-links">
-          <a href="#" onClick={(e) => { e.preventDefault(); navigate("/about"); }}>О компании</a>
-          <a href="#" onClick={(e) => { e.preventDefault(); navigate("/vacancies"); }}>Вакансии</a>
+          <button type="button" onClick={() => navigate("/about")}>О компании</button>
+          <button type="button" onClick={() => navigate("/vacancies")}>Вакансии</button>
         </nav>
         <div className="icon-1 cart-icon" onClick={() => navigate("/cart")}>
           <img src="/shopping-bag.png" alt="Cart" />
@@ -102,55 +113,58 @@ const NavBar = ({ children, forHome }) => {
       <div className={`sidebar-menu ${menuOpen ? "open" : ""} ${anySubmenuOpen ? "drilled" : ""}`}>
         <div className="sidebar-topbar">
           {anySubmenuOpen && (
-            <button className="back-btn" onClick={closeSubmenus}>&lt;</button>
+            <button className="back-btn" onClick={closeSubmenus} aria-label="Назад">
+              <img src="/left-chevron.png" alt="" />
+            </button>
           )}
-          <button className="close-btn" onClick={toggleMenu}>✕</button>
+          <button className="close-btn" onClick={toggleMenu} aria-label="Закрыть меню">
+            <img src="/close.png" alt="" />
+          </button>
         </div>
         <div className="sidebar-columns">
-          <nav className="sidebar-nav sidebar-nav-main">
-            <a href="#" onClick={() => goTo("/catalogue?category=new")}>Новые поступления</a>
-            <a
-              href="#"
+          <nav className={`sidebar-nav sidebar-nav-main ${anySubmenuOpen ? "has-active" : ""}`}>
+            <button type="button" onClick={() => goTo("/catalogue?category=new")}>Новые поступления</button>
+            <button
+              type="button"
               className={clothingOpen ? "active" : ""}
               onClick={openSubmenu(setClothingOpen)}
             >
               Одежда
-            </a>
-            <a
-              href="#"
+            </button>
+            <button
+              type="button"
               className={outerwearOpen ? "active" : ""}
               onClick={openSubmenu(setOuterwearOpen)}
             >
               Верхняя одежда
-            </a>
-            <a href="#" onClick={() => goTo("/catalogue?category=shoes")}>Обувь</a>
-            <a
-              href="#"
+            </button>
+            <button type="button" onClick={() => goTo("/catalogue?category=shoes")}>Обувь</button>
+            <button
+              type="button"
               className={accessoriesOpen ? "active" : ""}
               onClick={openSubmenu(setAccessoriesOpen)}
             >
               Аксессуары
-            </a>
-            <a
-              href="#"
-              className={giftGuideOpen ? "active" : ""}
-              onClick={openSubmenu(setGiftGuideOpen)}
-            >
-              Подарочный гид
-            </a>
-            <a href="#" onClick={() => goTo("/stores")}>Магазины</a>
+            </button>
+            <button type="button" onClick={() => goTo("/gift-guide")}>Подарочный гид</button>
+            <button type="button" onClick={() => goTo("/stores")}>Магазины</button>
             {/* В навбаре эти ссылки не помещаются на мобильных — дублируем их здесь */}
-            <a href="#" className="sidebar-mobile-only" onClick={() => goTo("/about")}>О компании</a>
-            <a href="#" className="sidebar-mobile-only" onClick={() => goTo("/vacancies")}>Вакансии</a>
+            <button type="button" className="sidebar-mobile-only" onClick={() => goTo("/about")}>О компании</button>
+            <button type="button" className="sidebar-mobile-only" onClick={() => goTo("/vacancies")}>Вакансии</button>
           </nav>
 
           {clothingOpen && (
             <nav className="sidebar-nav sidebar-nav-sub">
               <p className="sidebar-subnav-heading">Одежда</p>
               {clothingItems.map((sub) => (
-                <a key={sub.label} href="#" className="sidebar-subnav-item" onClick={() => goTo(sub.path)}>
+                <button
+                  key={sub.label}
+                  type="button"
+                  className="sidebar-subnav-item"
+                  onClick={() => goTo(sub.path)}
+                >
                   {sub.label}
-                </a>
+                </button>
               ))}
             </nav>
           )}
@@ -159,9 +173,14 @@ const NavBar = ({ children, forHome }) => {
             <nav className="sidebar-nav sidebar-nav-sub">
               <p className="sidebar-subnav-heading">Верхняя одежда</p>
               {outerwearItems.map((sub) => (
-                <a key={sub.label} href="#" className="sidebar-subnav-item" onClick={() => goTo(sub.path)}>
+                <button
+                  key={sub.label}
+                  type="button"
+                  className="sidebar-subnav-item"
+                  onClick={() => goTo(sub.path)}
+                >
                   {sub.label}
-                </a>
+                </button>
               ))}
             </nav>
           )}
@@ -170,23 +189,18 @@ const NavBar = ({ children, forHome }) => {
             <nav className="sidebar-nav sidebar-nav-sub">
               <p className="sidebar-subnav-heading">Аксессуары</p>
               {accessoryItems.map((sub) => (
-                <a key={sub.label} href="#" className="sidebar-subnav-item" onClick={() => goTo(sub.path)}>
+                <button
+                  key={sub.label}
+                  type="button"
+                  className="sidebar-subnav-item"
+                  onClick={() => goTo(sub.path)}
+                >
                   {sub.label}
-                </a>
+                </button>
               ))}
             </nav>
           )}
 
-          {giftGuideOpen && (
-            <nav className="sidebar-nav sidebar-nav-sub">
-              <p className="sidebar-subnav-heading">Подарочный гид</p>
-              {giftGuideItems.map((sub) => (
-                <a key={sub.label} href="#" className="sidebar-subnav-item" onClick={() => goTo(sub.path)}>
-                  {sub.label}
-                </a>
-              ))}
-            </nav>
-          )}
         </div>
       </div>
     </>

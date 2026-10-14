@@ -147,18 +147,6 @@ const Filter = ({ isHidden, onSort, currentSort }) => {
           >
             По цене: по убыванию
           </div>
-          <div 
-            className={`filter-option ${currentSort === 'name-asc' ? 'active' : ''}`}
-            onClick={() => onSort('name-asc')}
-          >
-            По названию: А-Я
-          </div>
-          <div 
-            className={`filter-option ${currentSort === 'name-desc' ? 'active' : ''}`}
-            onClick={() => onSort('name-desc')}
-          >
-            По названию: Я-А
-          </div>
         </div>
       </div>
     </div>
@@ -178,11 +166,27 @@ const Catalogue = () => {
   const category = searchParams.get("category");
   const subcategory = searchParams.get("subcategory");
 
+  // Точка возврата из корзины — ровно тот раздел, где покупатель был,
+  // включая подкатегорию, а не общая страница категории.
   useEffect(() => {
-    if (category) sessionStorage.setItem('lastCatalogueCategory', category);
-  }, [category]);
+    if (category) {
+      const params = new URLSearchParams({ category });
+      if (subcategory) params.set('subcategory', subcategory);
+      sessionStorage.setItem('lastCataloguePath', `/catalogue?${params}`);
+    }
+    sessionStorage.removeItem('lastProductPath');
+  }, [category, subcategory]);
 
   useEffect(() => {
+    // Смена категории — это такой же вход в раздел: сначала стекло и белое
+    // поле, и только потом новые карточки. Без сброса под стеклом остались
+    // бы висеть товары предыдущей категории.
+    setLoading(true);
+    setError(null);
+    setProducts([]);
+    setSortedProducts([]);
+    window.scrollTo(0, 0);
+
     api
       .get("/")
       .then((response) => {
@@ -226,12 +230,6 @@ const Catalogue = () => {
         break;
       case 'price-desc':
         sorted.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
-        break;
-      case 'name-asc':
-        sorted.sort((a, b) => a.name.localeCompare(b.name, 'ru'));
-        break;
-      case 'name-desc':
-        sorted.sort((a, b) => b.name.localeCompare(a.name, 'ru'));
         break;
       default:
         sorted = products;
@@ -330,7 +328,9 @@ const Catalogue = () => {
       </div>
       
       <Filter isHidden={!filterChosen} onSort={handleSort} currentSort={sortType} />
-      {isLoading && <div className="loading">Loading...</div>}
+      {/* Пока грузится — просто белое поле во весь экран: ни надписи
+          «Loading», ни подъехавшего снизу футера под стеклом не видно */}
+      {isLoading && <div className="catalogue-loading" />}
       {error && <div className="error">Error: {error}</div>}
       {!isLoading && sortedProducts.length === 0 && !error && (
         <div className="no-products">No products found</div>

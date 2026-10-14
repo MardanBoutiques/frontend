@@ -13,8 +13,9 @@
 }
 
 .burger-menu img {
-  width: 24px;
-  height: 24px;
+  /* Высота по пропорции: картинка не квадратная (512×373) */
+  width: 22px;
+  height: auto;
   display: block;
 }
 
@@ -22,7 +23,10 @@
 .sidebar-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  /* Стекло с затемнением: страница под меню размывается и уходит в тень */
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: var(--glass-blur-deep);
+  -webkit-backdrop-filter: var(--glass-blur-deep);
   z-index: 1001;
   opacity: 0;
   pointer-events: none;
@@ -32,6 +36,11 @@
 .sidebar-overlay.open {
   opacity: 1;
   pointer-events: auto;
+}
+
+/* Меню уже закрыто, стекло ещё держится — кликам мешать не должно */
+.sidebar-overlay.hold {
+  pointer-events: none;
 }
 
 /* Fullscreen Menu */
@@ -66,13 +75,16 @@
   right: 28px;
   background: none;
   border: none;
-  font-size: 20px;
   cursor: pointer;
-  color: var(--color-navy);
   padding: 0;
-  line-height: 1;
+  line-height: 0;
   transition: opacity 0.2s ease;
-  font-family: inherit;
+}
+
+.close-btn img {
+  display: block;
+  width: 16px;
+  height: 16px;
 }
 
 .close-btn:hover {
@@ -82,18 +94,22 @@
 .back-btn {
   display: none;
   position: absolute;
-  top: 20px;
+  /* Коробка шеврона крупнее крестика — отступ подобран так, чтобы
+     совпали центры: 32px от верха у обоих */
+  top: 21px;
   left: 28px;
   background: none;
   border: none;
-  font-size: 20px;
-  font-weight: 400;
   cursor: pointer;
-  color: var(--color-navy);
   padding: 0;
-  line-height: 1;
+  line-height: 0;
   transition: opacity 0.2s ease;
-  font-family: inherit;
+}
+
+.back-btn img {
+  display: block;
+  width: 22px;
+  height: 22px;
 }
 
 .back-btn:hover {
@@ -114,8 +130,54 @@
   gap: 4px;
 }
 
-.sidebar-nav a,
+/* При открытии пункты проявляются по очереди сверху вниз */
+@keyframes sidebar-item-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.sidebar-menu.open .sidebar-nav > * {
+  animation: sidebar-item-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.sidebar-menu.open .sidebar-nav > *:nth-child(1) { animation-delay: 45ms; }
+.sidebar-menu.open .sidebar-nav > *:nth-child(2) { animation-delay: 90ms; }
+.sidebar-menu.open .sidebar-nav > *:nth-child(3) { animation-delay: 135ms; }
+.sidebar-menu.open .sidebar-nav > *:nth-child(4) { animation-delay: 180ms; }
+.sidebar-menu.open .sidebar-nav > *:nth-child(5) { animation-delay: 225ms; }
+.sidebar-menu.open .sidebar-nav > *:nth-child(6) { animation-delay: 270ms; }
+.sidebar-menu.open .sidebar-nav > *:nth-child(7) { animation-delay: 315ms; }
+.sidebar-menu.open .sidebar-nav > *:nth-child(8) { animation-delay: 360ms; }
+.sidebar-menu.open .sidebar-nav > *:nth-child(9) { animation-delay: 405ms; }
+.sidebar-menu.open .sidebar-nav > *:nth-child(10) { animation-delay: 450ms; }
+.sidebar-menu.open .sidebar-nav > *:nth-child(11) { animation-delay: 495ms; }
+.sidebar-menu.open .sidebar-nav > *:nth-child(12) { animation-delay: 540ms; }
+.sidebar-menu.open .sidebar-nav > *:nth-child(13) { animation-delay: 585ms; }
+.sidebar-menu.open .sidebar-nav > *:nth-child(14) { animation-delay: 630ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-menu.open .sidebar-nav > * {
+    animation: none;
+  }
+}
+
+/* Пункты меню — кнопки, а не ссылки: снимаем с них браузерный вид */
+.sidebar-nav button,
 .sidebar-nav .sidebar-subnav-heading {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  border-radius: 0;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
   padding: 14px 0;
   color: var(--color-navy);
   text-decoration: none;
@@ -139,12 +201,23 @@
   opacity: 0.85;
 }
 
-.sidebar-nav a:hover {
+.sidebar-nav button:hover {
   opacity: 0.5;
 }
 
-.sidebar-nav-main a.active {
-  font-weight: 700;
+/* Выбранный раздел остаётся тёмным и плотным, остальные уходят в серый.
+   Только на десктопе: на телефоне список подменю перекрывает главный,
+   и подсвечивать там нечего. Селектор по классу, а не по тегу —
+   пункты меню теперь кнопки. */
+@media (min-width: 769px) {
+  .sidebar-nav-main .active {
+    font-weight: var(--font-weight-medium);
+    color: var(--color-navy);
+  }
+
+  .sidebar-nav-main.has-active button:not(.active) {
+    color: var(--color-secondary);
+  }
 }
 
 /* Second column (accessory subcategories) — hidden until drilled in */
@@ -181,7 +254,7 @@
   margin: 0 0 4px;
 }
 
-.sidebar-nav-sub a.sidebar-subnav-item {
+.sidebar-nav-sub .sidebar-subnav-item {
   font-size: 0.9375rem;
   font-weight: var(--font-weight-light);
 }
@@ -194,11 +267,11 @@
   left: 0;
   width: 100%;
   height: 70px;
-  background: rgba(255, 255, 255, 0.50);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur-deep);
+  -webkit-backdrop-filter: var(--glass-blur-deep);
   border-bottom: var(--glass-border);
-  box-shadow: var(--glass-shadow);
+  box-shadow: var(--glass-sheen), var(--glass-shadow);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -263,7 +336,12 @@
   gap: 24px;
 }
 
-.navbar-links a {
+.navbar-links button {
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
   font-size: 0.6875rem;
   font-weight: var(--font-weight-regular);
   text-transform: uppercase;
@@ -274,12 +352,14 @@
   transition: opacity 0.2s ease;
 }
 
-.navbar-links a:hover {
+.navbar-links button:hover {
   opacity: 0.5;
 }
 
-/* Shown only in the burger menu on mobile, where .navbar-links is hidden */
-.sidebar-mobile-only {
+/* Показываем только в бургер-меню на телефоне, где скрыт .navbar-links.
+   Селектор с двумя классами — иначе `.sidebar-nav button { display: block }`
+   выше по файлу оказывается сильнее и пункты видны на десктопе. */
+.sidebar-nav .sidebar-mobile-only {
   display: none;
 }
 
@@ -342,8 +422,21 @@
     display: none;
   }
 
+  /* Второстепенные пункты — мельче основного списка */
   .sidebar-nav .sidebar-mobile-only {
     display: block;
+    font-size: var(--fs-base);
+  }
+
+  /* Отбивка перед второй группой: разделение задаёт воздух, а не линия.
+     :first-of-type здесь не годится — он смотрит на тип элемента, а не на
+     класс, и выбрал бы самую первую кнопку списка. */
+  .sidebar-nav .sidebar-mobile-only {
+    margin-top: 44px;
+  }
+
+  .sidebar-nav .sidebar-mobile-only + .sidebar-mobile-only {
+    margin-top: 0;
   }
 
   .back-btn {
@@ -354,15 +447,18 @@
     padding: 40px 28px;
   }
 
-  .sidebar-nav a {
+  /* Плотнее, чем по умолчанию: иначе отбивка перед второй группой теряется
+     среди обычных интервалов */
+  .sidebar-nav button {
     font-size: 1rem;
+    padding: 9px 0;
   }
 
   .sidebar-nav-sub .sidebar-subnav-heading {
     font-size: 1rem;
   }
 
-  .sidebar-nav-sub a.sidebar-subnav-item {
+  .sidebar-nav-sub .sidebar-subnav-item {
     font-size: 0.825rem;
   }
 

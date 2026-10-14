@@ -6,7 +6,7 @@
   background-image: url('/photos/vacancies-hero.jpg');
   background-size: cover;
   background-position: center;
-  background-color: #0f1a2e;
+  background-color: #fff;
   position: relative;
   display: flex;
   align-items: center;
@@ -33,45 +33,47 @@
 }
 
 .vac-hero-title {
-  font-size: 2.5rem;
-  font-weight: var(--font-weight-regular);
+  font-size: var(--fs-xl);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--lh-tight);
   color: #fff;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  line-height: 1.3;
   margin: 0;
 }
 
 .vac-hero-sub {
-  font-size: 0.9375rem;
-  font-weight: 100;
-  color: rgba(255,255,255,0.8);
-  letter-spacing: 0.04em;
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-light);
+  line-height: var(--lh-text);
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: 0.06em;
   margin: 0;
 }
 
+/* Кнопка на фото — белая с синим текстом, как на карточках магазинов */
 .vac-hero-btn {
   margin-top: 12px;
-  padding: 14px 48px;
-  background: transparent;
+  padding: 11px 22px;
+  background: #fff;
   border: 1px solid #fff;
-  border-radius: 0;
-  color: #fff;
-  font-size: 0.8125rem;
-  font-weight: var(--font-weight-regular);
-  letter-spacing: 0.1em;
+  border-radius: var(--radius-md);
+  color: var(--color-navy);
+  font-family: inherit;
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--lh-tight);
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   cursor: pointer;
-  font-family: inherit;
-  transition: background 0.2s, color 0.2s;
+  transition: opacity 0.2s ease;
 }
 
 .vac-hero-btn:hover {
-  background: #fff;
-  color: var(--color-navy);
+  opacity: 0.85;
 }
 
-/* ── Sections ── */
+/* ── Секции ── */
 .vac-section {
   padding: 64px 24px;
   background: #fff;
@@ -83,37 +85,45 @@
 }
 
 .vac-section-title {
-  font-size: 0.8125rem;
-  font-weight: var(--font-weight-regular);
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--lh-tight);
   color: var(--color-navy);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  margin: 0 0 40px;
+  margin: 0 0 32px;
 }
 
-/* ── Benefits ── */
+/* Ручной перенос заголовка — только на телефоне */
+.vac-title-br {
+  display: none;
+}
+
+/* ── Что даёт работа: карточки на серой стеклянной подложке ── */
 .vac-benefits {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 10px;
 }
 
 .vac-benefit-row {
   display: flex;
   align-items: center;
-  gap: 32px;
-  padding: 28px 0;
-  border-bottom: 1px solid var(--color-outline);
-}
-
-.vac-benefits .vac-benefit-row:first-child {
-  border-top: 1px solid var(--color-outline);
+  gap: 24px;
+  padding: 20px;
+  border-radius: var(--radius-md);
+  background: rgba(242, 241, 238, 0.65);
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: var(--glass-sheen);
 }
 
 .vac-benefit-card {
   flex-shrink: 0;
-  width: 120px;
-  height: 120px;
+  width: 96px;
+  height: 96px;
+  border-radius: 6px;
   background: var(--color-navy);
   display: flex;
   align-items: center;
@@ -121,9 +131,9 @@
 }
 
 .vac-benefit-num {
-  font-size: 1.75rem;
-  font-weight: 100;
-  color: rgba(255,255,255,0.4);
+  font-size: var(--fs-xl);
+  font-weight: var(--font-weight-light);
+  color: rgba(255, 255, 255, 0.45);
   line-height: 1;
 }
 
@@ -131,60 +141,60 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-width: 0;
 }
 
 .vac-benefit-title {
-  font-size: 1rem;
-  font-weight: var(--font-weight-regular);
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--lh-tight);
   color: var(--color-navy);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   margin: 0;
 }
 
 .vac-benefit-text {
-  font-size: 0.8125rem;
-  font-weight: 100;
-  color: #000;
-  line-height: 1.7;
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-light);
+  line-height: var(--lh-text);
+  color: var(--color-primary);
   margin: 0;
   max-width: 560px;
 }
 
-/* ── Vacancies list ── */
+/* ── Открытые вакансии ── */
 .vac-list {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 10px;
 }
 
 .vac-card {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 28px 0;
-  border-bottom: 1px solid var(--color-outline);
-  cursor: pointer;
-  transition: padding-left 0.2s;
-}
-
-.vac-card:first-child {
-  border-top: 1px solid var(--color-outline);
-}
-
-.vac-card:hover {
-  padding-left: 12px;
+  gap: 16px;
+  padding: 20px 24px;
+  border-radius: var(--radius-md);
+  background: rgba(242, 241, 238, 0.65);
+  backdrop-filter: var(--glass-blur-light);
+  -webkit-backdrop-filter: var(--glass-blur-light);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: var(--glass-sheen);
 }
 
 .vac-card-left {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  min-width: 0;
 }
 
 .vac-card-city {
-  font-size: 0.75rem;
-  font-weight: 100;
+  font-size: var(--fs-sm);
+  font-weight: var(--font-weight-light);
+  line-height: var(--lh-tight);
   color: var(--color-secondary);
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -192,26 +202,40 @@
 }
 
 .vac-card-title {
-  font-size: 0.9375rem;
-  font-weight: var(--font-weight-regular);
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--lh-tight);
   color: var(--color-navy);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
   margin: 0;
 }
 
-.vac-card-arrow {
-  font-size: 1.25rem;
-  color: var(--color-secondary);
-  transition: transform 0.2s, color 0.2s;
+/* Кнопка справа в карточке — синяя, как «Посетить» на странице «О компании» */
+.vac-card-apply {
+  flex-shrink: 0;
+  padding: 9px 18px;
+  border-radius: var(--radius-md);
+  background: var(--color-navy);
+  border: 1px solid var(--color-navy);
+  color: #fff;
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--lh-tight);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
 }
 
-.vac-card:hover .vac-card-arrow {
-  transform: translateX(6px);
-  color: var(--color-navy);
+.vac-card-apply:hover {
+  opacity: 0.85;
 }
 
-/* ── Detail page ── */
+/* ── Страница вакансии ── */
 .vac-detail-container {
   margin-top: 70px;
   max-width: 800px;
@@ -220,61 +244,44 @@
   padding: 40px 24px 80px;
 }
 
-.vac-back-btn {
-  background: none;
-  border: none;
-  padding: 0;
-  font-size: 0.8125rem;
-  font-weight: 100;
-  color: var(--color-secondary);
-  cursor: pointer;
-  font-family: inherit;
-  letter-spacing: 0.04em;
-  margin-bottom: 40px;
-  display: block;
-  transition: color 0.2s;
-}
-
-.vac-back-btn:hover {
-  color: var(--color-navy);
-}
-
+/* Разделительных линий нет: блоки разводит воздух */
 .vac-detail-header {
-  margin-bottom: 48px;
-  padding-bottom: 32px;
-  border-bottom: 1px solid var(--color-outline);
+  margin-bottom: 40px;
 }
 
 .vac-detail-city {
-  font-size: 0.75rem;
-  font-weight: 100;
+  font-size: var(--fs-sm);
+  font-weight: var(--font-weight-light);
+  line-height: var(--lh-tight);
   color: var(--color-secondary);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  margin: 0 0 12px;
+  margin: 0 0 10px;
 }
 
 .vac-detail-title {
-  font-size: 1.25rem;
-  font-weight: var(--font-weight-regular);
+  font-size: var(--fs-lg);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--lh-tight);
   color: var(--color-navy);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   margin: 0;
 }
 
 .vac-detail-body {
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 32px;
 }
 
 .vac-detail-section h2 {
-  font-size: 0.8125rem;
-  font-weight: var(--font-weight-regular);
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--lh-tight);
   color: var(--color-navy);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   margin: 0 0 16px;
 }
 
@@ -288,10 +295,10 @@
 }
 
 .vac-detail-section li {
-  font-size: 0.8125rem;
-  font-weight: 100;
-  color: #000;
-  line-height: 1.7;
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-light);
+  line-height: var(--lh-text);
+  color: var(--color-primary);
   padding-left: 16px;
   position: relative;
 }
@@ -304,66 +311,79 @@
 }
 
 .vac-detail-cta {
-  padding-top: 40px;
-  border-top: 1px solid var(--color-outline);
+  padding-top: 8px;
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
 .vac-detail-city-note {
-  font-size: 0.8125rem;
-  font-weight: var(--font-weight-regular);
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--lh-tight);
   color: var(--color-navy);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   margin: 0;
 }
 
 .vac-detail-cta-text {
-  font-size: 0.8125rem;
-  font-weight: 100;
-  color: #000;
-  line-height: 1.7;
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-light);
+  line-height: var(--lh-text);
+  color: var(--color-primary);
   margin: 0;
 }
 
 .vac-apply-btn {
   display: inline-block;
+  align-self: flex-start;
   margin-top: 8px;
-  padding: 14px 40px;
+  min-height: 40px;
+  padding: 11px 22px;
   background: var(--color-navy);
+  border: 1px solid var(--color-navy);
+  border-radius: var(--radius-md);
   color: #fff;
-  font-size: 0.8125rem;
-  font-weight: var(--font-weight-regular);
-  letter-spacing: 0.08em;
+  font-family: inherit;
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--lh-tight);
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   text-decoration: none;
-  font-family: inherit;
-  transition: background 0.2s;
-  align-self: flex-start;
+  transition: opacity 0.2s ease;
 }
 
 .vac-apply-btn:hover {
-  background: #0d2341;
+  opacity: 0.85;
 }
 
-/* ── Tablet ── */
+/* ── Планшет ── */
 @media (max-width: 1024px) {
   .vac-benefit-card {
-    width: 90px;
-    height: 90px;
+    width: 80px;
+    height: 80px;
   }
 }
 
-/* ── Mobile ── */
+/* ── Мобильная ── */
 @media (max-width: 640px) {
   .vac-hero-title {
-    font-size: 1.5rem;
+    font-size: calc(var(--fs-xl) - 8px);
   }
 
   .vac-section {
     padding: 48px 16px;
+  }
+
+  .vac-title-br {
+    display: inline;
+  }
+
+  .vac-benefit-row {
+    padding: 16px;
+    gap: 16px;
   }
 
   .vac-benefit-card {
@@ -372,7 +392,22 @@
   }
 
   .vac-benefit-num {
-    font-size: 1.25rem;
+    font-size: var(--fs-lg);
+  }
+
+  /* Кнопка уходит на свою строку и прижимается вправо */
+  .vac-card {
+    padding: 16px 18px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+
+  .vac-card-apply {
+    align-self: flex-end;
+    padding: 5px 10px;
+    font-size: 11px;
+    letter-spacing: 0.03em;
   }
 
   .vac-detail-container {

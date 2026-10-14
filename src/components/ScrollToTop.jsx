@@ -5,7 +5,9 @@ const ScrollToTop = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    // Именно instant: с глобальным scroll-behavior: smooth переход на новую
+    // страницу иначе превращался бы в долгую прокрутку наверх.
+    window.scrollTo({ top: 0, behavior: "instant" });
   }, [pathname]);
 
   return null;

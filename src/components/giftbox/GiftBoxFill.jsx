@@ -45,7 +45,7 @@ export default function GiftBoxFill() {
     selected.forEach((p) => {
       addToCart({ id: p.id, name: p.name, price: p.price, image: p.image }, "Один размер");
     });
-    navigate("/cart");
+    navigate("/cart", { state: { noVeil: true } });
   };
 
   return (
@@ -62,7 +62,7 @@ export default function GiftBoxFill() {
         </div>
 
         {loading ? (
-          <div className="giftboxfill-loading">Загрузка...</div>
+          <div className="giftboxfill-loading" />
         ) : (
           <div className="giftboxfill-grid">
             {products.map((product) => (

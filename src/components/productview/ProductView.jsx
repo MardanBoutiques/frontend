@@ -1,51 +1,122 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import NavBar from "../navbar/NavBar";
+import StoreVisitCta from '../storescta/StoreVisitCta';
 import api from "../../api/axios";
 import { useCart } from "../../context/CartContext";
 import { getImageUrl } from "../../utils/imageUrl";
-import { getColorCode as getMappedColorCode } from "../../utils/colorMap";
 import "./ProductView.css";
 
-const Accordion = ({ title, children, open, onToggle }) => {
-  return (
-    <div className={`accordion-section ${open ? 'open' : ''}`}>
-      <button className="accordion-header" onClick={onToggle}>
-        <h3>{title}</h3>
-        <span className="accordion-icon">{open ? '−' : '+'}</span>
-      </button>
-      {open && <div className="accordion-body">{children}</div>}
+const Accordion = ({ title, children, open, onToggle }) => (
+  <div className={`pv-accordion ${open ? 'open' : ''}`}>
+    <button className="pv-accordion-head" onClick={onToggle} type="button">
+      <span>{title}</span>
+      <span className="pv-accordion-icon">{open ? '−' : '+'}</span>
+    </button>
+    {/* Содержимое не размонтируется — иначе высоту нечего анимировать */}
+    <div className="pv-accordion-wrap">
+      <div className="pv-accordion-clip">
+        <div className="pv-accordion-body">{children}</div>
+      </div>
     </div>
-  );
-};
+  </div>
+);
 
-// Variant swatches must stay clickable even when a color can't be mapped,
-// so this falls back to a neutral grey instead of hiding the option.
-const getColorCode = (colorName) => getMappedColorCode(colorName) || '#888';
+const TruckIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" aria-hidden="true">
+    <path d="M2 7h11v9H2zM13 10h4.5l2.5 3v3h-7z" />
+    <circle cx="6" cy="18" r="1.6" />
+    <circle cx="16.5" cy="18" r="1.6" />
+  </svg>
+);
+
+const BoxIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" aria-hidden="true">
+    <path d="M12 3l8 4.2v9L12 20.4 4 16.2v-9z" />
+    <path d="M4 7.2l8 4.2 8-4.2M12 11.4v9" />
+  </svg>
+);
+
+const SpecRow = ({ label, value }) =>
+  value ? (
+    <div className="pv-spec-row">
+      <span className="pv-spec-label">{label}</span>
+      <span className="pv-spec-value">{value}</span>
+    </div>
+  ) : null;
 
 const ProductView = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const [product, setProduct] = useState(null);
-  const [variants, setVariants] = useState([]);
   const [loading, setLoading] = useState(true);
+  // Весь каталог держим в памяти: по нему строятся свотчи, и из него же
+  // мгновенно берётся товар при переключении оттенка — без похода на сервер.
+  const [catalogue, setCatalogue] = useState([]);
+  const catalogueRef = useRef([]);
   const [selectedSize, setSelectedSize] = useState('');
-  const [quantity, setQuantity] = useState(1);
-  const [addedToCart, setAddedToCart] = useState(false);
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [sizesOpen, setSizesOpen] = useState(false);
   const [openAccordion, setOpenAccordion] = useState(null);
+  const [photoIndex, setPhotoIndex] = useState(0);
+  // Полоса оттенков показывает 4 карточки; счётчик на четвёртой пропадает,
+  // как только её пролистали и остальные стали видны.
+  const [variantsScrolled, setVariantsScrolled] = useState(false);
+  // Блок покупки прилип к низу экрана (лежит на фото) или уже встал на место
+  const [buyStuck, setBuyStuck] = useState(false);
+  const buyRef = useRef(null);
+  // Фото закрывается белым, и уже под ним подменяется товар
+  const [veilOn, setVeilOn] = useState(false);
+  const swapTimer = useRef(null);
+
+  // На мобильном фото листаются свайпом, полоса снизу показывает позицию —
+  // как на карточке в каталоге.
+  const galleryRef = useRef(null);
+
+  const handleGalleryScroll = () => {
+    const el = galleryRef.current;
+    if (!el || !el.clientWidth) return;
+    setPhotoIndex(Math.round(el.scrollLeft / el.clientWidth));
+  };
+
+  // Клик по оттенку: кадр сразу закрывается белым, через 0,3с
+  // под ним уже другой цвет, и белое так же сразу снимается.
+  const openVariant = (variantId) => {
+    if (String(variantId) === String(id)) return;
+    setVeilOn(true);
+    clearTimeout(swapTimer.current);
+    swapTimer.current = setTimeout(() => navigate(`/product/${variantId}`), 300);
+  };
+
+  useEffect(() => () => clearTimeout(swapTimer.current), []);
 
   const toggleAccordion = (key) => {
-    setOpenAccordion(prev => prev === key ? null : key);
+    setOpenAccordion((prev) => (prev === key ? null : key));
   };
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-    setLoading(true);
+    // Куда вернуть из корзины по «Продолжить покупки»
+    sessionStorage.setItem('lastProductPath', `/product/${id}`);
+
     setSelectedSize('');
-    setSelectedImageIndex(0);
+    setSizesOpen(false);
     setOpenAccordion(null);
+    setPhotoIndex(0);
+    setVariantsScrolled(false);
+    setVeilOn(false);
+
+    // Товар уже загружен вместе с каталогом — подменяем содержимое на месте,
+    // без экрана загрузки и без прыжка к началу страницы.
+    const known = catalogueRef.current.find((p) => String(p.id) === String(id));
+    if (known) {
+      setProduct(known);
+      setLoading(false);
+    } else {
+      window.scrollTo(0, 0);
+      setLoading(true);
+    }
+
+    // Всё равно дочитываем карточку: в списке может не быть части полей
     api.get(`/${id}`)
       .then((response) => {
         setProduct(response.data);
@@ -55,20 +126,55 @@ const ProductView = () => {
         console.error("Error fetching product:", error);
         setLoading(false);
       });
-    api.get(`/${id}/variants`)
-      .then((response) => setVariants(response.data))
-      .catch(() => setVariants([]));
   }, [id]);
 
+  // Стекло нужно, только пока блок лежит на фотографии. Прилип — значит его
+  // нижний край совпадает с нижним краем экрана.
+  useEffect(() => {
+    const update = () => {
+      const buy = buyRef.current;
+      if (!buy) return;
+      setBuyStuck(buy.getBoundingClientRect().bottom >= window.innerHeight - 1);
+    };
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
 
+    // Пока фото не загрузились, страница короткая и название попадает в экран —
+    // без этого панель гасла бы сразу при открытии и больше не возвращалась.
+    const observer = new ResizeObserver(update);
+    observer.observe(document.body);
+
+    return () => {
+      window.removeEventListener('scroll', update);
+      window.removeEventListener('resize', update);
+      observer.disconnect();
+    };
+  }, [product]);
+
+  useEffect(() => {
+    api.get('/')
+      .then((response) => {
+        catalogueRef.current = response.data;
+        setCatalogue(response.data);
+      })
+      .catch(() => setCatalogue([]));
+  }, []);
+
+  // Другие оттенки того же товара — по артикулу, как в каталоге
+  const variants = useMemo(() => {
+    if (!product || catalogue.length === 0) return [];
+    const same = product.article
+      ? catalogue.filter((p) => p.article === product.article)
+      : catalogue.filter((p) => p.name === product.name && !p.article);
+    return same.length > 1 ? same : [];
+  }, [product, catalogue]);
 
   if (loading) {
     return (
       <>
         <NavBar />
-        <div className="product-view-container">
-          <div className="loading">Загрузка...</div>
-        </div>
+        <div className="pv-state" />
       </>
     );
   }
@@ -77,256 +183,221 @@ const ProductView = () => {
     return (
       <>
         <NavBar />
-        <div className="product-view-container">
-          <div className="error">Товар не найден</div>
-        </div>
+        <div className="pv-state">Товар не найден</div>
       </>
     );
   }
 
+  const isAccessory = product.category === 'accessories';
+
   const getSizes = () => {
     if (product.available_sizes) {
-      return product.available_sizes.split(',').map(s => s.trim()).filter(s => s);
+      return product.available_sizes.split(',').map((s) => s.trim()).filter(Boolean);
     }
-    if (product.category === 'accessories') return [];
+    if (isAccessory) return [];
     if (product.category === 'suits') return ['46', '48', '50', '52', '54', '56'];
     return ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
   };
   const sizes = getSizes();
-  const isAccessory = product.category === 'accessories';
 
-  // Собираем все фото: главное + галерея
-  const getAllImages = () => {
-    const images = [];
+  const photos = [product.image, ...(product.images || []).map((i) => i.image)].filter(Boolean);
 
-    // Главное фото
-    if (product.image) {
-      images.push(product.image);
-    }
+  // Подзаголовок: цвет · краткое описание · состав
+  const subtitle = [product.colors, product.description, product.material]
+    .filter(Boolean)
+    .join(' · ');
 
-    // Фото из галереи
-    if (product.images && product.images.length > 0) {
-      product.images.forEach(img => {
-        images.push(img.image);
-      });
-    }
-
-    return images;
+  const cartButtonLabel = () => {
+    if (!isAccessory && !selectedSize) return 'Выбрать размер';
+    return `Добавить в корзину${selectedSize ? ` — ${selectedSize}` : ''}`;
   };
 
-  const allImages = getAllImages();
-  const currentImage = allImages[selectedImageIndex] || null;
+  const handleCartButtonClick = () => {
+    if (!isAccessory && !selectedSize) {
+      setSizesOpen((o) => !o);
+      return;
+    }
+    handleAddToCart();
+  };
+
+  const handleAddToCart = () => {
+    if (!isAccessory && !selectedSize) {
+      setSizesOpen(true);
+      return;
+    }
+    addToCart(product, isAccessory ? 'Один размер' : selectedSize, 1);
+    navigate('/cart', { state: { noVeil: true } });
+  };
 
   return (
     <>
       <NavBar />
-      <div className="product-view-container">
-        <div className="product-view-content">
-          {/* Левая часть - изображение */}
-          <div className="product-image-section">
-            {/* Главное изображение */}
-            <div className="main-image-container">
-              {currentImage ? (
-                <img
-                  src={getImageUrl(currentImage)}
-                  alt={product.name}
-                  className="product-main-image"
-                />
-              ) : (
-                <div className="product-image-placeholder">
-                  <span>👔</span>
+      <div className="pv-layout">
+        {/* Все фото идут одно за другим, с таким же зазором, как между
+            карточками товара в каталоге */}
+        <div className="pv-gallery-wrap">
+          <div
+            className="pv-gallery"
+            key={product.id}
+            ref={galleryRef}
+            onScroll={handleGalleryScroll}
+          >
+            {photos.length > 0 ? (
+              photos.map((photo, i) => (
+                <div className="pv-photo" key={i}>
+                  <img src={getImageUrl(photo)} alt={`${product.name} — фото ${i + 1}`} />
                 </div>
-              )}
-            </div>
+              ))
+            ) : (
+              <div className="pv-photo pv-photo-empty"><span>👔</span></div>
+            )}
+          </div>
 
-            {/* Миниатюры галереи */}
-            {allImages.length > 1 && (
-              <div className="image-thumbnails">
-                {allImages.map((img, index) => (
-                  <div
-                    key={index}
-                    className={`thumbnail ${selectedImageIndex === index ? 'active' : ''}`}
-                    onClick={() => setSelectedImageIndex(index)}
+          {/* Белая завеса на время смены оттенка */}
+          <div className={`pv-gallery-veil ${veilOn ? 'on' : ''}`} aria-hidden="true" />
+
+          {/* Полоса-индикатор под фото — только на мобильном */}
+          {photos.length > 1 && (
+            <div className="pv-progress">
+              <span
+                style={{
+                  width: `${100 / photos.length}%`,
+                  left: `${(100 / photos.length) * photoIndex}%`,
+                }}
+              />
+            </div>
+          )}
+        </div>
+
+        <aside className="pv-info">
+          {/* Тот же товар в других оттенках */}
+          {variants.length > 1 && (
+            <div
+              className="pv-variants"
+              onScroll={(e) => setVariantsScrolled(e.currentTarget.scrollLeft > 4)}
+            >
+              {variants.map((v, i) => (
+                <button
+                  key={v.id}
+                  type="button"
+                  className={`pv-variant ${String(v.id) === String(id) ? 'active' : ''}`}
+                  title={v.colors || v.name}
+                  onClick={() => openVariant(v.id)}
+                >
+                  {v.image ? (
+                    <img src={getImageUrl(v.image)} alt={v.colors || v.name} />
+                  ) : (
+                    <span className="pv-variant-empty" />
+                  )}
+                  {i === 3 && variants.length > 4 && !variantsScrolled && (
+                    <span className="pv-variant-more">+{variants.length - 4}</span>
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* На телефоне этот блок лежит на фото, прижатый к низу экрана,
+              и встаёт на своё место, когда до него долистали */}
+          <div className={`pv-buy ${buyStuck ? 'stuck' : ''}`} ref={buyRef}>
+            <div className="pv-head">
+              <h1 className="pv-title">{product.name}</h1>
+              <span className="pv-price">{Math.round(product.price).toLocaleString('ru-RU')} KZT</span>
+            </div>
+            {subtitle && <p className="pv-subtitle">{subtitle}</p>}
+
+            {/* Размеры раскрываются над кнопкой */}
+            {!isAccessory && sizesOpen && (
+              <div className="pv-sizes">
+                {sizes.map((size) => (
+                  <button
+                    key={size}
+                    type="button"
+                    className={`pv-size ${selectedSize === size ? 'selected' : ''}`}
+                    onClick={() => setSelectedSize(size)}
                   >
-                    <img
-                      src={getImageUrl(img)}
-                      alt={`${product.name} ${index + 1}`}
-                    />
-                  </div>
+                    {size}
+                  </button>
                 ))}
               </div>
             )}
+
+            {/* Одна кнопка на два шага: раскрыть размеры → добавить и уйти в корзину */}
+            <button type="button" className="pv-cart-btn" onClick={handleCartButtonClick}>
+              {cartButtonLabel()}
+            </button>
           </div>
 
-          {/* Правая часть - информация */}
-          <div className="product-info-section">
-            <div className="product-title-row">
-              <h1 className="product-title">{product.name}</h1>
-              <p className="product-price-large">{Math.round(product.price).toLocaleString('ru-RU')} KZT</p>
-            </div>
+          <p className="pv-ship-note">
+            <span className="pv-check">✓</span> Возврат в течение 14 дней
+          </p>
 
-            {/* Цвета */}
-            {variants.length > 0 && (
-              <div className="product-option">
-                <h3>Цвет</h3>
-                <div className="color-options">
-                  {variants.map((v) => (
-                    <button
-                      key={v.id}
-                      className={`color-option ${String(v.id) === String(id) ? 'active' : ''}`}
-                      style={{ backgroundColor: getColorCode(v.colors) }}
-                      title={v.colors}
-                      onClick={() => navigate(`/product/${v.id}`)}
-                      type="button"
-                    />
-                  ))}
-                </div>
+          {/* Размер и посадка — у аксессуаров размеров нет */}
+          {!isAccessory && (
+            <Accordion
+              title="Размер и посадка"
+              open={openAccordion === 'fit'}
+              onToggle={() => toggleAccordion('fit')}
+            >
+              <div className="pv-specs">
+                <SpecRow label="Доступные размеры" value={product.available_sizes || sizes.join(', ')} />
+                <SpecRow label="Посадка" value={product.fit} />
+                <SpecRow label="Стиль" value={product.style} />
               </div>
-            )}
-
-            {/* Размеры — скрыты для аксессуаров */}
-            {!isAccessory && (
-              <div className="product-option">
-                <h3>Размер</h3>
-                <div className="size-options">
-                  {sizes.map((size) => (
-                    <button
-                      key={size}
-                      className={`size-option ${selectedSize === size ? 'selected' : ''}`}
-                      onClick={() => setSelectedSize(size)}
-                    >
-                      {size}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Кнопка: добавить в корзину */}
-            <div className="product-actions">
-              <button
-                className={`btn-add-to-cart-large ${addedToCart ? 'added' : ''}`}
-                onClick={() => {
-                  if (!isAccessory && !selectedSize) {
-                    alert('Пожалуйста, выберите размер');
-                    return;
-                  }
-                  addToCart(product, isAccessory ? 'Один размер' : selectedSize, quantity);
-                  setAddedToCart(true);
-                  setTimeout(() => setAddedToCart(false), 2000);
-                }}
-                disabled={!isAccessory && !selectedSize}
-                type="button"
-              >
-                {addedToCart ? '✓ ДОБАВЛЕНО В КОРЗИНУ' : 'ДОБАВИТЬ В КОРЗИНУ'}
-              </button>
-            </div>
-
-            {/* Описание */}
-            {(product.description || product.detailed_description) && (
-              <div className="product-description">
-                <h3>Описание</h3>
-                {product.description && <p className="short-desc">{product.description}</p>}
-                {product.detailed_description && (
-                  <p className="detailed-desc">{product.detailed_description}</p>
-                )}
-              </div>
-            )}
-
-            {/* Характеристики */}
-            {product.material && (
-              <Accordion title="Характеристики" open={openAccordion === 'specs'} onToggle={() => toggleAccordion('specs')}>
-                <ul className="product-specs-list">
-                  <li><strong>Состав:</strong> {product.material}</li>
-                  {!isAccessory && product.available_sizes && (
-                    <li><strong>Размеры:</strong> {product.available_sizes}</li>
-                  )}
-                  {product.colors && (
-                    <li><strong>Цвета:</strong> {product.colors}</li>
-                  )}
-                </ul>
-              </Accordion>
-            )}
-
-            {/* Уход */}
-            <Accordion title="Уход за изделием" open={openAccordion === 'care'} onToggle={() => toggleAccordion('care')}>
-              {product.care_instructions ? (
-                <p style={{whiteSpace: 'pre-line'}} className="accordion-text">{product.care_instructions}</p>
-              ) : (
-                <ul className="product-specs-list">
-                  <li>Химчистка рекомендуется</li>
-                  <li>Не отбеливать</li>
-                  <li>Гладить при низкой температуре</li>
-                  <li>Хранить на вешалке</li>
-                </ul>
-              )}
+              <p className="pv-note">
+                Не уверены с размером? Приходите в бутик — стилисты помогут подобрать.
+              </p>
             </Accordion>
+          )}
 
-            {/* Доставка */}
-            <Accordion title="Доставка и возврат" open={openAccordion === 'delivery'} onToggle={() => toggleAccordion('delivery')}>
-              {product.delivery_info ? (
-                <p style={{whiteSpace: 'pre-line'}} className="accordion-text">{product.delivery_info}</p>
-              ) : (
-                <div className="delivery-info">
-                  <div className="delivery-section">
-                    <p className="delivery-region">Внутри города Алматы и Астана</p>
-                    <table className="delivery-table">
-                      <thead>
-                        <tr><th>Способ</th><th>Стоимость</th><th>Срок</th></tr>
-                      </thead>
-                      <tbody>
-                        <tr><td>Яндекс Доставка</td><td>По тарифу Яндекса</td><td>День в день</td></tr>
-                        <tr><td>Самовывоз</td><td>Бесплатно</td><td>В рабочее время магазина</td></tr>
-                      </tbody>
-                    </table>
-                  </div>
+          {/* Детали и уход */}
+          <Accordion
+            title="Детали и уход"
+            open={openAccordion === 'details'}
+            onToggle={() => toggleAccordion('details')}
+          >
+            {product.detailed_description && (
+              <p className="pv-text">{product.detailed_description}</p>
+            )}
+            <div className="pv-specs">
+              <SpecRow label="Артикул" value={product.article} />
+              <SpecRow label="Цвет" value={product.colors} />
+              <SpecRow label="Состав" value={product.material} />
+              <SpecRow label="Фактура" value={product.texture} />
+              <SpecRow label="Сезон" value={product.season} />
+              <SpecRow label="Инструкция по уходу" value={product.care_instructions} />
+            </div>
+          </Accordion>
 
-                  <div className="delivery-section">
-                    <p className="delivery-region">Внутри Казахстана</p>
-                    <table className="delivery-table">
-                      <thead>
-                        <tr><th>Способ</th><th>Стоимость</th><th>Срок</th></tr>
-                      </thead>
-                      <tbody>
-                        <tr><td>Казпочта</td><td>2 000 ₸</td><td>5–9 рабочих дней (до пункта выдачи)</td></tr>
-                        <tr><td>RIKA</td><td>от 3 500 ₸</td><td>2–4 дня (до двери, включая посёлки)</td></tr>
-                      </tbody>
-                    </table>
-                  </div>
-
-                  <div className="delivery-section">
-                    <p className="delivery-region">СНГ</p>
-                    <table className="delivery-table">
-                      <thead>
-                        <tr><th>Регион</th><th>Стоимость</th><th>Срок</th></tr>
-                      </thead>
-                      <tbody>
-                        <tr><td>СНГ</td><td>По тарифу СДЭК и KAZPOST</td><td>7–14 рабочих дней (до пункта выдачи)</td></tr>
-                      </tbody>
-                    </table>
-                  </div>
-
-                  <div className="delivery-section">
-                    <p className="delivery-region">Европа и Америка</p>
-                    <table className="delivery-table">
-                      <thead>
-                        <tr><th>Регион</th><th>Стоимость</th><th>Срок</th></tr>
-                      </thead>
-                      <tbody>
-                        <tr><td>Европа</td><td>По тарифу СДЭК и KAZPOST</td><td>от 2 недель (до пункта выдачи)</td></tr>
-                        <tr><td>Америка</td><td>По тарифу СДЭК и KAZPOST</td><td>от 2 недель (до пункта выдачи)</td></tr>
-                        <tr><td>Остальные страны</td><td>По тарифу СДЭК и KAZPOST</td><td>от 2 недель (до пункта выдачи)</td></tr>
-                      </tbody>
-                    </table>
-                  </div>
-
-                  <p className="delivery-return">* Возврат в течение 14 дней при сохранении чека, товарного вида и этикеток.</p>
-                </div>
-              )}
-            </Accordion>
-          </div>
-        </div>
+          {/* Доставка и возврат */}
+          <Accordion
+            title="Доставка и возврат"
+            open={openAccordion === 'delivery'}
+            onToggle={() => toggleAccordion('delivery')}
+          >
+            {product.delivery_info && (
+              <p className="pv-text" style={{ whiteSpace: 'pre-line' }}>{product.delivery_info}</p>
+            )}
+            <ul className="pv-links">
+              <li>
+                <TruckIcon />
+                <span>
+                  <Link to="/support/shipping">Доставка</Link> по тарифам служб доставки
+                </span>
+              </li>
+              <li>
+                <BoxIcon />
+                <span>
+                  Возврат в течение 14 дней — <Link to="/support/offer">условия</Link>
+                </span>
+              </li>
+            </ul>
+          </Accordion>
+        </aside>
       </div>
+
+      {/* Приглашение в бутики — тот же блок, что внизу главной */}
+      <StoreVisitCta variant="product" />
     </>
   );
 };

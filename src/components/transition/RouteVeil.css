@@ -1,0 +1,20 @@
+/* Ниже навбара (z-index 1000), поэтому шапка остаётся резкой */
+.route-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  /* Такое же стекло, как за бургер-меню: страница просвечивает и размывается */
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: var(--glass-blur-deep);
+  -webkit-backdrop-filter: var(--glass-blur-deep);
+  opacity: 0;
+  pointer-events: none;
+  /* уход плавный, появление быстрое — иначе за короткий переход
+     слой не успевает набрать плотность */
+  transition: opacity 0.35s ease;
+}
+
+.route-veil.on {
+  opacity: 1;
+  transition: opacity 0.15s ease;
+}

@@ -1,503 +1,547 @@
-/* ProductView inherits tokens from index.css :root */
-
-/* ── Root layout ── */
-.product-view-container {
+/* Размеры берём из общей шкалы в index.css (--fs-lg / --fs-base / --fs-sm).
+   Вес: 300 для текста, 400 для названия, цены и заголовков блоков. */
+/* ── Layout: photo column + info column ── */
+.pv-layout {
   margin-top: 70px;
-  background-color: var(--color-surface);
-  min-height: calc(100vh - 70px);
-}
-
-.product-view-content {
-  max-width: 1400px;
-  margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-20);
-  padding: var(--spacing-10) var(--spacing-10);
+  grid-template-columns: 60% 40%;
+  background: #fff;
 }
 
-/* ── Left: image ── */
-.product-image-section {
-  position: sticky;
-  top: 90px;
-  height: fit-content;
+.pv-state {
+  margin-top: 70px;
+  min-height: calc(100vh - 70px);
+  background: #fff;
+  padding: 120px 40px;
+  text-align: center;
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-light);
+  color: var(--color-secondary);
+}
+
+/* ── Photos, one after another ── */
+.pv-gallery-wrap {
+  position: relative;
+}
+
+.pv-gallery {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-04);
+  /* Зазор как между двумя карточками товара в каталоге */
+  gap: 8px;
 }
 
-.main-image-container {
+.pv-photo {
   width: 100%;
   aspect-ratio: 3 / 4;
   background: var(--color-background-light);
   overflow: hidden;
 }
 
-.product-main-image {
+.pv-photo img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform var(--tr-duration-in) var(--tr-timing-in);
 }
 
-.product-image-placeholder {
-  width: 100%;
-  height: 100%;
-  background: var(--color-background);
+/* Смена оттенка: кадр закрывается белым, под ним подменяется товар,
+   затем белое уходит — нового фото в пустоте не видно. */
+.pv-gallery-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pv-gallery-veil.on {
+  opacity: 1;
+}
+
+/* Позиция в галерее: полоса снизу, появляется только на мобильном */
+.pv-progress {
+  display: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  z-index: 3;
+}
+
+.pv-progress span {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: var(--color-navy);
+  transition: left 0.25s ease;
+}
+
+.pv-photo-empty {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 100px;
-  opacity: 0.2;
+  font-size: 3rem;
 }
 
-.image-thumbnails {
+/* ── Info column ── */
+.pv-info {
+  padding: 96px 64px;
   display: flex;
-  gap: var(--spacing-02);
-  flex-wrap: wrap;
+  flex-direction: column;
 }
 
-.thumbnail {
-  width: 72px;
-  height: 72px;
-  overflow: hidden;
+.pv-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 24px;
+}
+
+.pv-title {
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-navy);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.pv-price {
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-navy);
+  white-space: nowrap;
+}
+
+.pv-subtitle {
+  margin: 10px 0 0;
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-light);
+  color: var(--color-secondary);
+  line-height: var(--lh-text);
+}
+
+/* ── Other colours of the same product ──
+   В ряд помещаются ровно 4 карточки, остальные доступны прокруткой. */
+.pv-variants {
+  --pv-variant-w: 78px;
+  --pv-variant-gap: 10px;
+
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--pv-variant-gap);
+  margin-top: 28px;
+  max-width: calc(var(--pv-variant-w) * 4 + var(--pv-variant-gap) * 3);
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.pv-variants::-webkit-scrollbar {
+  display: none;
+}
+
+.pv-variant {
+  position: relative;
+  flex: 0 0 var(--pv-variant-w);
+  scroll-snap-align: start;
+  width: var(--pv-variant-w);
+  aspect-ratio: 3 / 4;
+  padding: 0;
+  border: 1px solid var(--color-outline);
+  border-radius: var(--radius-md);
+  background: var(--color-background-light);
   cursor: pointer;
-  border: 1px solid transparent;
-  transition: border-color var(--tr-duration-out) var(--tr-timing-out);
+  overflow: hidden;
+  transition: border-color 0.2s ease;
 }
 
-.thumbnail img {
+.pv-variant img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
-.thumbnail:hover {
-  border-color: var(--color-secondary);
-}
-
-.thumbnail.active {
+.pv-variant.active {
   border-color: var(--color-navy);
 }
 
-/* ── Right: info ── */
-.product-info-section {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-06);
-  padding-top: var(--spacing-02);
+.pv-variant-empty {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
-/* Title + price row */
-.product-title-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: var(--spacing-04);
-}
-
-.product-title {
-  font-size: 0.8125rem;
-  font-weight: var(--font-weight-regular);
-  color: var(--color-navy);
-  margin: 0;
-  line-height: 1.4;
-  letter-spacing: 0;
-  text-transform: uppercase;
-}
-
-.product-price-large {
-  font-size: 0.8125rem;
-  font-weight: var(--font-weight-regular);
-  color: var(--color-navy);
-  margin: 0;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-/* ── Options ── */
-.product-option {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-03);
-}
-
-.product-option h3 {
-  font-size: 0.8125rem;
-  font-weight: var(--font-weight-regular);
-  color: var(--color-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin: 0;
-}
-
-/* Colors */
-.color-options {
-  display: flex;
-  gap: var(--spacing-03);
-}
-
-.color-option {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  cursor: pointer;
-  border: 1px solid var(--color-outline);
-  padding: 0;
-  appearance: none;
-  transition: transform var(--tr-duration-out) var(--tr-timing-out),
-              border-color var(--tr-duration-out) var(--tr-timing-out);
-}
-
-.color-option:hover {
-  transform: scale(1.1);
-  border-color: var(--color-secondary);
-}
-
-.color-option.active {
-  border-color: var(--color-navy);
-  box-shadow: 0 0 0 2px #fff, 0 0 0 3px var(--color-navy);
-}
-
-/* Sizes */
-.size-options {
-  display: flex;
-  gap: var(--spacing-02);
-  flex-wrap: wrap;
-}
-
-.size-option {
-  min-width: 36px;
-  padding: var(--spacing-02) var(--spacing-03);
-  border: 1px solid var(--color-outline);
-  background: var(--color-surface);
-  font-size: 0.75rem;
-  font-weight: var(--font-weight-regular);
-  color: var(--color-navy);
-  cursor: pointer;
-  font-family: inherit;
-  transition: border-color var(--tr-duration-out) var(--tr-timing-out),
-              background var(--tr-duration-out) var(--tr-timing-out);
-  border-radius: 0;
-}
-
-.size-option:hover {
-  border-color: var(--color-navy);
-  background: var(--color-background-light);
-}
-
-.size-option.selected {
-  background: var(--color-navy);
-  color: var(--color-surface);
-  border-color: var(--color-navy);
-}
-
-/* ── Actions ── */
-.product-actions {
-  display: flex;
-  gap: var(--spacing-03);
-}
-
-.btn-add-to-cart-large {
-  flex: 1;
-  padding: var(--spacing-03) var(--spacing-06);
-  background: var(--color-navy);
-  color: var(--color-surface);
-  border: none;
-  border-radius: 0;
-  font-size: 0.75rem;
-  font-weight: var(--font-weight-medium);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  cursor: pointer;
-  font-family: inherit;
-  transition: background var(--tr-duration-out) var(--tr-timing-out),
-              opacity var(--tr-duration-out) var(--tr-timing-out);
-}
-
-.btn-add-to-cart-large:hover:not(:disabled) {
-  background: #0d2a4a;
-}
-
-.btn-add-to-cart-large:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-}
-
-.btn-add-to-cart-large.added {
-  background: #3a7d44;
-}
-
-.btn-wishlist-large {
-  width: 52px;
-  height: 52px;
-  background: var(--color-surface);
-  border: 1px solid var(--color-outline);
-  font-size: 1.25rem;
-  cursor: pointer;
+/* Сколько оттенков осталось за краем полосы */
+.pv-variant-more {
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-secondary);
-  transition: border-color var(--tr-duration-out) var(--tr-timing-out),
-              color var(--tr-duration-out) var(--tr-timing-out);
+  background: rgba(18, 48, 85, 0.55);
+  color: #fff;
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-medium);
+  pointer-events: none;
 }
 
-.btn-wishlist-large:hover {
+/* ── Size ── */
+.pv-sizes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 28px;
+}
+
+.pv-size {
+  min-width: 56px;
+  padding: 12px 14px;
+  background: #fff;
+  border: 1px solid var(--color-outline);
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-light);
+  color: var(--color-navy);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.pv-size:hover {
   border-color: var(--color-navy);
+}
+
+.pv-size.selected {
+  background: var(--color-navy);
+  border-color: var(--color-navy);
+  color: #fff;
+}
+
+/* ── Add to cart ── */
+.pv-cart-btn {
+  margin-top: 28px;
+  width: 100%;
+  padding: 18px 20px;
+  background: var(--color-navy);
+  color: #fff;
+  border: 1px solid var(--color-navy);
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.pv-cart-btn:hover {
+  opacity: 0.85;
+}
+
+
+.pv-ship-note {
+  margin: 14px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: var(--fs-sm);
+  font-weight: var(--font-weight-light);
+  color: var(--color-secondary);
+}
+
+.pv-check {
   color: var(--color-navy);
 }
 
-.btn-wishlist-large.active {
-  background: var(--color-navy);
-  border-color: var(--color-navy);
-  color: var(--color-surface);
+/* Desktop keeps the thumbnails under the subtitle; on mobile they come first
+   (DOM order), as in the reference. */
+@media (min-width: 769px) {
+  /* Правая колонка держится на экране и прокручивается сама по себе:
+     курсор над описанием — листается описание, над фото — фотографии. */
+  .pv-info {
+    position: sticky;
+    top: 70px;
+    align-self: start;
+    width: 100%;
+    max-width: 466px;
+    margin: 0 auto;
+    height: calc(100vh - 70px);
+    overflow-y: auto;
+    /* safe: пока содержимое помещается — по центру, переросло — от верха,
+       иначе при центрировании верхушка уезжает за край без возможности
+       её прокрутить */
+    justify-content: center;
+    justify-content: safe center;
+    padding: 40px 55px 30px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .pv-info::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Обёртка нужна только телефону — здесь она исчезает из раскладки */
+  .pv-buy {
+    display: contents;
+  }
+
+  .pv-head { order: 0; }
+  .pv-subtitle { order: 1; }
+  .pv-variants { order: 2; }
+  .pv-sizes { order: 3; }
+  .pv-cart-btn { order: 4; }
+  .pv-ship-note { order: 5; }
+  .pv-accordion { order: 6; }
 }
 
-/* ── Info sections ── */
-.product-description,
-.product-specs,
-.product-care,
-.product-delivery {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-03);
-  padding-top: var(--spacing-05);
-  border-top: 1px solid var(--color-outline);
+/* ── Accordions: без разделительных линий, блоки держатся на отступах ── */
+.pv-accordion:first-of-type {
+  margin-top: 40px;
 }
 
-.product-description h3,
-.product-specs h3,
-.product-care h3,
-.product-delivery h3 {
-  font-size: 0.8125rem;
-  font-weight: var(--font-weight-regular);
-  color: var(--color-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin: 0;
-}
-
-.product-description p.short-desc {
-  font-size: 0.875rem;
-  font-weight: 100;
-  color: #000;
-  line-height: 1.6;
-  margin: 0 0 var(--spacing-02) 0;
-}
-
-.product-description p.detailed-desc {
-  font-size: 0.8125rem;
-  font-weight: 100;
-  color: #000;
-  line-height: 1.7;
-  margin: 0;
-}
-
-.product-specs ul,
-.product-care ul,
-.product-delivery ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-02);
-}
-
-.product-specs li,
-.product-care li,
-.product-delivery li {
-  font-size: 0.8125rem;
-  color: var(--color-secondary);
-  line-height: 1.6;
-  padding-left: var(--spacing-04);
-  position: relative;
-}
-
-.product-specs li::before,
-.product-care li::before,
-.product-delivery li::before {
-  content: "–";
-  position: absolute;
-  left: 0;
-  color: var(--color-secondary-variation);
-}
-
-.product-specs li strong {
-  color: var(--color-secondary);
-  font-weight: var(--font-weight-regular);
-}
-
-/* ── Accordion ── */
-.accordion-section {
-  border: none;
-}
-
-.accordion-header {
+.pv-accordion-head {
   width: 100%;
+  padding: 22px 0;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-02) 0;
+  justify-content: space-between;
+  gap: 16px;
   background: none;
   border: none;
+  border-radius: 0;
   cursor: pointer;
   font-family: inherit;
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-navy);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   text-align: left;
 }
 
-.accordion-header h3 {
-  font-size: 0.8125rem;
-  font-weight: var(--font-weight-regular);
-  color: var(--color-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin: 0;
-}
-
-.accordion-icon {
-  font-size: 0.9rem;
-  font-weight: var(--font-weight-regular);
-  color: var(--color-secondary);
-  line-height: 1;
+.pv-accordion-icon {
+  font-size: var(--fs-lg);
+  color: var(--color-navy);
   flex-shrink: 0;
 }
 
-.accordion-body {
-  padding: var(--spacing-03) 0 var(--spacing-04);
+/* Плавное раскрытие: высота строки грида едет из 0fr в 1fr.
+   Высоту в пикселях анимировать нельзя — она заранее неизвестна. */
+.pv-accordion-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.product-specs-list {
-  margin: 0;
-  padding: 0 0 0 var(--spacing-04);
-  list-style: disc;
+.pv-accordion.open .pv-accordion-wrap {
+  grid-template-rows: 1fr;
+}
+
+.pv-accordion-clip {
+  overflow: hidden;
+}
+
+.pv-accordion-body {
+  padding-bottom: 28px;
+}
+
+.pv-text {
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-light);
+  color: #111;
+  line-height: var(--lh-text);
+  margin: 0 0 20px;
+}
+
+/* label / value rows, like the reference */
+.pv-specs {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-02);
+  gap: 12px;
 }
 
-.product-specs-list li {
-  font-size: 0.8125rem;
-  font-weight: 100;
-  color: #000;
-  line-height: 1.6;
+.pv-spec-row {
+  display: grid;
+  grid-template-columns: 40% 1fr;
+  gap: 16px;
+  align-items: start;
 }
 
-.product-specs-list li strong {
-  color: #000;
+.pv-spec-label {
+  font-size: var(--fs-base);
   font-weight: var(--font-weight-regular);
+  color: var(--color-navy);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
-.accordion-text {
-  font-size: 0.8125rem;
-  font-weight: 100;
-  color: #000;
-  line-height: 1.7;
-  margin: 0;
-}
-
-/* ── States ── */
-.loading,
-.error {
-  text-align: center;
-  padding: 80px 20px;
-  font-size: 0.9375rem;
-  color: var(--color-secondary);
+.pv-spec-value {
+  font-size: var(--fs-base);
   font-weight: var(--font-weight-light);
+  color: #111;
+  line-height: var(--lh-text);
+}
+
+/* Short delivery/returns lines with icons and links */
+.pv-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pv-links li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-light);
+  color: var(--color-secondary);
+  line-height: var(--lh-text);
+}
+
+.pv-links svg {
+  flex-shrink: 0;
+  color: var(--color-navy);
+}
+
+.pv-links a {
+  color: var(--color-navy);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: opacity 0.2s ease;
+}
+
+.pv-links a:hover {
+  opacity: 0.6;
+}
+
+.pv-note {
+  margin: 20px 0 0;
+  font-size: var(--fs-sm);
+  font-weight: var(--font-weight-light);
+  color: var(--color-secondary);
+  line-height: var(--lh-text);
 }
 
 /* ── Tablet ── */
 @media (max-width: 1024px) {
-  .product-view-content {
+  .pv-info {
+    padding: 56px 32px;
+  }
+}
+
+/* ── Mobile: photos become a swipeable row, info sits underneath ── */
+@media (max-width: 768px) {
+  .pv-layout {
     grid-template-columns: 1fr;
-    gap: var(--spacing-10);
-    padding: var(--spacing-06);
   }
-  .product-image-section {
-    position: static;
-  }
-}
 
-/* ── Mobile ── */
-@media (max-width: 640px) {
-  .product-view-container {
-    margin-top: 60px;
+  .pv-gallery {
+    flex-direction: row;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
   }
-  .product-view-content {
-    padding: 0;
-    gap: var(--spacing-06);
+
+  .pv-gallery::-webkit-scrollbar {
+    display: none;
   }
-  .main-image-container {
-    border-radius: 0;
+
+  /* Фото во весь экран: пока его листаешь, блоку покупки есть над чем висеть.
+     Короткое фото (3/4) заканчивалось раньше, и блок вставал на место сразу. */
+  .pv-photo {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+    aspect-ratio: auto;
+    height: calc(100vh - 70px);
+    height: calc(100svh - 70px);
   }
-  .product-info-section {
-    padding: var(--spacing-04) var(--spacing-04) var(--spacing-12);
-    gap: var(--spacing-05);
+
+  .pv-progress {
+    display: block;
   }
-  .product-title {
-    font-size: 0.8125rem;
+
+  /* Колонка растворяется: иначе блок покупки не смог бы выйти за её пределы
+     и лечь поверх фотографии. Отступы переезжают на сами элементы. */
+  .pv-info {
+    display: contents;
   }
-  .product-price-large {
-    font-size: 0.8125rem;
+
+  .pv-info > * {
+    padding-left: 20px;
+    padding-right: 20px;
   }
-  .image-thumbnails {
-    padding: 0 var(--spacing-04);
+
+  .pv-accordion:last-of-type {
+    margin-bottom: 56px;
   }
-}
 
-/* ── Delivery Info ── */
-.delivery-info {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-08);
-}
+  /* Порядок на телефоне: фото → оттенки → блок покупки → остальное */
+  .pv-gallery-wrap { order: 0; }
+  .pv-variants { order: 1; }
+  .pv-buy { order: 2; }
+  .pv-ship-note { order: 3; }
+  .pv-accordion { order: 4; }
 
-.delivery-section {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-03);
-}
+  /* Отступ полосы оттенков — внешними полями, а не паддингом: паддинг лежит
+     внутри прокручиваемой области, браузер подкручивает её к активной карточке
+     и съедает его. С полями ширина равна ровно четырём карточкам. */
+  .pv-variants {
+    margin: 24px 20px 0;
+    padding-left: 0;
+    padding-right: 0;
+    max-width: calc(var(--pv-variant-w) * 4 + var(--pv-variant-gap) * 3);
+    scroll-snap-type: none;
+  }
 
-.delivery-region {
-  font-size: 0.8125rem;
-  font-weight: var(--font-weight-regular);
-  color: var(--color-navy);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin: 0;
-}
+  /* Название, цена, описание и кнопка — одним блоком у нижнего края экрана,
+     пока до их настоящего места не долистали */
+  .pv-buy {
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    padding: 12px 20px 16px;
+  }
 
-.delivery-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.8125rem;
-}
+  /* Блок ниже на фото: убираем лишнюю высоту между описанием и кнопкой */
+  .pv-buy .pv-cart-btn {
+    margin-top: 14px;
+  }
 
-.delivery-table th {
-  font-weight: var(--font-weight-regular);
-  color: var(--color-secondary);
-  text-align: left;
-  padding: var(--spacing-02) var(--spacing-03);
-  border-bottom: 1px solid var(--color-outline);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
+  .pv-buy .pv-sizes {
+    margin-top: 14px;
+  }
 
-.delivery-table td {
-  padding: var(--spacing-03) var(--spacing-03);
-  color: var(--color-navy);
-  font-weight: 100;
-  vertical-align: top;
-}
+  .pv-buy.stuck {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur-deep);
+    -webkit-backdrop-filter: var(--glass-blur-deep);
+    border-top: var(--glass-border);
+    box-shadow: var(--glass-sheen), var(--glass-shadow);
+  }
 
-.delivery-return {
-  font-size: 0.8125rem;
-  font-weight: 100;
-  color: var(--color-secondary);
-  margin: 0;
-  padding-top: var(--spacing-02);
-  border-top: 1px solid var(--color-outline);
+  .pv-head {
+    margin-top: 0;
+  }
+
+  .pv-spec-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
 }

@@ -1,10 +1,11 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Home.css";
 import NavBar from "../navbar/NavBar";
 import openAxios from "../../api/axios";
 import { getImageUrl } from "../../utils/imageUrl";
+import StoreVisitCta from "../storescta/StoreVisitCta";
 // eslint-disable-next-line react/prop-types
 // function Surrounding({ element }) {
 //   return <div className="background-container">{element}</div>;
@@ -52,15 +53,20 @@ const listener2 = () => {
   navbar.style.top = "0";
 };
 
+// Каждый пункт открывает главное меню — и сразу раскрывает тот раздел,
+// в котором эта категория живёт. Так список на hero не расходится с меню.
 const HERO_CATEGORIES = [
-  { label: 'Новые поступления', path: '/catalogue?category=new' },
-  { label: 'Костюмы', path: '/catalogue?category=suits&subcategory=set' },
-  { label: 'Пиджаки', path: '/catalogue?category=suits&subcategory=jacket' },
-  { label: 'Рубашки', path: '/catalogue?category=shirts' },
-  { label: 'Брюки', path: '/catalogue?category=pants' },
-  { label: 'Обувь', path: '/catalogue?category=shoes' },
-  { label: 'Аксессуары', path: '/catalogue?category=accessories' },
+  { label: 'Новые поступления' },
+  { label: 'Костюмы', submenu: 'clothing' },
+  { label: 'Пиджаки', submenu: 'clothing' },
+  { label: 'Рубашки', submenu: 'clothing' },
+  { label: 'Брюки', submenu: 'clothing' },
+  { label: 'Обувь' },
+  { label: 'Аксессуары', submenu: 'accessories' },
 ];
+
+const openMenu = (submenu) =>
+  window.dispatchEvent(new CustomEvent('mardan:open-menu', { detail: { submenu } }));
 
 // Hero timeline, in scroll pixels (keep in sync with .hero-pin-wrap height):
 //   0 … REVEAL        — список категорий разворачивается
@@ -71,23 +77,25 @@ const HERO_HOLD_PX = () => window.innerHeight * 0.5;
 const HERO_COVER_START_PX = () => HERO_REVEAL_PX() + HERO_HOLD_PX();
 const HERO_TOTAL_PX = () => HERO_COVER_START_PX() + window.innerHeight;
 
-const HeroSection = ({ heroImage, visibleCount, hidden }) => {
+const HeroSection = ({ heroImage, heroCaption, visibleCount, hidden }) => {
   const heroStyle = heroImage ? { backgroundImage: `url(${heroImage})` } : {};
 
   return (
     <div className="hero-pin-wrap">
       <div className={`hero-fixed ${hidden ? 'is-hidden' : ''}`}>
         <div className="hero-picture" style={heroStyle}></div>
-        <div className="hero-picture-darkening"></div>
+        {/* Подпись задаётся в админке; пустую не показываем */}
+        {heroCaption && <p className="hero-caption">{heroCaption}</p>}
         <nav className="hero-section-menu">
           {HERO_CATEGORIES.map((c, i) => (
-            <Link
+            <button
               key={c.label}
-              to={c.path}
+              type="button"
               className={`hero-nav-item ${i < visibleCount ? 'is-shown' : ''}`}
+              onClick={() => openMenu(c.submenu)}
             >
               {c.label}
-            </Link>
+            </button>
           ))}
         </nav>
       </div>
@@ -95,8 +103,17 @@ const HeroSection = ({ heroImage, visibleCount, hidden }) => {
   );
 };
 
-const CollectionTile = ({ to, label, image }) => (
-  <Link to={to} className="collection-section">
+const CollectionTile = ({ to, submenu, label, image }) => {
+  const Tag = submenu ? 'button' : Link;
+  const props = submenu
+    ? {
+        type: 'button',
+        onClick: () => openMenu(submenu),
+      }
+    : { to };
+
+  return (
+  <Tag {...props} className="collection-section">
     <div
       className="collection-image-full"
       style={{
@@ -108,8 +125,63 @@ const CollectionTile = ({ to, label, image }) => (
         <div className="collection-cta">{label}</div>
       </div>
     </div>
-  </Link>
-);
+  </Tag>
+  );
+};
+
+const MOTTO_LINES = [
+  'Ежедневный комфорт — не компромисс,',
+  'а основа хорошего стиля.',
+];
+
+// Срабатывает один раз, когда блок доходит до экрана
+const useInView = (threshold = 0.4) => {
+  const ref = useRef(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return undefined;
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setInView(true);
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries[0].isIntersecting) return;
+        setInView(true);
+        observer.disconnect();
+      },
+      { threshold }
+    );
+    observer.observe(el);
+
+    return () => observer.disconnect();
+  }, [threshold]);
+
+  return [ref, inView];
+};
+
+// Строки проявляются по очереди, сверху вниз
+const Motto = () => {
+  const [ref, inView] = useInView(0.5);
+
+  return (
+    <p className={`home-motto-text ${inView ? 'in' : ''}`} ref={ref}>
+      {MOTTO_LINES.map((line, i) => (
+        <span
+          key={line}
+          className="home-reveal home-motto-line"
+          style={{ transitionDelay: `${i * 160}ms` }}
+        >
+          {line}
+        </span>
+      ))}
+    </p>
+  );
+};
 
 const HomeSections = ({ images, giftBoxImage }) => {
   const img = (imageType) => {
@@ -117,52 +189,24 @@ const HomeSections = ({ images, giftBoxImage }) => {
     return image ? getImageUrl(image.image) : null;
   };
 
-  // Reveal each block once it scrolls into view
-  useEffect(() => {
-    const targets = document.querySelectorAll('[data-reveal]');
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.15 }
-    );
-    targets.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, [images]);
-
   return (
     <div className="home-stack">
-      <section className="home-row" data-reveal>
-        <CollectionTile to="/catalogue?category=suits" label="Костюмы" image={img('section1')} />
-        <CollectionTile to="/catalogue?category=outerwear" label="Верхняя одежда" image={img('section2')} />
+      <section className="home-row">
+        <CollectionTile to="/catalogue?category=suits&subcategory=set" label="Костюмы" image={img('section1')} />
+        <CollectionTile submenu="outerwear" label="Верхняя одежда" image={img('section2')} />
       </section>
 
-      <section className="home-row" data-reveal>
+      <section className="home-row">
         <CollectionTile to="/catalogue?category=polo" label="Поло и футболки" image={img('section4')} />
         {/* Берём вторую карточку подарочного бокса; отдельный слот — запасной вариант */}
-        <CollectionTile to="/giftbox" label="Подарочный гид" image={giftBoxImage || img('section5')} />
+        <CollectionTile to="/gift-guide" label="Подарочный гид" image={giftBoxImage || img('section5')} />
       </section>
 
-      <Link to="/stores" className="home-row home-stores" data-reveal>
-        <div className="home-statement">
-          <h2 className="home-statement-title">Your Daily Comfort</h2>
-          <p className="home-statement-text">
-            Ждем вас в наших бутиках для примерки, подбора идеального размера и консультации стилистов.
-          </p>
-        </div>
-        <div
-          className="home-stores-photo"
-          style={{
-            backgroundImage: img('section6') ? `url(${img('section6')})` : 'none',
-            backgroundColor: img('section6') ? 'transparent' : '#1a1a1a',
-          }}
-        />
-      </Link>
+      <section className="home-motto">
+        <Motto />
+      </section>
+
+      <StoreVisitCta photo={img('section6')} />
     </div>
   );
 };
@@ -175,10 +219,9 @@ export default function Home() {
   const [visibleCount, setVisibleCount] = useState(1);
   const [heroHidden, setHeroHidden] = useState(false);
 
-  const getHeroImage = () => {
-    const heroImg = images.find(img => img.image_type === 'hero');
-    return heroImg ? getImageUrl(heroImg.image) : null;
-  };
+  const heroSlot = images.find(img => img.image_type === 'hero');
+
+  const getHeroImage = () => (heroSlot ? getImageUrl(heroSlot.image) : null);
 
   useEffect(() => {
     const onScroll = () => {
@@ -236,7 +279,12 @@ export default function Home() {
         <span></span>
         <span></span>
       </NavBar>
-      <HeroSection heroImage={getHeroImage()} visibleCount={visibleCount} hidden={heroHidden} />
+      <HeroSection
+        heroImage={getHeroImage()}
+        heroCaption={heroSlot?.caption || ''}
+        visibleCount={visibleCount}
+        hidden={heroHidden}
+      />
       <HomeSections images={images} giftBoxImage={giftBoxImage} />
     </>
   );

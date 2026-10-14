@@ -111,12 +111,8 @@ const About = () => {
             В 2023 году они объединили опыт классического костюма и современного кэжуала, создав бренд, где одежда служит образу жизни, а не витрине.
           </p>
           <div className="about-founders-grid">
-            <a
-              href="https://www.instagram.com/mardanqs/"
-              target="_blank"
-              rel="noreferrer"
-              className="about-founder-card"
-            >
+            {/* Кликабельна только кнопка, поэтому карточка — не ссылка */}
+            <div className="about-founder-card">
               <div className="about-founder-photo-wrap">
                 <div
                   className="about-founder-photo"
@@ -124,16 +120,21 @@ const About = () => {
                 />
               </div>
               <div className="about-founder-info">
-                <span className="about-founder-name">Мардан Алихан</span>
-                <p className="about-founder-role">Сo-founder</p>
+                <div className="about-founder-text">
+                  <span className="about-founder-name">Мардан Алихан</span>
+                  <p className="about-founder-role">Сo-founder</p>
+                </div>
+                <a
+                  href="https://www.instagram.com/mardanqs/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="about-founder-visit"
+                >
+                  Изучить
+                </a>
               </div>
-            </a>
-            <a
-              href="https://www.instagram.com/eklive13/"
-              target="_blank"
-              rel="noreferrer"
-              className="about-founder-card"
-            >
+            </div>
+            <div className="about-founder-card">
               <div className="about-founder-photo-wrap">
                 <div
                   className="about-founder-photo"
@@ -141,10 +142,20 @@ const About = () => {
                 />
               </div>
               <div className="about-founder-info">
-                <span className="about-founder-name">Хабидуллин Еркебулан</span>
-                <p className="about-founder-role">Сo-founder</p>
+                <div className="about-founder-text">
+                  <span className="about-founder-name">Хабидуллин Еркебулан</span>
+                  <p className="about-founder-role">Сo-founder</p>
+                </div>
+                <a
+                  href="https://www.instagram.com/eklive13/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="about-founder-visit"
+                >
+                  Изучить
+                </a>
               </div>
-            </a>
+            </div>
           </div>
         </div>
       </section>
@@ -170,12 +181,8 @@ const About = () => {
             MARDAN развивает экосистему брендов, дополняющих основной ассортимент и усиливающих ценностное предложение.
           </p>
           <div className="about-brands-grid">
-            <a
-              href="https://www.instagram.com/114.avenue/"
-              target="_blank"
-              rel="noreferrer"
-              className="about-brand-card"
-            >
+            {/* Кликабельна только кнопка, поэтому карточка — не ссылка */}
+            <div className="about-brand-card">
               <div className="about-brand-photo-wrap">
                 <div
                   className="about-brand-photo"
@@ -183,16 +190,21 @@ const About = () => {
                 />
               </div>
               <div className="about-brand-info">
-                <span className="about-brand-name">114 Avenue</span>
-                <span className="about-brand-category">Очки</span>
+                <div className="about-brand-text">
+                  <span className="about-brand-name">114 Avenue</span>
+                  <span className="about-brand-category">Очки</span>
+                </div>
+                <a
+                  href="https://www.instagram.com/114.avenue/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="about-brand-visit"
+                >
+                  Посетить
+                </a>
               </div>
-            </a>
-            <a
-              href="https://www.instagram.com/inspira.kz/"
-              target="_blank"
-              rel="noreferrer"
-              className="about-brand-card"
-            >
+            </div>
+            <div className="about-brand-card">
               <div className="about-brand-photo-wrap">
                 <div
                   className="about-brand-photo"
@@ -200,10 +212,20 @@ const About = () => {
                 />
               </div>
               <div className="about-brand-info">
-                <span className="about-brand-name">INSPIRA</span>
-                <span className="about-brand-category">Женская одежда</span>
+                <div className="about-brand-text">
+                  <span className="about-brand-name">INSPIRA</span>
+                  <span className="about-brand-category">Женская одежда</span>
+                </div>
+                <a
+                  href="https://www.instagram.com/inspira.kz/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="about-brand-visit"
+                >
+                  Посетить
+                </a>
               </div>
-            </a>
+            </div>
           </div>
         </div>
       </section>
