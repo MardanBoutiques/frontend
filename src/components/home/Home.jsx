@@ -77,15 +77,19 @@ const HERO_HOLD_PX = () => window.innerHeight * 0.5;
 const HERO_COVER_START_PX = () => HERO_REVEAL_PX() + HERO_HOLD_PX();
 const HERO_TOTAL_PX = () => HERO_COVER_START_PX() + window.innerHeight;
 
-const HeroSection = ({ heroImage, heroCaption, visibleCount, hidden }) => {
+const HeroSection = ({ heroImage, heroCaption, heroCaptionColor, visibleCount, hidden }) => {
   const heroStyle = heroImage ? { backgroundImage: `url(${heroImage})` } : {};
 
   return (
     <div className="hero-pin-wrap">
       <div className={`hero-fixed ${hidden ? 'is-hidden' : ''}`}>
         <div className="hero-picture" style={heroStyle}></div>
-        {/* Подпись задаётся в админке; пустую не показываем */}
-        {heroCaption && <p className="hero-caption">{heroCaption}</p>}
+        {/* Подпись и её цвет задаются в админке; пустую не показываем */}
+        {heroCaption && (
+          <p className="hero-caption" style={heroCaptionColor ? { color: heroCaptionColor } : undefined}>
+            {heroCaption}
+          </p>
+        )}
         <nav className="hero-section-menu">
           {HERO_CATEGORIES.map((c, i) => (
             <button
@@ -282,6 +286,7 @@ export default function Home() {
       <HeroSection
         heroImage={getHeroImage()}
         heroCaption={heroSlot?.caption || ''}
+        heroCaptionColor={heroSlot?.caption_color || ''}
         visibleCount={visibleCount}
         hidden={heroHidden}
       />

@@ -62,17 +62,18 @@ body {
 .hero-caption {
   position: absolute;
   /* Ниже шапки: она фиксированная, высотой 70px */
-  top: calc(70px + var(--spacing-06));
+  top: calc(70px + var(--spacing-12));
   left: var(--spacing-10);
   z-index: 10;
   margin: 0;
-  font-size: var(--fs-base);
+  font-size: clamp(1.75rem, 4vw, 3.25rem);
   font-weight: var(--font-weight-medium);
   line-height: var(--lh-tight);
+  /* Цвет по умолчанию; из админки приходит свой и перебивает его инлайном */
   color: var(--color-surface);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
   pointer-events: none;
 }
 
@@ -350,7 +351,7 @@ body {
   }
 
   .hero-caption {
-    top: calc(60px + var(--spacing-05));
+    top: calc(60px + var(--spacing-10));
     left: var(--spacing-06);
   }
 
