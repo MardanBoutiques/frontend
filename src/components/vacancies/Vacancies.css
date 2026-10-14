@@ -369,6 +369,12 @@
 
 /* ── Мобильная ── */
 @media (max-width: 640px) {
+  /* Заголовок с кнопкой уходят вниз кадра, а не стоят по центру */
+  .vac-hero {
+    align-items: flex-end;
+    padding-bottom: 16vh;
+  }
+
   .vac-hero-title {
     font-size: calc(var(--fs-xl) - 8px);
   }
