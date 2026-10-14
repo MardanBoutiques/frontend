@@ -134,10 +134,18 @@ const CollectionTile = ({ to, submenu, label, image }) => {
   );
 };
 
-const MOTTO_LINES = [
+// Фраза ломается по-разному: на узком экране первая строка короче
+const MOTTO_LINES_WIDE = [
   'Ежедневный комфорт — не компромисс,',
   'а основа хорошего стиля.',
 ];
+
+const MOTTO_LINES_NARROW = [
+  'Ежедневный комфорт',
+  'не компромисс, а основа хорошего стиля.',
+];
+
+const MOTTO_QUERY = '(max-width: 768px)';
 
 // Срабатывает один раз, когда блок доходит до экрана
 const useInView = (threshold = 0.4) => {
@@ -172,10 +180,22 @@ const useInView = (threshold = 0.4) => {
 // Строки проявляются по очереди, сверху вниз
 const Motto = () => {
   const [ref, inView] = useInView(0.5);
+  const [narrow, setNarrow] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia(MOTTO_QUERY).matches
+  );
+
+  useEffect(() => {
+    const query = window.matchMedia(MOTTO_QUERY);
+    const onChange = (e) => setNarrow(e.matches);
+    query.addEventListener('change', onChange);
+    return () => query.removeEventListener('change', onChange);
+  }, []);
+
+  const lines = narrow ? MOTTO_LINES_NARROW : MOTTO_LINES_WIDE;
 
   return (
     <p className={`home-motto-text ${inView ? 'in' : ''}`} ref={ref}>
-      {MOTTO_LINES.map((line, i) => (
+      {lines.map((line, i) => (
         <span
           key={line}
           className="home-reveal home-motto-line"
