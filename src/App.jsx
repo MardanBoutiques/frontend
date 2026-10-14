@@ -68,6 +68,8 @@ function App() {
           </Route>
           <Route path="/vacancies" element={<Vacancies />} />
           <Route path="/vacancies/:id" element={<VacancyDetail />} />
+          {/* Ничего не совпало — возвращаем на главную, а не пустой экран */}
+          <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>
         <Footer />

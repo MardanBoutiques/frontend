@@ -18,6 +18,31 @@ const Viewer = ({ stories, index, onClose, onNavigate }) => {
   const navigate = useNavigate();
   const story = stories[index];
 
+  // Ссылку из админки принимаем в любом виде: путь, путь без слэша или
+  // полный адрес. Свой адрес сводим к пути, чужой открываем в новой вкладке.
+  const openLink = (raw) => {
+    const link = (raw || '').trim();
+    if (!link) return;
+
+    if (/^https?:\/\//i.test(link)) {
+      try {
+        const url = new URL(link);
+        if (url.origin === window.location.origin) {
+          onClose();
+          navigate(`${url.pathname}${url.search}${url.hash}`);
+          return;
+        }
+      } catch {
+        // Адрес не разобрался — считаем внешним
+      }
+      window.open(link, '_blank', 'noopener');
+      return;
+    }
+
+    onClose();
+    navigate(link.startsWith('/') ? link : `/${link}`);
+  };
+
   // Клавиатура: стрелки листают, Esc закрывает
   useEffect(() => {
     const onKey = (e) => {
@@ -70,7 +95,7 @@ const Viewer = ({ stories, index, onClose, onNavigate }) => {
           <button
             type="button"
             className="stories-viewer-btn"
-            onClick={() => { onClose(); navigate(story.link); }}
+            onClick={() => openLink(story.link)}
           >
             В каталог
           </button>
