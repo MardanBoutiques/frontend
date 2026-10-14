@@ -19,26 +19,27 @@
 }
 
 .svc-desc {
-  font-size: var(--fs-lg);
+  /* Крупнее шкалы на 4px: блок большой, 16px в нём теряются */
+  font-size: calc(var(--fs-lg) + 4px);
   font-weight: var(--font-weight-light);
   color: rgba(255, 255, 255, 0.85);
   letter-spacing: 0.04em;
   line-height: var(--lh-text);
   margin: 0;
-  max-width: 420px;
+  max-width: 520px;
 }
 
 /* Белая кнопка на синем — как на карточках магазинов и на боксе */
 .svc-btn {
   align-self: flex-start;
   margin-top: var(--spacing-06);
-  padding: 6px 13px;
+  padding: 9px 18px;
   background: #fff;
   border: 1px solid #fff;
   border-radius: var(--radius-md);
   color: var(--color-navy);
   font-family: inherit;
-  font-size: var(--fs-sm);
+  font-size: var(--fs-base);
   font-weight: var(--font-weight-medium);
   line-height: var(--lh-tight);
   text-transform: uppercase;
