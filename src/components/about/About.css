@@ -207,11 +207,49 @@
 }
 
 /* ── Name meaning grid ── */
-.about-meaning-grid {
+/* Сетка карточек и фото рядом: на десктопе в два столбца, ниже — друг
+   под другом, фото первым */
+.about-meaning-row {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
   gap: 10px;
   margin-top: 48px;
+}
+
+.about-meaning-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.about-meaning-photo {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.about-meaning-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
+@media (min-width: 1025px) {
+  .about-meaning-row.has-photo {
+    grid-template-columns: 1.1fr 0.9fr;
+    align-items: stretch;
+  }
+
+  /* Фото справа от сетки */
+  .about-meaning-photo {
+    order: 2;
+  }
+
+  /* В два столбца фото тянется по высоте сетки, пропорции не держим */
+  .about-meaning-photo img {
+    aspect-ratio: auto;
+    min-height: 100%;
+  }
 }
 
 .about-meaning-card {
@@ -494,9 +532,6 @@
     grid-template-columns: 1fr;
   }
 
-  .about-meaning-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
 /* ── Mobile ── */
@@ -530,8 +565,8 @@
     padding: 48px 20px;
   }
 
-  .about-meaning-grid {
-    grid-template-columns: 1fr;
+  .about-meaning-card {
+    padding: 20px 16px;
   }
 
   .about-meaning-headline {

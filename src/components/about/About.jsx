@@ -94,22 +94,30 @@ const About = () => {
           <p className="about-body about-meaning-desc">
             В переводе — «отважный мужчина». Это человек, который принимает решения, несёт ответственность, выбирает качество и ценит комфорт. Название отражает наш характер: уверенный, решительный и ориентированный на поступок.
           </p>
-          <div className="about-meaning-grid">
-            <div className="about-meaning-card">
-              <h3 className="about-meaning-title">Принимает решения</h3>
-              <p className="about-meaning-text">Готов выбирать лучшее и не боится ответственности.</p>
-            </div>
-            <div className="about-meaning-card">
-              <h3 className="about-meaning-title">Несёт ответственность</h3>
-              <p className="about-meaning-text">Стиль — это выбор, который отражается в поступках и отношении к делу.</p>
-            </div>
-            <div className="about-meaning-card">
-              <h3 className="about-meaning-title">Выбирает качество</h3>
-              <p className="about-meaning-text">Инвестиция в вещи, которые живут дольше и лучше выглядят со временем.</p>
-            </div>
-            <div className="about-meaning-card">
-              <h3 className="about-meaning-title">Ценит комфорт</h3>
-              <p className="about-meaning-text">Комфорт — функциональность, которая не выдаёт усталости и всегда уместна.</p>
+          {/* Фото справа от сетки на десктопе, сверху на телефоне */}
+          <div className={`about-meaning-row ${getImageByType('about_meaning') ? 'has-photo' : ''}`}>
+            {getImageByType('about_meaning') && (
+              <div className="about-meaning-photo">
+                <img src={getImageByType('about_meaning')} alt="MARDAN" />
+              </div>
+            )}
+            <div className="about-meaning-grid">
+              <div className="about-meaning-card">
+                <h3 className="about-meaning-title">Принимает решения</h3>
+                <p className="about-meaning-text">Готов выбирать лучшее и не боится ответственности.</p>
+              </div>
+              <div className="about-meaning-card">
+                <h3 className="about-meaning-title">Несёт ответственность</h3>
+                <p className="about-meaning-text">Стиль — это выбор, который отражается в поступках и отношении к делу.</p>
+              </div>
+              <div className="about-meaning-card">
+                <h3 className="about-meaning-title">Выбирает качество</h3>
+                <p className="about-meaning-text">Инвестиция в вещи, которые живут дольше и лучше выглядят со временем.</p>
+              </div>
+              <div className="about-meaning-card">
+                <h3 className="about-meaning-title">Ценит комфорт</h3>
+                <p className="about-meaning-text">Комфорт — функциональность, которая не выдаёт усталости и всегда уместна.</p>
+              </div>
             </div>
           </div>
         </div>
