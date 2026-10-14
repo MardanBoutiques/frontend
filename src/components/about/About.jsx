@@ -39,21 +39,26 @@ const About = () => {
 
       {/* Intro */}
       <section className="about-section about-intro">
-        <div className="about-container about-container--narrow">
-          <p className="about-label">Вступление</p>
-          <h2 className="about-quote">
-            «MARDAN — бренд, рождённый на грани классики и кэжуала.»
-          </h2>
-          <p className="about-body">
-            Наша цель — сделать костюм удобным и уместным в повседневной жизни, чтобы мужчина чувствовал себя уверенно и комфортно в любом ритме дня: на встрече, в дороге, на деловом ужине или семейном событии.
-          </p>
-
-          {/* Фото задаётся в админке; без него блок остаётся прежним */}
-          {getImageByType('about_intro') && (
-            <div className="about-intro-photo">
-              <img src={getImageByType('about_intro')} alt="MARDAN" />
+        {/* Фото задаётся в админке. Без него карточка становится одноколоночной
+            и выглядит как раньше, только на подложке. */}
+        <div className="about-container about-container--card">
+          <div className={`about-intro-card ${getImageByType('about_intro') ? 'has-photo' : ''}`}>
+            <div className="about-intro-text">
+              <p className="about-label">Вступление</p>
+              <h2 className="about-quote">
+                «MARDAN — бренд, рождённый на грани классики и кэжуала.»
+              </h2>
+              <p className="about-body">
+                Наша цель — сделать костюм удобным и уместным в повседневной жизни, чтобы мужчина чувствовал себя уверенно и комфортно в любом ритме дня: на встрече, в дороге, на деловом ужине или семейном событии.
+              </p>
             </div>
-          )}
+
+            {getImageByType('about_intro') && (
+              <div className="about-intro-photo">
+                <img src={getImageByType('about_intro')} alt="MARDAN" />
+              </div>
+            )}
+          </div>
         </div>
       </section>
 
