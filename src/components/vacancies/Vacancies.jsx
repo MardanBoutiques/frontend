@@ -48,8 +48,13 @@ const Vacancies = () => {
       .catch((error) => console.error('Ошибка загрузки изображений:', error));
   }, []);
 
-  const heroImg = images.find((i) => i.image_type === 'vacancies_hero');
-  const heroImageUrl = heroImg ? getImageUrl(heroImg.image) : null;
+  const imageBySlot = (slot) => {
+    const found = images.find((i) => i.image_type === slot);
+    return found ? getImageUrl(found.image) : null;
+  };
+
+  const heroImageUrl = imageBySlot('vacancies_hero');
+  const benefitsImageUrl = imageBySlot('vacancies_benefits');
 
   const scrollToVacancies = () => {
     vacanciesRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -86,18 +91,19 @@ const Vacancies = () => {
             <br className="vac-title-br" />
             работа в Mardan Boutiques
           </h2>
-          <div className="vac-benefits">
-            {BENEFITS.map((b, i) => (
-              <div key={i} className="vac-benefit-row">
-                <div className="vac-benefit-card">
-                  <span className="vac-benefit-num">0{i + 1}</span>
-                </div>
-                <div className="vac-benefit-content">
+          {/* Фото уходит в фон, карточки лежат поверх него */}
+          <div
+            className={`vac-benefits-stage ${benefitsImageUrl ? 'has-photo' : ''}`}
+            style={benefitsImageUrl ? { backgroundImage: `url(${benefitsImageUrl})` } : undefined}
+          >
+            <div className="vac-benefits-grid">
+              {BENEFITS.map((b) => (
+                <div key={b.title} className="vac-benefit-card">
                   <h3 className="vac-benefit-title">{b.title}</h3>
                   <p className="vac-benefit-text">{b.text}</p>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>

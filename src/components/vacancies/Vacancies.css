@@ -99,49 +99,51 @@
   display: none;
 }
 
-/* ── Что даёт работа: карточки на серой стеклянной подложке ── */
-.vac-benefits {
-  display: flex;
-  flex-direction: column;
+/* ── Что даёт работа: фото-фон, на котором лежат карточки ── */
+.vac-benefits-stage {
+  position: relative;
+  padding: 40px;
+  border-radius: var(--radius-md);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Без фото подложка не нужна — карточки лежат прямо на фоне страницы */
+.vac-benefits-stage:not(.has-photo) {
+  padding: 0;
+}
+
+/* Фото занимает заметную высоту, карточки прижаты к низу кадра */
+@media (min-width: 769px) {
+  .vac-benefits-stage.has-photo {
+    display: flex;
+    align-items: flex-end;
+    min-height: 620px;
+  }
+}
+
+.vac-benefits-grid {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 10px;
 }
 
-.vac-benefit-row {
+.vac-benefit-card {
   display: flex;
-  align-items: center;
-  gap: 24px;
-  padding: 20px;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  padding: 20px 16px;
   border-radius: var(--radius-md);
   background: rgba(242, 241, 238, 0.65);
   backdrop-filter: var(--glass-blur-light);
   -webkit-backdrop-filter: var(--glass-blur-light);
   border: 1px solid rgba(255, 255, 255, 0.5);
   box-shadow: var(--glass-sheen);
-}
-
-.vac-benefit-card {
-  flex-shrink: 0;
-  width: 96px;
-  height: 96px;
-  border-radius: 6px;
-  background: var(--color-navy);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.vac-benefit-num {
-  font-size: var(--fs-xl);
-  font-weight: var(--font-weight-light);
-  color: rgba(255, 255, 255, 0.45);
-  line-height: 1;
-}
-
-.vac-benefit-content {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-width: 0;
 }
 
 .vac-benefit-title {
@@ -160,7 +162,6 @@
   line-height: var(--lh-text);
   color: var(--color-primary);
   margin: 0;
-  max-width: 560px;
 }
 
 /* ── Открытые вакансии ── */
@@ -359,13 +360,7 @@
   opacity: 0.85;
 }
 
-/* ── Планшет ── */
-@media (max-width: 1024px) {
-  .vac-benefit-card {
-    width: 80px;
-    height: 80px;
-  }
-}
+
 
 /* ── Мобильная ── */
 @media (max-width: 640px) {
@@ -387,18 +382,34 @@
     display: inline;
   }
 
-  .vac-benefit-row {
-    padding: 16px;
-    gap: 16px;
+  /* Карточки листаются вбок одна за другой по нижней части фото */
+  .vac-benefits-stage {
+    padding: 16px 0 16px 16px;
+  }
+
+  .vac-benefits-stage.has-photo {
+    display: flex;
+    align-items: flex-end;
+    min-height: 68vh;
+  }
+
+  .vac-benefits-grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-right: 16px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .vac-benefits-grid::-webkit-scrollbar {
+    display: none;
   }
 
   .vac-benefit-card {
-    width: 64px;
-    height: 64px;
-  }
-
-  .vac-benefit-num {
-    font-size: var(--fs-lg);
+    flex: 0 0 80%;
+    scroll-snap-align: start;
   }
 
   /* Кнопка уходит на свою строку и прижимается вправо */
