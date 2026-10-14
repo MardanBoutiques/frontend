@@ -56,7 +56,15 @@ const ProductCard = ({ product, variants }) => {
           <div className="product-photos" ref={scrollerRef} onScroll={handleScroll}>
             {photos.map((photo, i) => (
               <div className="product-photo" key={i}>
-                <img src={getImageUrl(photo)} alt={product.name} className="product-img" />
+                {/* Первое фото нужно сразу, остальные — только когда до них
+                    долистают: иначе каталог тянет сотни картинок разом */}
+                <img
+                  src={getImageUrl(photo)}
+                  alt={product.name}
+                  className="product-img"
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                />
               </div>
             ))}
           </div>
@@ -165,6 +173,8 @@ const inPeriod = (createdAt, period) => {
   return true;
 };
 
+const PAGE_SIZE = 40;
+
 const Catalogue = () => {
   const [filterChosen, setFilterChosen] = useState(false);
   const [products, setProducts] = useState([]);
@@ -174,6 +184,8 @@ const Catalogue = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [error, setError] = useState(null);
   const [sortType, setSortType] = useState('');
+  // Каталог выводится порциями: 200 карточек разом роняли Safari на телефоне
+  const [shown, setShown] = useState(PAGE_SIZE);
   const [searchParams] = useSearchParams();
   const category = searchParams.get("category");
   const subcategory = searchParams.get("subcategory");
@@ -197,6 +209,7 @@ const Catalogue = () => {
     setError(null);
     setProducts([]);
     setSortedProducts([]);
+    setShown(PAGE_SIZE);
     window.scrollTo(0, 0);
 
     // Для «Новых поступлений» нужен ещё период из админки
@@ -359,7 +372,7 @@ const Catalogue = () => {
         className={`grid ${filterChosen ? "dark" : "light"}`}
         onClick={() => setFilterChosen(false)}
       >
-        {sortedProducts.map((product, index) => {
+        {sortedProducts.slice(0, shown).map((product, index) => {
           // Same article = same design in different colors. Matching by name alone
           // would wrongly group unrelated products that happen to share a name but
           // have different articles (and are therefore different products).
@@ -369,6 +382,18 @@ const Catalogue = () => {
           return <ProductCard product={product} variants={variants} key={index} />;
         })}
       </Grid>
+
+      {shown < sortedProducts.length && (
+        <div className="catalogue-more">
+          <button
+            type="button"
+            className="catalogue-more-btn"
+            onClick={() => setShown((n) => n + PAGE_SIZE)}
+          >
+            Показать ещё
+          </button>
+        </div>
+      )}
     </>
   );
 };

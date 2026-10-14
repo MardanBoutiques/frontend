@@ -372,6 +372,35 @@
   font-weight: var(--font-weight-medium);
 }
 
+/* Подгрузка следующей порции карточек */
+.catalogue-more {
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px 60px;
+  background: #fff;
+}
+
+.catalogue-more-btn {
+  min-height: 40px;
+  padding: 0 24px;
+  background: var(--color-navy);
+  border: 1px solid var(--color-navy);
+  border-radius: var(--radius-md);
+  color: #fff;
+  font-family: inherit;
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--lh-tight);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.catalogue-more-btn:hover {
+  opacity: 0.85;
+}
+
 /* ── States ── */
 .catalogue-loading {
   min-height: calc(100vh - 140px);
