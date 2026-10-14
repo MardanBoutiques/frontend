@@ -153,6 +153,18 @@ const Filter = ({ isHidden, onSort, currentSort }) => {
   );
 };
 
+// Дата добавления товара попадает в период из админки. Пустая граница
+// означает «без ограничения», поэтому сравниваем только заданные.
+const inPeriod = (createdAt, period) => {
+  if (!period || (!period.date_from && !period.date_to)) return true;
+  if (!createdAt) return false;
+
+  const day = createdAt.slice(0, 10);
+  if (period.date_from && day < period.date_from) return false;
+  if (period.date_to && day > period.date_to) return false;
+  return true;
+};
+
 const Catalogue = () => {
   const [filterChosen, setFilterChosen] = useState(false);
   const [products, setProducts] = useState([]);
@@ -187,22 +199,30 @@ const Catalogue = () => {
     setSortedProducts([]);
     window.scrollTo(0, 0);
 
-    api
-      .get("/")
-      .then((response) => {
-        if (response.status != 200) {
+    // Для «Новых поступлений» нужен ещё период из админки
+    const requests = [api.get("/")];
+    if (category === 'new') {
+      requests.push(
+        api.get('/api/new-arrivals/').catch(() => ({ data: {} }))
+      );
+    }
+
+    Promise.all(requests)
+      .then(([productsResponse, periodResponse]) => {
+        if (productsResponse.status != 200) {
           throw new Error("Network response was not ok");
         }
-        return response.data;
+        return { data: productsResponse.data, period: periodResponse?.data || {} };
       })
-      .then((data) => {
+      .then(({ data, period }) => {
         let filtered = data;
 
-        // "Новые поступления" — псевдо-категория: показываем все товары,
-        // отсортированные бэкендом по дате создания (по умолчанию), без
-        // фильтра по category.
+        // «Новые поступления» — псевдо-категория: не фильтруем по category,
+        // но оставляем только товары, заведённые в заданный период.
         if (category && category !== 'new') {
           filtered = filtered.filter(product => product.category === category);
+        } else if (category === 'new') {
+          filtered = filtered.filter((product) => inPeriod(product.created_at, period));
         }
         if (subcategory) {
           filtered = filtered.filter(product =>

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Home.css";
 import NavBar from "../navbar/NavBar";
 import openAxios from "../../api/axios";
@@ -56,13 +56,15 @@ const listener2 = () => {
 
 // Каждый пункт открывает главное меню — и сразу раскрывает тот раздел,
 // в котором эта категория живёт. Так список на hero не расходится с меню.
+// Пункт либо ведёт сразу в каталог, либо открывает нужное подменю:
+// без подменю открывать меню бессмысленно — выглядит как «ничего не нажалось»
 const HERO_CATEGORIES = [
-  { label: 'Новые поступления' },
+  { label: 'Новые поступления', to: '/catalogue?category=new' },
   { label: 'Костюмы', submenu: 'clothing' },
   { label: 'Пиджаки', submenu: 'clothing' },
   { label: 'Рубашки', submenu: 'clothing' },
   { label: 'Брюки', submenu: 'clothing' },
-  { label: 'Обувь' },
+  { label: 'Обувь', to: '/catalogue?category=shoes' },
   { label: 'Аксессуары', submenu: 'accessories' },
 ];
 
@@ -79,6 +81,7 @@ const HERO_COVER_START_PX = () => HERO_REVEAL_PX() + HERO_HOLD_PX();
 const HERO_TOTAL_PX = () => HERO_COVER_START_PX() + window.innerHeight;
 
 const HeroSection = ({ heroImage, heroCaption, heroCaptionColor, visibleCount, hidden }) => {
+  const navigate = useNavigate();
   const heroStyle = heroImage ? { backgroundImage: `url(${heroImage})` } : {};
 
   return (
@@ -97,7 +100,7 @@ const HeroSection = ({ heroImage, heroCaption, heroCaptionColor, visibleCount, h
               key={c.label}
               type="button"
               className={`hero-nav-item ${i < visibleCount ? 'is-shown' : ''}`}
-              onClick={() => openMenu(c.submenu)}
+              onClick={() => (c.to ? navigate(c.to) : openMenu(c.submenu))}
             >
               {c.label}
             </button>
