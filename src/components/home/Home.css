@@ -73,7 +73,6 @@ body {
   color: var(--color-surface);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
   pointer-events: none;
 }
 
