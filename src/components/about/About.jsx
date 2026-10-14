@@ -47,6 +47,13 @@ const About = () => {
           <p className="about-body">
             Наша цель — сделать костюм удобным и уместным в повседневной жизни, чтобы мужчина чувствовал себя уверенно и комфортно в любом ритме дня: на встрече, в дороге, на деловом ужине или семейном событии.
           </p>
+
+          {/* Фото задаётся в админке; без него блок остаётся прежним */}
+          {getImageByType('about_intro') && (
+            <div className="about-intro-photo">
+              <img src={getImageByType('about_intro')} alt="MARDAN" />
+            </div>
+          )}
         </div>
       </section>
 
