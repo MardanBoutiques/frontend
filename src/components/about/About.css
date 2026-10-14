@@ -207,53 +207,42 @@
 }
 
 /* ── Name meaning grid ── */
-/* Сетка карточек и фото рядом: на десктопе в два столбца, ниже — друг
-   под другом, фото первым */
-.about-meaning-row {
-  display: grid;
-  gap: 10px;
+/* Фото-фон, на котором лежат карточки */
+.about-meaning-stage {
+  position: relative;
   margin-top: 48px;
+  padding: 40px;
+  border-radius: var(--radius-md);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Фото занимает заметную высоту, карточки прижаты к низу кадра */
+@media (min-width: 769px) {
+  .about-meaning-stage.has-photo {
+    display: flex;
+    align-items: flex-end;
+    min-height: 620px;
+  }
+}
+
+/* Без фото подложка не нужна — карточки лежат прямо на синем фоне блока */
+.about-meaning-stage:not(.has-photo) {
+  padding: 0;
 }
 
 .about-meaning-grid {
+  position: relative;
+  z-index: 1;
+  width: 100%;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 10px;
 }
 
-.about-meaning-photo {
-  border-radius: var(--radius-md);
-  overflow: hidden;
-}
-
-.about-meaning-photo img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  aspect-ratio: 16 / 10;
-  object-fit: cover;
-}
-
-@media (min-width: 1025px) {
-  .about-meaning-row.has-photo {
-    grid-template-columns: 1.1fr 0.9fr;
-    align-items: stretch;
-  }
-
-  /* Фото справа от сетки */
-  .about-meaning-photo {
-    order: 2;
-  }
-
-  /* В два столбца фото тянется по высоте сетки, пропорции не держим */
-  .about-meaning-photo img {
-    aspect-ratio: auto;
-    min-height: 100%;
-  }
-}
-
 .about-meaning-card {
-  padding: 28px 24px;
+  padding: 20px 16px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -565,7 +554,36 @@
     padding: 48px 20px;
   }
 
+  /* Карточки листаются вбок одна за другой по нижней части фото */
+  .about-meaning-stage {
+    padding: 16px 0 16px 16px;
+  }
+
+  .about-meaning-stage.has-photo {
+    display: flex;
+    align-items: flex-end;
+    min-height: 68vh;
+  }
+
+  .about-meaning-grid {
+    display: flex;
+    max-width: none;
+    margin: 0;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-right: 16px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .about-meaning-grid::-webkit-scrollbar {
+    display: none;
+  }
+
   .about-meaning-card {
+    flex: 0 0 80%;
+    scroll-snap-align: start;
     padding: 20px 16px;
   }
 
