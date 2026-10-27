@@ -162,6 +162,15 @@ const ProductView = () => {
   }, []);
 
   // Другие оттенки того же товара — по артикулу, как в каталоге
+  // Пиджак и брюки одной модели — отдельные товары с разными артикулами.
+  // Связывает их общий «Код комплекта» из админки.
+  const setParts = useMemo(() => {
+    if (!product || !product.set_code || catalogue.length === 0) return [];
+    return catalogue.filter(
+      (p) => p.set_code === product.set_code && String(p.id) !== String(product.id)
+    );
+  }, [product, catalogue]);
+
   const variants = useMemo(() => {
     if (!product || catalogue.length === 0) return [];
     const same = product.article
@@ -331,6 +340,32 @@ const ProductView = () => {
           <p className="pv-ship-note">
             <span className="pv-check">✓</span> Возврат в течение 14 дней
           </p>
+
+          {setParts.length > 0 && (
+            <div className="pv-suit">
+              <p className="pv-suit-label">Дополните костюм</p>
+              {setParts.map((part) => (
+                <button
+                  key={part.id}
+                  type="button"
+                  className="pv-suit-part"
+                  onClick={() => openVariant(part.id)}
+                >
+                  {part.image ? (
+                    <img src={getImageUrl(part.image)} alt={part.name} />
+                  ) : (
+                    <span className="pv-suit-part-empty" />
+                  )}
+                  <span className="pv-suit-part-text">
+                    <span className="pv-suit-part-name">{part.name}</span>
+                    <span className="pv-suit-part-price">
+                      {Math.round(part.price).toLocaleString('ru-RU')} KZT
+                    </span>
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
 
           {/* Размер и посадка — у аксессуаров размеров нет */}
           {!isAccessory && (

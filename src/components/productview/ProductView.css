@@ -259,6 +259,75 @@
   color: var(--color-secondary);
 }
 
+/* ── Вторая часть костюма ── */
+.pv-suit {
+  margin-top: 24px;
+}
+
+.pv-suit-label {
+  margin: 0 0 10px;
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--lh-tight);
+  color: var(--color-navy);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.pv-suit-part {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 10px;
+  background: none;
+  border: 1px solid var(--color-outline);
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.pv-suit-part + .pv-suit-part {
+  margin-top: 8px;
+}
+
+.pv-suit-part:hover {
+  border-color: var(--color-navy);
+}
+
+.pv-suit-part img,
+.pv-suit-part-empty {
+  flex-shrink: 0;
+  width: 56px;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 6px;
+  background: var(--color-background-light);
+}
+
+.pv-suit-part-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.pv-suit-part-name {
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--lh-tight);
+  color: var(--color-navy);
+}
+
+.pv-suit-part-price {
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-light);
+  line-height: var(--lh-tight);
+  color: var(--color-secondary);
+}
+
 .pv-check {
   color: var(--color-navy);
 }
@@ -302,7 +371,8 @@
   .pv-sizes { order: 3; }
   .pv-cart-btn { order: 4; }
   .pv-ship-note { order: 5; }
-  .pv-accordion { order: 6; }
+  .pv-suit { order: 6; }
+  .pv-accordion { order: 7; }
 }
 
 /* ── Accordions: без разделительных линий, блоки держатся на отступах ── */
@@ -497,7 +567,8 @@
   .pv-variants { order: 1; }
   .pv-buy { order: 2; }
   .pv-ship-note { order: 3; }
-  .pv-accordion { order: 4; }
+  .pv-suit { order: 4; }
+  .pv-accordion { order: 5; }
 
   /* Отступ полосы оттенков — внешними полями, а не паддингом: паддинг лежит
      внутри прокручиваемой области, браузер подкручивает её к активной карточке
