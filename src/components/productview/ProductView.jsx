@@ -45,6 +45,15 @@ const SpecRow = ({ label, value }) =>
     </div>
   ) : null;
 
+// Цвета заводят руками, поэтому сравниваем без оглядки на регистр, «ё» и
+// лишние дефисы: «Тёмно-синий» и «темно синий» — один цвет.
+const normaliseColour = (value) =>
+  (value || '')
+    .toLowerCase()
+    .replace(/ё/g, 'е')
+    .replace(/[\s-]+/g, ' ')
+    .trim();
+
 const ProductView = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -166,9 +175,20 @@ const ProductView = () => {
   // Связывает их общий «Код комплекта» из админки.
   const setParts = useMemo(() => {
     if (!product || !product.set_code || catalogue.length === 0) return [];
-    return catalogue.filter(
-      (p) => p.set_code === product.set_code && String(p.id) !== String(product.id)
-    );
+
+    const colour = normaliseColour(product.colors);
+
+    return catalogue.filter((p) => {
+      if (p.set_code !== product.set_code) return false;
+      if (String(p.id) === String(product.id)) return false;
+      // Тот же артикул — это та же вещь в другом цвете, её место в полосе
+      // оттенков, а не в комплекте
+      if (product.article && p.article === product.article) return false;
+      // Вторая часть должна быть того же цвета, если цвет указан у обоих
+      const other = normaliseColour(p.colors);
+      if (colour && other && colour !== other) return false;
+      return true;
+    });
   }, [product, catalogue]);
 
   const variants = useMemo(() => {
