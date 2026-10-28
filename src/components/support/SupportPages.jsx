@@ -557,7 +557,7 @@ export const SupportOffer = () => (
     </p>
 
     <p className="support-body" style={{ marginTop: 24, fontSize: '0.8125rem', color: 'var(--color-secondary)' }}>
-      Редакция №1 от 08.08.2026.
+      Редакция №2 от 28.10.2026.
     </p>
   </div>
 );
