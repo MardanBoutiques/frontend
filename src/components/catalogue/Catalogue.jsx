@@ -281,6 +281,7 @@ const Catalogue = () => {
     'wallets': 'Портмоне',
     'belts': 'Ремни',
     'socks': 'Носки',
+    'suspenders': 'Подтяжки',
   };
 
   const outerwearTypeTitles = {

@@ -80,6 +80,7 @@ const NavBar = ({ children, forHome }) => {
     { label: 'Портмоне', path: '/catalogue?category=accessories&subcategory=wallets' },
     { label: 'Ремни', path: '/catalogue?category=accessories&subcategory=belts' },
     { label: 'Носки', path: '/catalogue?category=accessories&subcategory=socks' },
+    { label: 'Подтяжки', path: '/catalogue?category=accessories&subcategory=suspenders' },
   ];
 
   const anySubmenuOpen = clothingOpen || outerwearOpen || accessoriesOpen;
