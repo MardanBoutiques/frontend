@@ -209,21 +209,62 @@
   background-color: #0d2a4a;
 }
 
-/* Ссылка на условия */
-.terms-link {
-  text-align: center;
+/* Условия использования — раскрывающийся блок, как на странице товара */
+.gc-terms {
+  margin-top: 24px;
 }
 
-.terms-link a {
+.gc-terms-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  padding: 14px 0;
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: var(--fs-base);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--lh-tight);
+  color: var(--color-navy);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-align: left;
+  cursor: pointer;
+}
+
+.gc-terms-icon {
+  flex-shrink: 0;
+  font-size: var(--fs-lg);
+  font-weight: var(--font-weight-light);
+  color: var(--color-navy);
+  line-height: 1;
+}
+
+/* Высота неизвестна заранее, поэтому раскрытие анимируем через строки грида */
+.gc-terms-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.gc-terms.open .gc-terms-wrap {
+  grid-template-rows: 1fr;
+}
+
+.gc-terms-clip {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.gc-terms-body {
+  margin: 0 0 16px;
   font-size: var(--fs-base);
   font-weight: var(--font-weight-light);
-  color: var(--color-secondary);
-  text-decoration: underline;
-  transition: color var(--tr-duration-out) var(--tr-timing-out);
-}
-
-.terms-link a:hover {
-  color: var(--color-navy);
+  line-height: var(--lh-text);
+  color: var(--color-primary);
+  white-space: pre-line;
 }
 
 /* Мобильная версия */

@@ -11,6 +11,7 @@ function GiftCard() {
   const [loading, setLoading] = useState(true);
   const [cardType, setCardType] = useState('physical');
   const [amount, setAmount] = useState('20000');
+  const [termsOpen, setTermsOpen] = useState(false);
   const [customAmount, setCustomAmount] = useState('');
   const [addedToCart, setAddedToCart] = useState(false);
   const navigate = useNavigate();
@@ -168,10 +169,23 @@ function GiftCard() {
             {addedToCart ? '✓ ДОБАВЛЕНО В КОРЗИНУ' : 'ДОБАВИТЬ В КОРЗИНУ'}
           </button>
 
-          {/* Условия использования */}
+          {/* Условия использования раскрываются здесь же: раньше ссылка вела
+              на якорь #terms, которого на странице нет */}
           {giftcard.terms && (
-            <div className="terms-link">
-              <a href="#terms">Условия использования</a>
+            <div className={`gc-terms ${termsOpen ? 'open' : ''}`}>
+              <button
+                type="button"
+                className="gc-terms-head"
+                onClick={() => setTermsOpen((v) => !v)}
+              >
+                <span>Условия использования</span>
+                <span className="gc-terms-icon">{termsOpen ? '−' : '+'}</span>
+              </button>
+              <div className="gc-terms-wrap">
+                <div className="gc-terms-clip">
+                  <p className="gc-terms-body">{giftcard.terms}</p>
+                </div>
+              </div>
             </div>
           )}
         </div>
