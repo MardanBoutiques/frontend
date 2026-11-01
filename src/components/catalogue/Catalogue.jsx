@@ -161,31 +161,19 @@ const Filter = ({ isHidden, onSort, currentSort }) => {
   );
 };
 
-// Дата добавления товара попадает в период из админки. Пустая граница
-// означает «без ограничения», поэтому сравниваем только заданные.
-const inPeriod = (createdAt, period) => {
-  if (!period || (!period.date_from && !period.date_to)) return true;
-  if (!createdAt) return false;
-
-  const day = createdAt.slice(0, 10);
-  if (period.date_from && day < period.date_from) return false;
-  if (period.date_to && day > period.date_to) return false;
-  return true;
-};
-
 const PAGE_SIZE = 40;
 
 const Catalogue = () => {
   const [filterChosen, setFilterChosen] = useState(false);
   const [products, setProducts] = useState([]);
-  const [sortedProducts, setSortedProducts] = useState([]);
   const [isLoading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [error, setError] = useState(null);
   const [sortType, setSortType] = useState('');
-  // Каталог выводится порциями: 200 карточек разом роняли Safari на телефоне
-  const [shown, setShown] = useState(PAGE_SIZE);
+  // Каталог приходит страницами: сервер фильтрует и сортирует сам, а за раз
+  // отдаёт сорок товаров — раньше все двести приходили одним ответом
+  const [total, setTotal] = useState(0);
+  const [nextPage, setNextPage] = useState(null);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [searchParams] = useSearchParams();
   const category = searchParams.get("category");
   const subcategory = searchParams.get("subcategory");
@@ -208,67 +196,48 @@ const Catalogue = () => {
     setLoading(true);
     setError(null);
     setProducts([]);
-    setSortedProducts([]);
-    setShown(PAGE_SIZE);
     window.scrollTo(0, 0);
 
-    // Для «Новых поступлений» нужен ещё период из админки
-    const requests = [api.get("/")];
-    if (category === 'new') {
-      requests.push(
-        api.get('/api/new-arrivals/').catch(() => ({ data: {} }))
-      );
-    }
-
-    Promise.all(requests)
-      .then(([productsResponse, periodResponse]) => {
-        if (productsResponse.status != 200) {
-          throw new Error("Network response was not ok");
-        }
-        return { data: productsResponse.data, period: periodResponse?.data || {} };
-      })
-      .then(({ data, period }) => {
-        let filtered = data;
-
-        // «Новые поступления» — псевдо-категория: не фильтруем по category,
-        // но оставляем только товары, заведённые в заданный период.
-        if (category && category !== 'new') {
-          filtered = filtered.filter(product => product.category === category);
-        } else if (category === 'new') {
-          filtered = filtered.filter((product) => inPeriod(product.created_at, period));
-        }
-        if (subcategory) {
-          filtered = filtered.filter(product =>
-            product.accessory_type === subcategory || product.outerwear_type === subcategory || product.suit_type === subcategory
-          );
-        }
-
-        setProducts(filtered);
-        setSortedProducts(filtered);
+    fetchPage(1)
+      .then(({ results, count, next }) => {
+        setProducts(results);
+        setTotal(count);
+        setNextPage(next);
         setLoading(false);
       })
       .catch((error) => {
         setError(error.message);
         setLoading(false);
       });
-  }, [category, subcategory]);
+  }, [category, subcategory, sortType]);
 
+  const fetchPage = (page) => {
+    const params = new URLSearchParams({ page, page_size: PAGE_SIZE });
+    if (category) params.set('category', category);
+    if (subcategory) params.set('subcategory', subcategory);
+    if (sortType) params.set('sort', sortType);
+
+    return api.get(`/?${params}`).then((response) => {
+      if (response.status !== 200) throw new Error('Network response was not ok');
+      return response.data;
+    });
+  };
+
+  const loadMore = () => {
+    if (!nextPage || loadingMore) return;
+    setLoadingMore(true);
+    fetchPage(nextPage)
+      .then(({ results, next }) => {
+        setProducts((current) => [...current, ...results]);
+        setNextPage(next);
+      })
+      .catch(() => {})
+      .finally(() => setLoadingMore(false));
+  };
+
+  // Сортировка меняет запрос: иначе упорядочивалась бы только загруженная часть
   const handleSort = (type) => {
     setSortType(type);
-    let sorted = [...products];
-    
-    switch(type) {
-      case 'price-asc':
-        sorted.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
-        break;
-      case 'price-desc':
-        sorted.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
-        break;
-      default:
-        sorted = products;
-    }
-    
-    setSortedProducts(sorted);
     setFilterChosen(false);
   };
 
@@ -366,32 +335,33 @@ const Catalogue = () => {
           «Loading», ни подъехавшего снизу футера под стеклом не видно */}
       {isLoading && <div className="catalogue-loading" />}
       {error && <div className="error">Error: {error}</div>}
-      {!isLoading && sortedProducts.length === 0 && !error && (
-        <div className="no-products">No products found</div>
+      {!isLoading && products.length === 0 && !error && (
+        <div className="no-products">Товары не найдены</div>
       )}
       <Grid
         className={`grid ${filterChosen ? "dark" : "light"}`}
         onClick={() => setFilterChosen(false)}
       >
-        {sortedProducts.slice(0, shown).map((product, index) => {
-          // Same article = same design in different colors. Matching by name alone
-          // would wrongly group unrelated products that happen to share a name but
-          // have different articles (and are therefore different products).
-          const variants = product.article
-            ? products.filter(p => p.article === product.article)
-            : products.filter(p => p.name === product.name && !p.article);
-          return <ProductCard product={product} variants={variants} key={index} />;
-        })}
+        {products.map((product) => (
+          // Оттенки считает сервер: на странице каталога лежат не все товары,
+          // и подобрать их по артикулу здесь было бы уже не из чего
+          <ProductCard
+            product={product}
+            variants={product.variant_colors || []}
+            key={product.id}
+          />
+        ))}
       </Grid>
 
-      {shown < sortedProducts.length && (
+      {nextPage && (
         <div className="catalogue-more">
           <button
             type="button"
             className="catalogue-more-btn"
-            onClick={() => setShown((n) => n + PAGE_SIZE)}
+            onClick={loadMore}
+            disabled={loadingMore}
           >
-            Показать ещё
+            {loadingMore ? 'Загружаем…' : `Показать ещё (${total - products.length})`}
           </button>
         </div>
       )}

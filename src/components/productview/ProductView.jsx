@@ -45,15 +45,6 @@ const SpecRow = ({ label, value }) =>
     </div>
   ) : null;
 
-// Цвета заводят руками, поэтому сравниваем без оглядки на регистр, «ё» и
-// лишние дефисы: «Тёмно-синий» и «темно синий» — один цвет.
-const normaliseColour = (value) =>
-  (value || '')
-    .toLowerCase()
-    .replace(/ё/g, 'е')
-    .replace(/[\s-]+/g, ' ')
-    .trim();
-
 const ProductView = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -62,8 +53,8 @@ const ProductView = () => {
   const [loading, setLoading] = useState(true);
   // Весь каталог держим в памяти: по нему строятся свотчи, и из него же
   // мгновенно берётся товар при переключении оттенка — без похода на сервер.
-  const [catalogue, setCatalogue] = useState([]);
-  const catalogueRef = useRef([]);
+  // Отмечает переход между оттенками: там экран загрузки не нужен
+  const swapRef = useRef(false);
   const [selectedSize, setSelectedSize] = useState('');
   const [sizesOpen, setSizesOpen] = useState(false);
   const [openAccordion, setOpenAccordion] = useState(null);
@@ -93,6 +84,7 @@ const ProductView = () => {
   const openVariant = (variantId) => {
     if (String(variantId) === String(id)) return;
     setVeilOn(true);
+    swapRef.current = true;
     clearTimeout(swapTimer.current);
     swapTimer.current = setTimeout(() => navigate(`/product/${variantId}`), 300);
   };
@@ -114,12 +106,10 @@ const ProductView = () => {
     setVariantsScrolled(false);
     setVeilOn(false);
 
-    // Товар уже загружен вместе с каталогом — подменяем содержимое на месте,
-    // без экрана загрузки и без прыжка к началу страницы.
-    const known = catalogueRef.current.find((p) => String(p.id) === String(id));
-    if (known) {
-      setProduct(known);
-      setLoading(false);
+    // Белая вуаль держится 0,3 с и перекрывает загрузку нового оттенка,
+    // поэтому экран загрузки при смене не показываем
+    if (swapRef.current) {
+      swapRef.current = false;
     } else {
       window.scrollTo(0, 0);
       setLoading(true);
@@ -161,43 +151,13 @@ const ProductView = () => {
     };
   }, [product]);
 
-  useEffect(() => {
-    api.get('/')
-      .then((response) => {
-        catalogueRef.current = response.data;
-        setCatalogue(response.data);
-      })
-      .catch(() => setCatalogue([]));
-  }, []);
-
-  // Другие оттенки того же товара — по артикулу, как в каталоге
-  // Пиджак и брюки одной модели — отдельные товары с разными артикулами.
-  // Связывает их общий «Код комплекта» из админки.
-  const setParts = useMemo(() => {
-    if (!product || !product.set_code || catalogue.length === 0) return [];
-
-    const colour = normaliseColour(product.colors);
-
-    return catalogue.filter((p) => {
-      if (p.set_code !== product.set_code) return false;
-      if (String(p.id) === String(product.id)) return false;
-      // Тот же артикул — это та же вещь в другом цвете, её место в полосе
-      // оттенков, а не в комплекте
-      if (product.article && p.article === product.article) return false;
-      // Вторая часть должна быть того же цвета, если цвет указан у обоих
-      const other = normaliseColour(p.colors);
-      if (colour && other && colour !== other) return false;
-      return true;
-    });
-  }, [product, catalogue]);
-
+  // Оттенки и вторая половина костюма приходят с сервера вместе с товаром:
+  // раньше ради них страница тянула весь каталог целиком
+  const setParts = product?.set_parts || [];
   const variants = useMemo(() => {
-    if (!product || catalogue.length === 0) return [];
-    const same = product.article
-      ? catalogue.filter((p) => p.article === product.article)
-      : catalogue.filter((p) => p.name === product.name && !p.article);
-    return same.length > 1 ? same : [];
-  }, [product, catalogue]);
+    const list = product?.variant_colors || [];
+    return list.length > 1 ? list : [];
+  }, [product]);
 
   if (loading) {
     return (
