@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../navbar/NavBar';
 import { useCart } from '../../context/CartContext';
@@ -27,6 +27,7 @@ const Checkout = () => {
   const navigate = useNavigate();
   const { cartItems, getTotalPrice, clearCart } = useCart();
   const [loading, setLoading] = useState(false);
+  const submitting = useRef(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [orderId, setOrderId] = useState(null);
   const [formData, setFormData] = useState({
@@ -153,6 +154,11 @@ const Checkout = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Состояние в React обновляется не мгновенно: при быстром двойном клике
+    // disabled ещё не успевает примениться, и заказ ушёл бы дважды.
+    // Засов через ref срабатывает сразу.
+    if (submitting.current) return;
     
     if (cartItems.length === 0) {
       alert('Корзина пуста!');
@@ -169,6 +175,7 @@ const Checkout = () => {
       return;
     }
 
+    submitting.current = true;
     setLoading(true);
 
     const orderData = {
@@ -212,6 +219,7 @@ const Checkout = () => {
         alert('Ошибка при оформлении заказа. Попробуйте еще раз.');
       }
     } finally {
+      submitting.current = false;
       setLoading(false);
     }
   };
