@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import NavBar from "../navbar/NavBar";
+import { useSupportPages } from "./useSupportPages";
 import "./Support.css";
 
-const NAV_ITEMS = [
+/* Названия и порядок разделов приходят из админки. Этот список — то, что
+   видно, пока ответ не пришёл, и если API недоступен: шесть подписей меню
+   короче любого запроса, и оставлять раздел с пустым меню незачем. */
+const FALLBACK_ITEMS = [
   { to: "/support/faq", label: "Частые вопросы" },
   { to: "/support/shipping", label: "Доставка и возврат" },
   { to: "/support/terms", label: "Условия использования" },
@@ -13,6 +17,11 @@ const NAV_ITEMS = [
 ];
 
 const SupportLayout = () => {
+  const { pages } = useSupportPages();
+  const navItems = pages.length
+    ? pages.map((page) => ({ to: `/support/${page.slug}`, label: page.menu_title }))
+    : FALLBACK_ITEMS;
+
   // key по адресу: при смене раздела содержимое пересоздаётся,
   // и анимация въезда запускается заново
   const { pathname } = useLocation();
@@ -22,7 +31,7 @@ const SupportLayout = () => {
 
   useEffect(() => setNavOpen(false), [pathname]);
 
-  const current = NAV_ITEMS.find((item) => item.to === pathname);
+  const current = navItems.find((item) => item.to === pathname);
 
   return (
     <>
@@ -43,7 +52,7 @@ const SupportLayout = () => {
             {/* Обёртка нужна телефону, чтобы было что схлопывать по высоте;
                 на десктопе она растворяется через display: contents */}
             <div className="support-nav-list">
-              {NAV_ITEMS.map((item) => (
+              {navItems.map((item) => (
                 <NavLink
                   key={item.to}
                   to={item.to}

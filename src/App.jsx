@@ -14,14 +14,7 @@ import Stores from "./components/stores/Stores";
 import Footer from "./components/footer/Footer";
 import About from "./components/about/About";
 import SupportLayout from "./components/support/SupportLayout";
-import {
-  SupportFaq,
-  SupportShipping,
-  SupportTerms,
-  SupportOffer,
-  SupportPrivacy,
-  SupportContact,
-} from "./components/support/SupportPages";
+import SupportPage from "./components/support/SupportPages";
 import Vacancies from "./components/vacancies/Vacancies";
 import VacancyDetail from "./components/vacancies/VacancyDetail";
 import ScrollToTop from "./components/ScrollToTop";
@@ -59,12 +52,14 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/support" element={<SupportLayout />}>
             <Route index element={<Navigate to="faq" replace />} />
-            <Route path="faq" element={<SupportFaq />} />
-            <Route path="shipping" element={<SupportShipping />} />
-            <Route path="terms" element={<SupportTerms />} />
-            <Route path="offer" element={<SupportOffer />} />
-            <Route path="privacy" element={<SupportPrivacy />} />
-            <Route path="contact" element={<SupportContact />} />
+            {/* Адреса перечислены, а не взяты из базы: чужой путь должен
+                по-прежнему уводить на главную, а не показывать пустую страницу */}
+            <Route path="faq" element={<SupportPage slug="faq" />} />
+            <Route path="shipping" element={<SupportPage slug="shipping" />} />
+            <Route path="terms" element={<SupportPage slug="terms" />} />
+            <Route path="offer" element={<SupportPage slug="offer" />} />
+            <Route path="privacy" element={<SupportPage slug="privacy" />} />
+            <Route path="contact" element={<SupportPage slug="contact" />} />
           </Route>
           <Route path="/vacancies" element={<Vacancies />} />
           <Route path="/vacancies/:id" element={<VacancyDetail />} />

@@ -112,6 +112,11 @@
 }
 
 /* ── Contact cards ── */
+/* Абзац после карточек не должен лежать на них вплотную */
+.support-contact-cards + .support-body {
+  margin-top: 32px;
+}
+
 /* Та же серая стеклянная подложка, что у таблиц и у меню разделов */
 .support-contact-cards {
   display: grid;
@@ -285,10 +290,23 @@
   border-bottom: 1px solid #f0efec;
 }
 
-.support-shipping-note {
+/* Серая строка-сноска. Отступы зависят от места: под заголовком это строка
+   с номером редакции документа, в конце — приписка, в середине страницы
+   доставки — сноска к таблицам. */
+.support-note {
   font-size: var(--fs-base);
+  font-weight: var(--font-weight-light);
   color: var(--color-secondary);
+  line-height: 1.8;
   margin: 16px 0 48px;
+}
+
+.support-title + .support-note {
+  margin: 0 0 32px;
+}
+
+.support-note:last-child {
+  margin: 24px 0 0;
 }
 
 /* ── Desktop: список разделов на такой же серой стеклянной подложке,
