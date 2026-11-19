@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Home.css";
 import NavBar from "../navbar/NavBar";
 import openAxios from "../../api/axios";
-import { getImageUrl } from "../../utils/imageUrl";
+import { getImageUrl, adaptiveBackground, adaptiveBackgroundFor } from "../../utils/imageUrl";
 import StoreVisitCta from "../storescta/StoreVisitCta";
 import Stories from "../stories/Stories";
 // eslint-disable-next-line react/prop-types
@@ -59,6 +59,7 @@ const listener2 = () => {
 // Пункт либо ведёт сразу в каталог, либо открывает нужное подменю:
 // без подменю открывать меню бессмысленно — выглядит как «ничего не нажалось»
 const HERO_CATEGORIES = [
+  { label: 'BLACK FRIDAY', to: '/catalogue?category=sale' },
   { label: 'Новые поступления', to: '/catalogue?category=new' },
   { label: 'Костюмы', submenu: 'clothing' },
   { label: 'Пиджаки', submenu: 'clothing' },
@@ -80,19 +81,100 @@ const HERO_HOLD_PX = () => window.innerHeight * 0.5;
 const HERO_COVER_START_PX = () => HERO_REVEAL_PX() + HERO_HOLD_PX();
 const HERO_TOTAL_PX = () => HERO_COVER_START_PX() + window.innerHeight;
 
-const HeroSection = ({ heroImage, heroCaption, heroCaptionColor, visibleCount, hidden }) => {
+// Из админки приходит ключ шрифта, а не название семейства: подставлять в
+// стиль страницы строку из базы нельзя. Ключу соответствует класс, описанный
+// в Home.css рядом с @font-face.
+const FONT_CLASS = {
+  halvar: 'hero-font--halvar',
+  mellarose: 'hero-font--mellarose',
+  serif: 'hero-font--serif',
+  sans: 'hero-font--sans',
+};
+
+// Незнакомый ключ — возвращаемся к фирменному, а не остаёмся без шрифта
+const шрифт = (ключ) => FONT_CLASS[ключ] || FONT_CLASS.halvar;
+
+// Цвет задаётся в админке в свободной форме: #ffffff, #ffffff80 с
+// прозрачностью, rgba(...). Формат намеренно не проверяем.
+//
+// Значение уходит свойством объекта стиля, а не строкой стиля. Браузер
+// разбирает его как значение одного свойства color: неподходящее просто
+// не применится, а новых правил из него не возникнет. Пустую строку не
+// передаём вовсе, иначе она перебила бы цвет из таблицы стилей.
+const цвет = (значение) => (значение ? { color: значение } : undefined);
+
+// Размер из админки задан для обычного экрана (около 1440 точек). Отдаём его
+// через clamp, чтобы на узких экранах строка уменьшалась сама, а не уезжала
+// за край: нижняя граница — доля от заданного размера, средняя — та же
+// величина в долях ширины окна.
+const размер = (px, доляМин) => {
+  const число = Number(px);
+  if (!Number.isFinite(число) || число <= 0) return undefined;
+  return {
+    fontSize: `clamp(${Math.round(число * доляМин)}px, ${(число / 14.4).toFixed(2)}vw, ${число}px)`,
+  };
+};
+
+// Доли подобраны так, чтобы значения по умолчанию (52 и 20) повторяли
+// прежний вид страницы
+const стильЗаголовка = (цветЗн, размерЗн) => ({ ...цвет(цветЗн), ...размер(размерЗн, 0.55) });
+const стильПодзаголовка = (цветЗн, размерЗн) => ({ ...цвет(цветЗн), ...размер(размерЗн, 0.75) });
+
+const HeroSection = ({
+  heroSlot,
+  heroCaption,
+  heroSubtitle,
+  heroCaptionColor,
+  heroSubtitleColor,
+  heroCategoriesColor,
+  heroFirstCategoryColor,
+  heroFont,
+  heroSubtitleFont,
+  heroCaptionSize,
+  heroSubtitleSize,
+  heroOverlayColor,
+  heroOverlayStrength,
+  visibleCount,
+  hidden,
+}) => {
   const navigate = useNavigate();
-  const heroStyle = heroImage ? { backgroundImage: `url(${heroImage})` } : {};
+  // Затемнение рисует псевдоэлемент, своего стиля в разметке у него нет —
+  // поэтому цвет и силу передаём переменными на родителя.
+  const сила = Number(heroOverlayStrength);
+  // Фото для компьютера и для телефона приходят из админки отдельно;
+  // какое показать, решает медиазапрос в index.css.
+  const фон = adaptiveBackgroundFor(heroSlot);
+  const heroStyle = {
+    ...(фон.style || {}),
+    ...(heroOverlayColor ? { '--hero-overlay': heroOverlayColor } : {}),
+    '--hero-overlay-strength': Number.isFinite(сила) ? сила / 100 : 1,
+  };
 
   return (
     <div className="hero-pin-wrap">
       <div className={`hero-fixed ${hidden ? 'is-hidden' : ''}`}>
-        <div className="hero-picture" style={heroStyle}></div>
-        {/* Подпись и её цвет задаются в админке; пустую не показываем */}
-        {heroCaption && (
-          <p className="hero-caption" style={heroCaptionColor ? { color: heroCaptionColor } : undefined}>
-            {heroCaption}
-          </p>
+        <div className={`hero-picture ${фон.className}`} style={heroStyle}></div>
+        {/* Заголовок, подзаголовок, их цвета и шрифт задаются в админке.
+            Пустые строки не выводим вовсе, чтобы не оставлять отступ. */}
+        {(heroCaption || heroSubtitle) && (
+          <div className="hero-caption-block">
+            {heroCaption && (
+              <p
+                className={`hero-caption ${шрифт(heroFont)}`}
+                style={стильЗаголовка(heroCaptionColor, heroCaptionSize)}
+              >
+                {heroCaption}
+              </p>
+            )}
+            {heroSubtitle && (
+              <p
+                className={`hero-subtitle ${шрифт(heroSubtitleFont)}`}
+                style={стильПодзаголовка(heroSubtitleColor, heroSubtitleSize)}
+              >
+                {heroSubtitle}
+              </p>
+            )}
+          </div>
         )}
         <nav className="hero-section-menu">
           {HERO_CATEGORIES.map((c, i) => (
@@ -100,6 +182,9 @@ const HeroSection = ({ heroImage, heroCaption, heroCaptionColor, visibleCount, h
               key={c.label}
               type="button"
               className={`hero-nav-item ${i < visibleCount ? 'is-shown' : ''}`}
+              // Первый пункт можно выделить своим цветом: сейчас это
+              // BLACK FRIDAY. Пусто — берём цвет остальных пунктов.
+              style={цвет((i === 0 && heroFirstCategoryColor) || heroCategoriesColor)}
               onClick={() => (c.to ? navigate(c.to) : openMenu(c.submenu))}
             >
               {c.label}
@@ -111,7 +196,7 @@ const HeroSection = ({ heroImage, heroCaption, heroCaptionColor, visibleCount, h
   );
 };
 
-const CollectionTile = ({ to, submenu, label, image }) => {
+const CollectionTile = ({ to, submenu, label, фон }) => {
   const Tag = submenu ? 'button' : Link;
   const props = submenu
     ? {
@@ -123,10 +208,10 @@ const CollectionTile = ({ to, submenu, label, image }) => {
   return (
   <Tag {...props} className="collection-section">
     <div
-      className="collection-image-full"
+      className={`collection-image-full ${фон.className}`}
       style={{
-        backgroundImage: image ? `url(${image})` : 'none',
-        backgroundColor: image ? 'transparent' : '#1a1a1a',
+        ...(фон.style || {}),
+        backgroundColor: фон.className ? 'transparent' : '#1a1a1a',
       }}
     >
       <div className="collection-overlay">
@@ -212,10 +297,8 @@ const Motto = () => {
 };
 
 const HomeSections = ({ images, giftBoxImage }) => {
-  const img = (imageType) => {
-    const image = images.find((i) => i.image_type === imageType);
-    return image ? getImageUrl(image.image) : null;
-  };
+  const слот = (imageType) => images.find((i) => i.image_type === imageType);
+  const фон = (imageType) => adaptiveBackgroundFor(слот(imageType));
 
   return (
     <div className="home-stack">
@@ -223,22 +306,26 @@ const HomeSections = ({ images, giftBoxImage }) => {
       <Stories />
 
       <section className="home-row">
-        <CollectionTile to="/catalogue?category=suits&subcategory=set" label="Костюмы" image={img('section1')} />
-        <CollectionTile submenu="outerwear" label="Верхняя одежда" image={img('section2')} />
+        <CollectionTile to="/catalogue?category=suits&subcategory=set" label="Костюмы" фон={фон('section1')} />
+        <CollectionTile submenu="outerwear" label="Верхняя одежда" фон={фон('section2')} />
       </section>
 
       <section className="home-row">
-        <CollectionTile to="/catalogue?category=polo" label="Поло и футболки" image={img('section4')} />
+        <CollectionTile to="/catalogue?category=polo" label="Поло и футболки" фон={фон('section4')} />
         {/* Слот из админки главнее: иначе фото бокса перебивало бы то, что
             загрузили в «Главная: Подарочный гид» */}
-        <CollectionTile to="/gift-guide" label="Подарочный гид" image={img('section5') || giftBoxImage} />
+        <CollectionTile
+          to="/gift-guide"
+          label="Подарочный гид"
+          фон={слот('section5') ? фон('section5') : adaptiveBackground(giftBoxImage)}
+        />
       </section>
 
       <section className="home-motto">
         <Motto />
       </section>
 
-      <StoreVisitCta photo={img('section6')} />
+      <StoreVisitCta slot={слот('section6') || null} />
     </div>
   );
 };
@@ -252,8 +339,6 @@ export default function Home() {
   const [heroHidden, setHeroHidden] = useState(false);
 
   const heroSlot = images.find(img => img.image_type === 'hero');
-
-  const getHeroImage = () => (heroSlot ? getImageUrl(heroSlot.image) : null);
 
   useEffect(() => {
     const onScroll = () => {
@@ -312,9 +397,19 @@ export default function Home() {
         <span></span>
       </NavBar>
       <HeroSection
-        heroImage={getHeroImage()}
+        heroSlot={heroSlot}
         heroCaption={heroSlot?.caption || ''}
+        heroSubtitle={heroSlot?.subtitle || ''}
         heroCaptionColor={heroSlot?.caption_color || ''}
+        heroSubtitleColor={heroSlot?.subtitle_color || ''}
+        heroCategoriesColor={heroSlot?.categories_color || ''}
+        heroFirstCategoryColor={heroSlot?.first_category_color || ''}
+        heroFont={heroSlot?.caption_font || 'halvar'}
+        heroSubtitleFont={heroSlot?.subtitle_font || 'halvar'}
+        heroCaptionSize={heroSlot?.caption_size}
+        heroSubtitleSize={heroSlot?.subtitle_size}
+        heroOverlayColor={heroSlot?.overlay_color || ''}
+        heroOverlayStrength={heroSlot?.overlay_strength}
         visibleCount={visibleCount}
         hidden={heroHidden}
       />

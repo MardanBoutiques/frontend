@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import NavBar from '../navbar/NavBar';
 import openAxios from '../../api/axios';
-import { getImageUrl } from '../../utils/imageUrl';
+import { getImageUrl, adaptiveBackgroundFor } from '../../utils/imageUrl';
+import AdaptiveImage from '../AdaptiveImage';
 import './About.css';
 
 const About = () => {
@@ -13,22 +14,25 @@ const About = () => {
       .catch((error) => console.error('Ошибка загрузки изображений:', error));
   }, []);
 
+  const слот = (imageType) => images.find((i) => i.image_type === imageType);
+
   const getImageByType = (imageType) => {
-    const img = images.find((i) => i.image_type === imageType);
+    const img = слот(imageType);
     return img ? getImageUrl(img.image) : null;
   };
 
-  const heroImageUrl = getImageByType('about_hero');
+  // Фон, который сам меняется на телефоне: в админке у каждой записи
+  // два файла, второй — для узкого экрана.
+  const фон = (imageType) => adaptiveBackgroundFor(слот(imageType));
+
+  const heroФон = фон('about_hero');
 
   return (
     <>
       <NavBar />
 
       {/* Hero */}
-      <div
-        className="about-hero"
-        style={heroImageUrl ? { backgroundImage: `url(${heroImageUrl})` } : undefined}
-      >
+      <div className={`about-hero ${heroФон.className}`} style={heroФон.style}>
         <div className="about-hero-inner">
           <h1 className="about-hero-title">MARDAN</h1>
           <p className="about-hero-tagline">
@@ -55,7 +59,11 @@ const About = () => {
 
             {getImageByType('about_intro') && (
               <div className="about-intro-photo">
-                <img src={getImageByType('about_intro')} alt="MARDAN" />
+                <AdaptiveImage
+                  src={getImageByType('about_intro')}
+                  srcMobile={getImageUrl(слот('about_intro')?.image_mobile)}
+                  alt="MARDAN"
+                />
               </div>
             )}
           </div>
@@ -103,10 +111,8 @@ const About = () => {
           </p>
           {/* Фото уходит в фон, карточки лежат поверх него */}
           <div
-            className={`about-meaning-stage ${getImageByType('about_meaning') ? 'has-photo' : ''}`}
-            style={getImageByType('about_meaning')
-              ? { backgroundImage: `url(${getImageByType('about_meaning')})` }
-              : undefined}
+            className={`about-meaning-stage ${getImageByType('about_meaning') ? 'has-photo' : ''} ${фон('about_meaning').className}`}
+            style={фон('about_meaning').style}
           >
             <div className="about-meaning-grid">
               <div className="about-meaning-card">
@@ -142,8 +148,8 @@ const About = () => {
             <div className="about-founder-card">
               <div className="about-founder-photo-wrap">
                 <div
-                  className="about-founder-photo"
-                  style={getImageByType('founder_alikhan') ? { backgroundImage: `url(${getImageByType('founder_alikhan')})` } : undefined}
+                  className={`about-founder-photo ${фон('founder_alikhan').className}`}
+                  style={фон('founder_alikhan').style}
                 />
               </div>
               <div className="about-founder-info">
@@ -164,8 +170,8 @@ const About = () => {
             <div className="about-founder-card">
               <div className="about-founder-photo-wrap">
                 <div
-                  className="about-founder-photo"
-                  style={getImageByType('founder_erkebulan') ? { backgroundImage: `url(${getImageByType('founder_erkebulan')})` } : undefined}
+                  className={`about-founder-photo ${фон('founder_erkebulan').className}`}
+                  style={фон('founder_erkebulan').style}
                 />
               </div>
               <div className="about-founder-info">
@@ -212,8 +218,8 @@ const About = () => {
             <div className="about-brand-card">
               <div className="about-brand-photo-wrap">
                 <div
-                  className="about-brand-photo"
-                  style={getImageByType('brand_114avenue') ? { backgroundImage: `url(${getImageByType('brand_114avenue')})` } : undefined}
+                  className={`about-brand-photo ${фон('brand_114avenue').className}`}
+                  style={фон('brand_114avenue').style}
                 />
               </div>
               <div className="about-brand-info">
@@ -234,8 +240,8 @@ const About = () => {
             <div className="about-brand-card">
               <div className="about-brand-photo-wrap">
                 <div
-                  className="about-brand-photo"
-                  style={getImageByType('brand_inspira') ? { backgroundImage: `url(${getImageByType('brand_inspira')})` } : undefined}
+                  className={`about-brand-photo ${фон('brand_inspira').className}`}
+                  style={фон('brand_inspira').style}
                 />
               </div>
               <div className="about-brand-info">

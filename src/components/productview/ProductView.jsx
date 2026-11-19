@@ -6,6 +6,7 @@ import api from "../../api/axios";
 import { useCart } from "../../context/CartContext";
 import { getImageUrl } from "../../utils/imageUrl";
 import "./ProductView.css";
+import { formatPrice, hasDiscount } from "../../utils/price";
 
 const Accordion = ({ title, children, open, onToggle }) => (
   <div className={`pv-accordion ${open ? 'open' : ''}`}>
@@ -291,7 +292,12 @@ const ProductView = () => {
           <div className={`pv-buy ${buyStuck ? 'stuck' : ''}`} ref={buyRef}>
             <div className="pv-head">
               <h1 className="pv-title">{product.name}</h1>
-              <span className="pv-price">{Math.round(product.price).toLocaleString('ru-RU')} KZT</span>
+              <span className="pv-price">
+                {hasDiscount(product) && (
+                  <span className="pv-price-old">{formatPrice(product.old_price)}</span>
+                )}
+                {formatPrice(product.price)}
+              </span>
             </div>
             {subtitle && <p className="pv-subtitle">{subtitle}</p>}
 

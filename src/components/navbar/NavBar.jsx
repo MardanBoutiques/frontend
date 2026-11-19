@@ -124,6 +124,13 @@ const NavBar = ({ children, forHome }) => {
         </div>
         <div className="sidebar-columns">
           <nav className={`sidebar-nav sidebar-nav-main ${anySubmenuOpen ? "has-active" : ""}`}>
+            <button
+              type="button"
+              className="nav-sale"
+              onClick={() => goTo("/catalogue?category=sale")}
+            >
+              BLACK FRIDAY
+            </button>
             <button type="button" onClick={() => goTo("/catalogue?category=new")}>Новые поступления</button>
             <button
               type="button"

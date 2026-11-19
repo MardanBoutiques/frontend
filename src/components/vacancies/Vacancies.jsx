@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../navbar/NavBar';
 import openAxios from '../../api/axios';
-import { getImageUrl } from '../../utils/imageUrl';
+import { getImageUrl, adaptiveBackgroundFor } from '../../utils/imageUrl';
 import './Vacancies.css';
 
 const BENEFITS = [
@@ -48,12 +48,17 @@ const Vacancies = () => {
       .catch((error) => console.error('Ошибка загрузки изображений:', error));
   }, []);
 
-  const imageBySlot = (slot) => {
-    const found = images.find((i) => i.image_type === slot);
+  const слот = (name) => images.find((i) => i.image_type === name);
+
+  const imageBySlot = (name) => {
+    const found = слот(name);
     return found ? getImageUrl(found.image) : null;
   };
 
-  const heroImageUrl = imageBySlot('vacancies_hero');
+  // В админке у записи два файла: второй показывается на узком экране.
+  const фон = (name) => adaptiveBackgroundFor(слот(name));
+
+  const heroФон = фон('vacancies_hero');
   const benefitsImageUrl = imageBySlot('vacancies_benefits');
 
   const scrollToVacancies = () => {
@@ -65,10 +70,7 @@ const Vacancies = () => {
       <NavBar />
 
       {/* Hero */}
-      <div
-        className="vac-hero"
-        style={heroImageUrl ? { backgroundImage: `url(${heroImageUrl})` } : undefined}
-      >
+      <div className={`vac-hero ${heroФон.className}`} style={heroФон.style}>
         <div className="vac-hero-overlay">
           <h1 className="vac-hero-title">
             Построй карьеру<br />в сфере моды
@@ -93,8 +95,8 @@ const Vacancies = () => {
           </h2>
           {/* Фото уходит в фон, карточки лежат поверх него */}
           <div
-            className={`vac-benefits-stage ${benefitsImageUrl ? 'has-photo' : ''}`}
-            style={benefitsImageUrl ? { backgroundImage: `url(${benefitsImageUrl})` } : undefined}
+            className={`vac-benefits-stage ${benefitsImageUrl ? 'has-photo' : ''} ${фон('vacancies_benefits').className}`}
+            style={фон('vacancies_benefits').style}
           >
             <div className="vac-benefits-grid">
               {BENEFITS.map((b) => (

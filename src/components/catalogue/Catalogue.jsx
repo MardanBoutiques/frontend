@@ -6,6 +6,7 @@ import api from "../../api/axios";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { getImageUrl } from "../../utils/imageUrl";
 import { getColorCode } from "../../utils/colorMap";
+import { formatPrice, hasDiscount } from "../../utils/price";
 
 const Grid = ({ children, onClick, className }) => {
   return (
@@ -109,7 +110,12 @@ const ProductCard = ({ product, variants }) => {
       <div className="product-info">
         <div className="product-header">
           <h3 className="product-name">{product.name}</h3>
-          <p className="product-price">{Math.round(product.price).toLocaleString('ru-RU')} KZT</p>
+          <p className="product-price">
+            {hasDiscount(product) && (
+              <span className="product-price-old">{formatPrice(product.old_price)}</span>
+            )}
+            {formatPrice(product.price)}
+          </p>
         </div>
         <p className="product-desc">{product.description}</p>
         {dots.length > 0 && (
@@ -270,6 +276,7 @@ const Catalogue = () => {
 
     const categoryTitles = {
       'new': 'Новые поступления',
+      'sale': 'BLACK FRIDAY',
       'suits': 'Костюмы',
       'shirts': 'Рубашки',
       'cardigans': 'Кардиганы',
@@ -292,6 +299,7 @@ const Catalogue = () => {
 
     const categoryDescriptions = {
       'new': 'Последние поступления в каталог Mardan — свежие модели, которые только что появились в продаже.',
+      'sale': 'Межсезонная распродажа с 20 по 30 ноября включительно.',
       'suits': 'Наши костюмы — идеальный баланс современного силуэта и легкости, обеспечивающий комфорт в любой ситуации.',
       'shirts': 'Рубашки, созданные для рабочих дней, путешествий и летних вечеров, чтобы вы выглядели элегантно в любой обстановке.',
       'cardigans': 'Кардиганы из премиальных материалов для завершённого образа в любое время года.',
@@ -328,6 +336,13 @@ const Catalogue = () => {
           </div>
         </div>
         <p className="category-description">{getCategoryDescription()}</p>
+        {/* Условие акции: мелкой строкой под описанием, чтобы не
+            потерялось, но и не спорило с ним */}
+        {category === 'sale' && (
+          <p className="category-note">
+            Скидки действуют только на модели и цвета, собранные в этом разделе.
+          </p>
+        )}
       </div>
       
       <Filter isHidden={!filterChosen} onSort={handleSort} currentSort={sortType} />

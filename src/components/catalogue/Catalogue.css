@@ -33,6 +33,18 @@
   white-space: pre-line;
 }
 
+/* Условие акции под описанием раздела: тот же кегль, но приглушённое —
+   это сноска, а не вторая половина текста. */
+.category-note {
+  font-size: var(--fs-sm);
+  font-weight: var(--font-weight-light);
+  color: rgba(0, 0, 0, 0.55);
+  margin: 4px 0 0;
+  max-width: 75%;
+  line-height: var(--lh-text);
+  padding: 0 30px;
+}
+
 .filter-btn {
   display: flex;
   align-items: center;
@@ -437,4 +449,13 @@
   .product-info {
     padding: 8px 8px 12px;
   }
+}
+
+/* Старая цена рядом с нынешней: зачёркнутая и приглушённая.
+   Процент скидки не пишем — так решено. */
+.product-price-old {
+  margin-right: 8px;
+  text-decoration: line-through;
+  opacity: 0.45;
+  font-weight: 400;
 }

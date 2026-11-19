@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import NavBar from "../navbar/NavBar";
 import openAxios from "../../api/axios";
 import { getImageUrl } from "../../utils/imageUrl";
+import AdaptiveImage from "../AdaptiveImage";
 import "./Stores.css";
 
 
@@ -141,10 +142,15 @@ export default function Stores() {
       .catch((error) => console.error('Ошибка загрузки изображений:', error));
   }, []);
 
+  const слотFor = (store) => images.find((i) => i.image_type === `store_${store.id}`);
+
   const photoFor = (store) => {
-    const uploaded = images.find((i) => i.image_type === `store_${store.id}`);
+    const uploaded = слотFor(store);
     return uploaded ? getImageUrl(uploaded.image) : store.photo;
   };
+
+  // Второй файл из админки — для телефона и планшета; его может не быть.
+  const photoMobileFor = (store) => getImageUrl(слотFor(store)?.image_mobile);
 
   // Обновляем статус каждую минуту
   useEffect(() => {
@@ -175,7 +181,11 @@ export default function Stores() {
 
           {photoFor(store) && (
             <div className="store-detail-photo">
-              <img src={photoFor(store)} alt={store.city} />
+              <AdaptiveImage
+                src={photoFor(store)}
+                srcMobile={photoMobileFor(store)}
+                alt={store.city}
+              />
             </div>
           )}
 
@@ -268,7 +278,11 @@ export default function Stores() {
           {STORES.map((store) => (
             <div key={store.id} className="store-card">
               <div className="store-card-photo">
-                <img src={photoFor(store)} alt={store.city} />
+                <AdaptiveImage
+                  src={photoFor(store)}
+                  srcMobile={photoMobileFor(store)}
+                  alt={store.city}
+                />
               </div>
               <div className="store-card-info">
                 {/* Город и статус на лёгком размытии, чтобы текст читался на любом фото */}

@@ -48,23 +48,38 @@ body {
   content: '';
   position: absolute;
   inset: 0;
+  /* Цвет и сила задаются в админке и приходят переменными: вписать их
+     прямо в правило нельзя — у псевдоэлемента нет своего стиля в разметке.
+
+     Цвет обёрнут в color-mix намеренно. Так значением может быть только
+     цвет: что-то другое сделает правило недействительным, и заливка просто
+     не отрисуется — вместо того чтобы подставиться в background как есть.
+
+     Доли 70/40/15 повторяют прежний вид при чёрном цвете и силе 100%. */
   background: radial-gradient(
     70% 55% at 0% 100%,
-    rgba(0, 0, 0, 0.7) 0%,
-    rgba(0, 0, 0, 0.4) 35%,
-    rgba(0, 0, 0, 0.15) 55%,
+    color-mix(in srgb, var(--hero-overlay, #000000) 70%, transparent) 0%,
+    color-mix(in srgb, var(--hero-overlay, #000000) 40%, transparent) 35%,
+    color-mix(in srgb, var(--hero-overlay, #000000) 15%, transparent) 55%,
     transparent 75%
   );
+  opacity: var(--hero-overlay-strength, 1);
   pointer-events: none;
 }
 
-/* Подпись в левом верхнем углу hero — сезон или название кампании */
-.hero-caption {
+/* Подпись в левом верхнем углу hero — сезон или название кампании.
+   Позиционируется блок целиком, строки внутри идут обычным потоком. */
+.hero-caption-block {
   position: absolute;
   /* Ниже шапки: она фиксированная, высотой 70px */
   top: calc(70px + var(--spacing-12));
   left: var(--spacing-10);
   z-index: 10;
+  pointer-events: none;
+  max-width: min(90vw, 40ch);
+}
+
+.hero-caption {
   margin: 0;
   font-size: clamp(1.75rem, 4vw, 3.25rem);
   font-weight: var(--font-weight-medium);
@@ -73,7 +88,49 @@ body {
   color: var(--color-surface);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  pointer-events: none;
+}
+
+/* Подзаголовок: заметно мельче заголовка и без верхнего регистра —
+   иначе две строки капсом спорят друг с другом */
+.hero-subtitle {
+  margin: var(--spacing-03) 0 0;
+  font-size: clamp(0.9375rem, 1.5vw, 1.25rem);
+  font-weight: var(--font-weight-light);
+  line-height: 1.4;
+  color: var(--color-surface);
+  letter-spacing: 0.04em;
+}
+
+/* ---- Шрифт подписи. Выбирается в админке, приходит ключом ----
+   Заголовок и подзаголовок выбирают шрифт независимо, поэтому класс
+   висит на самой строке, а не на блоке.
+
+   Чтобы добавить свой шрифт: положить файл в public/fonts/, объявить
+   рядом @font-face и добавить класс сюда, а ключ — в ШРИФТЫ_ПОДПИСИ
+   в backend/store/models.py. Названия должны совпасть. */
+@font-face {
+  font-family: "Mellarose";
+  src: url("/fonts/Mellarose-2vxzl.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  /* Пока шрифт грузится, строка видна запасным — а не пустым местом */
+  font-display: swap;
+}
+
+.hero-font--halvar {
+  font-family: "Halvar Breitschrift", sans-serif;
+}
+
+.hero-font--mellarose {
+  font-family: "Mellarose", Georgia, serif;
+}
+
+.hero-font--serif {
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.hero-font--sans {
+  font-family: system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
 }
 
 /* Category list over the hero: anchored to the bottom, so items unfolding
@@ -349,7 +406,7 @@ body {
     left: var(--spacing-06);
   }
 
-  .hero-caption {
+  .hero-caption-block {
     top: calc(60px + var(--spacing-10));
     left: var(--spacing-06);
   }
