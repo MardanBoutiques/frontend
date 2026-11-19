@@ -535,6 +535,15 @@
     grid-template-columns: 1fr;
   }
 
+  /* Четыре карточки в ряд на планшет не помещаются: их собственная
+     ширина больше подложки, и крайняя уезжает за край кадра. */
+  .about-meaning-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .about-meaning-stage {
+    padding: 24px;
+  }
 }
 
 /* ── Mobile ── */
