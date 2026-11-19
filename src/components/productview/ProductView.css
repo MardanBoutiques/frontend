@@ -152,7 +152,11 @@
   flex: 0 0 var(--pv-variant-w);
   scroll-snap-align: start;
   width: var(--pv-variant-w);
-  aspect-ratio: 3 / 4;
+  /* Съёмка у нас вертикальная, 2:3. В рамке 3:4 кадр обрезался сверху и
+     снизу примерно на одиннадцатую часть высоты: на большом фото это
+     незаметно, а на миниатюре в 56 точек срезало голову и обувь, и вещь
+     становилось не разобрать. Рамка повторяет пропорции снимка. */
+  aspect-ratio: 2 / 3;
   padding: 0;
   border: 1px solid var(--color-outline);
   border-radius: var(--radius-md);
@@ -301,7 +305,8 @@
 .pv-suit-part-empty {
   flex-shrink: 0;
   width: 56px;
-  aspect-ratio: 3 / 4;
+  /* Те же пропорции, что у снимка: см. .pv-variant */
+  aspect-ratio: 2 / 3;
   object-fit: cover;
   border-radius: 6px;
   background: var(--color-background-light);

@@ -345,7 +345,12 @@ const ProductView = () => {
                   <span className="pv-suit-part-text">
                     <span className="pv-suit-part-name">{part.name}</span>
                     <span className="pv-suit-part-price">
-                      {Math.round(part.price).toLocaleString('ru-RU')} KZT
+                      {/* Половины комплекта уценивают по отдельности,
+                          поэтому цену показываем так же, как в каталоге */}
+                      {hasDiscount(part) && (
+                        <span className="pv-price-old">{formatPrice(part.old_price)}</span>
+                      )}
+                      {formatPrice(part.price)}
                     </span>
                   </span>
                 </button>
