@@ -107,7 +107,9 @@
 
 .cart-item-image {
   width: 110px;
-  aspect-ratio: 3 / 4;
+  /* Пропорции снимка: съёмка вертикальная, 2:3. В рамке 3:4 кадр
+     обрезался сверху и снизу примерно на одиннадцатую часть высоты. */
+  aspect-ratio: 2 / 3;
   border: 1px solid var(--color-outline);
   border-radius: var(--radius-md);
   overflow: hidden;

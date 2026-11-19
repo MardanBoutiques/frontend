@@ -33,7 +33,9 @@
 
 .pv-photo {
   width: 100%;
-  aspect-ratio: 3 / 4;
+  /* Пропорции снимка: съёмка вертикальная, 2:3. В рамке 3:4 кадр
+     обрезался сверху и снизу примерно на одиннадцатую часть высоты. */
+  aspect-ratio: 2 / 3;
   background: var(--color-background-light);
   overflow: hidden;
 }
@@ -126,16 +128,20 @@
 }
 
 /* ── Other colours of the same product ──
-   В ряд помещаются ровно 4 карточки, остальные доступны прокруткой. */
+   В ряд помещаются ровно 3 карточки, остальные доступны прокруткой.
+
+   Раньше их было 4 по 78 точек. На таком квадратике от снимка в полный
+   рост оставался серый фон и кусочек вещи — понять, что за оттенок, было
+   трудно. Крупнее и втроём — вещь узнаётся. */
 .pv-variants {
-  --pv-variant-w: 78px;
+  --pv-variant-w: 106px;
   --pv-variant-gap: 10px;
 
   display: flex;
   flex-wrap: nowrap;
   gap: var(--pv-variant-gap);
   margin-top: 28px;
-  max-width: calc(var(--pv-variant-w) * 4 + var(--pv-variant-gap) * 3);
+  max-width: calc(var(--pv-variant-w) * 3 + var(--pv-variant-gap) * 2);
   overflow-x: auto;
   scroll-snap-type: x proximity;
   scrollbar-width: none;
@@ -152,11 +158,13 @@
   flex: 0 0 var(--pv-variant-w);
   scroll-snap-align: start;
   width: var(--pv-variant-w);
-  /* Съёмка у нас вертикальная, 2:3. В рамке 3:4 кадр обрезался сверху и
-     снизу примерно на одиннадцатую часть высоты: на большом фото это
-     незаметно, а на миниатюре в 56 точек срезало голову и обувь, и вещь
-     становилось не разобрать. Рамка повторяет пропорции снимка. */
-  aspect-ratio: 2 / 3;
+  /* Высота числом, а не через aspect-ratio. Полоса оттенков — флексбокс
+     с прокруткой, и карточка в нём растягивалась по высоте строки: кадр
+     сплющивался в узкую полоску. С заданной высотой такого не бывает.
+
+     Пропорция 3:4, а не 2:3, как у снимка: это выбор оттенка, и фигура
+     целиком в маленькой карточке читается хуже подрезанного кадра. */
+  height: calc(var(--pv-variant-w) * 4 / 3);
   padding: 0;
   border: 1px solid var(--color-outline);
   border-radius: var(--radius-md);
@@ -305,8 +313,9 @@
 .pv-suit-part-empty {
   flex-shrink: 0;
   width: 56px;
-  /* Те же пропорции, что у снимка: см. .pv-variant */
-  aspect-ratio: 2 / 3;
+  /* Пропорции снимка, 2:3, высотой в точках — по той же причине,
+     что и у карточек оттенков */
+  height: 84px;
   object-fit: cover;
   border-radius: 6px;
   background: var(--color-background-light);
@@ -590,12 +599,15 @@
 
   /* Отступ полосы оттенков — внешними полями, а не паддингом: паддинг лежит
      внутри прокручиваемой области, браузер подкручивает её к активной карточке
-     и съедает его. С полями ширина равна ровно четырём карточкам. */
+     и съедает его. С полями ширина равна ровно трём карточкам. */
   .pv-variants {
+    /* На телефоне три карточки по 106 точек не умещаются в ширину экрана */
+    --pv-variant-w: 92px;
+
     margin: 24px 20px 0;
     padding-left: 0;
     padding-right: 0;
-    max-width: calc(var(--pv-variant-w) * 4 + var(--pv-variant-gap) * 3);
+    max-width: calc(var(--pv-variant-w) * 3 + var(--pv-variant-gap) * 2);
     scroll-snap-type: none;
   }
 

@@ -125,7 +125,9 @@
 .product-photo {
   flex: 0 0 100%;
   scroll-snap-align: start;
-  aspect-ratio: 3 / 4;
+  /* Пропорции снимка: съёмка вертикальная, 2:3. В рамке 3:4 кадр
+     обрезался сверху и снизу примерно на одиннадцатую часть высоты. */
+  aspect-ratio: 2 / 3;
   background: var(--color-background-light);
   overflow: hidden;
 }
@@ -202,7 +204,9 @@
 
 .product-image {
   width: 100%;
-  aspect-ratio: 3 / 4;
+  /* Пропорции снимка: съёмка вертикальная, 2:3. В рамке 3:4 кадр
+     обрезался сверху и снизу примерно на одиннадцатую часть высоты. */
+  aspect-ratio: 2 / 3;
   background: var(--color-background-light);
   display: flex;
   align-items: center;
