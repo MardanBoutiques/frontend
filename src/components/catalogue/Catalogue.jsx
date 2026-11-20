@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import NavBar from "../navbar/NavBar";
 import "./Catalogue.css";
 import api from "../../api/axios";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate, useNavigationType } from "react-router-dom";
 import { getImageUrl } from "../../utils/imageUrl";
 import { getColorCode } from "../../utils/colorMap";
 import { formatPrice, hasDiscount } from "../../utils/price";
@@ -21,11 +21,25 @@ const Grid = ({ children, onClick, className }) => {
 // стоит с пустыми плитками, пока всё не приедет.
 const СРАЗУ_ВИДНО = 4;
 
-const ProductCard = ({ product, variants, индекс }) => {
+// Что уже показывали в каждом разделе: товары, счётчик, ссылка на
+// следующую страницу и место, до которого долистали.
+//
+// Живёт в памяти вкладки, не в хранилище: при возврате с карточки товара
+// список рисуется сразу, без запроса и без белого поля. Перезагрузка
+// страницы память очищает — цены всегда свежие после обновления.
+const ПАМЯТЬ_РАЗДЕЛОВ = new Map();
+
+const ключРаздела = (category, subcategory, sortType) =>
+  `${category || ''}|${subcategory || ''}|${sortType || ''}`;
+
+const ProductCard = ({ product, variants, индекс, приОткрытии }) => {
   const navigate = useNavigate();
   const [photoIndex, setPhotoIndex] = useState(0);
 
   const handleCardClick = () => {
+    // Место прокрутки запоминаем здесь, до перехода: к тому времени, когда
+    // каталог будет размонтирован, страница уже уедет к началу.
+    if (приОткрытии) приОткрытии();
     navigate(`/product/${product.id}`);
   };
 
@@ -186,6 +200,7 @@ const Catalogue = () => {
   const [nextPage, setNextPage] = useState(null);
   const [loadingMore, setLoadingMore] = useState(false);
   const [searchParams] = useSearchParams();
+  const тип_перехода = useNavigationType();
   const category = searchParams.get("category");
   const subcategory = searchParams.get("subcategory");
 
@@ -200,27 +215,75 @@ const Catalogue = () => {
     sessionStorage.removeItem('lastProductPath');
   }, [category, subcategory]);
 
-  useEffect(() => {
-    // Смена категории — это такой же вход в раздел: сначала стекло и белое
-    // поле, и только потом новые карточки. Без сброса под стеклом остались
-    // бы висеть товары предыдущей категории.
-    setLoading(true);
-    setError(null);
-    setProducts([]);
-    window.scrollTo(0, 0);
+  // Последнее отрисованное состояние — его же и запоминаем, когда уходим
+  const состояние = useRef({});
+  // Куда вернуть прокрутку, когда список снова окажется на экране
+  const вернутьПрокрутку = useRef(null);
+  // Место, на котором покупатель ушёл в карточку товара
+  const местоУхода = useRef(null);
+  состояние.current = { products, total, nextPage };
 
-    fetchPage(1)
-      .then(({ results, count, next }) => {
-        setProducts(results);
-        setTotal(count);
-        setNextPage(next);
-        setLoading(false);
-      })
-      .catch((error) => {
-        setError(error.message);
-        setLoading(false);
-      });
+  useEffect(() => {
+    const ключ = ключРаздела(category, subcategory, sortType);
+    const запомненное = ПАМЯТЬ_РАЗДЕЛОВ.get(ключ);
+
+    // Возврат с карточки товара: показываем то же, что и было, и на том
+    // же месте. Запрашивать раздел заново — это белое поле, повторная
+    // отрисовка сорока карточек и прыжок к началу списка.
+    if (тип_перехода === 'POP' && запомненное) {
+      setProducts(запомненное.products);
+      setTotal(запомненное.total);
+      setNextPage(запомненное.nextPage);
+      setLoading(false);
+      вернутьПрокрутку.current = запомненное.scrollY || 0;
+    } else {
+      // Смена категории — это такой же вход в раздел: сначала стекло и белое
+      // поле, и только потом новые карточки. Без сброса под стеклом остались
+      // бы висеть товары предыдущей категории.
+      setLoading(true);
+      setError(null);
+      setProducts([]);
+      window.scrollTo(0, 0);
+
+      fetchPage(1)
+        .then(({ results, count, next }) => {
+          setProducts(results);
+          setTotal(count);
+          setNextPage(next);
+          setLoading(false);
+        })
+        .catch((error) => {
+          setError(error.message);
+          setLoading(false);
+        });
+    }
+
+    return () => {
+      const { products: т, total: в, nextPage: с } = состояние.current;
+      if (т.length) {
+        ПАМЯТЬ_РАЗДЕЛОВ.set(ключ, {
+          products: т, total: в, nextPage: с,
+          scrollY: местоУхода.current === null ? window.scrollY : местоУхода.current,
+        });
+      }
+    };
   }, [category, subcategory, sortType]);
+
+  // Прокрутку возвращаем не раньше, чем список отрисован: до этого
+  // страница короткая, и браузер прижал бы её к концу содержимого.
+  useEffect(() => {
+    if (вернутьПрокрутку.current === null || !products.length) return;
+
+    const цель = вернутьПрокрутку.current;
+    вернутьПрокрутку.current = null;
+    // Первый кадр — React отрисовал карточки, второй — браузер посчитал
+    // их высоту: плитки заданы пропорцией, фотографии для этого не нужны.
+    //
+    // instant обязателен: в стилях сайта стоит scroll-behavior: smooth, и
+    // обычный вызов превратился бы в долгую прокрутку через весь список.
+    requestAnimationFrame(() => requestAnimationFrame(() =>
+      window.scrollTo({ top: цель, behavior: 'instant' })));
+  }, [products]);
 
   const fetchPage = (page) => {
     const params = new URLSearchParams({ page, page_size: PAGE_SIZE });
@@ -369,6 +432,7 @@ const Catalogue = () => {
             product={product}
             variants={product.variant_colors || []}
             индекс={индекс}
+            приОткрытии={() => { местоУхода.current = window.scrollY; }}
             key={product.id}
           />
         ))}
