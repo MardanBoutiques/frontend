@@ -16,7 +16,12 @@ const Grid = ({ children, onClick, className }) => {
   );
 };
 
-const ProductCard = ({ product, variants }) => {
+// Сколько карточек грузят своё фото сразу. Остальные ждут, пока до них
+// долистают: на странице их сорок, и разом это семь мегабайт — телефон
+// стоит с пустыми плитками, пока всё не приедет.
+const СРАЗУ_ВИДНО = 4;
+
+const ProductCard = ({ product, variants, индекс }) => {
   const navigate = useNavigate();
   const [photoIndex, setPhotoIndex] = useState(0);
 
@@ -63,7 +68,7 @@ const ProductCard = ({ product, variants }) => {
                   src={getImageUrl(photo)}
                   alt={product.name}
                   className="product-img"
-                  loading={i === 0 ? 'eager' : 'lazy'}
+                  loading={i === 0 && индекс < СРАЗУ_ВИДНО ? 'eager' : 'lazy'}
                   decoding="async"
                 />
               </div>
@@ -357,12 +362,13 @@ const Catalogue = () => {
         className={`grid ${filterChosen ? "dark" : "light"}`}
         onClick={() => setFilterChosen(false)}
       >
-        {products.map((product) => (
+        {products.map((product, индекс) => (
           // Оттенки считает сервер: на странице каталога лежат не все товары,
           // и подобрать их по артикулу здесь было бы уже не из чего
           <ProductCard
             product={product}
             variants={product.variant_colors || []}
+            индекс={индекс}
             key={product.id}
           />
         ))}

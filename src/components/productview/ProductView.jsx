@@ -235,7 +235,14 @@ const ProductView = () => {
             {photos.length > 0 ? (
               photos.map((photo, i) => (
                 <div className="pv-photo" key={i}>
-                  <img src={getImageUrl(photo)} alt={`${product.name} — фото ${i + 1}`} />
+                  {/* Первое фото нужно сразу, остальные — когда до них
+                      долистают: иначе карточка тянет всю съёмку разом */}
+                  <img
+                    src={getImageUrl(photo)}
+                    alt={`${product.name} — фото ${i + 1}`}
+                    loading={i === 0 ? 'eager' : 'lazy'}
+                    decoding="async"
+                  />
                 </div>
               ))
             ) : (
