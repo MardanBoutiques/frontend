@@ -49,6 +49,38 @@ const ProductCard = ({ product, variants, индекс, приОткрытии }
   // Галерея — горизонтальная прокрутка: на мобильных листается свайпом,
   // на десктопе её же прокручивают стрелки.
   const scrollerRef = useRef(null);
+  const карточкаRef = useRef(null);
+
+  // Пока карточка далеко от экрана, в ней живёт одно фото вместо шести.
+  //
+  // loading="lazy" тут не спасал: у сорока карточек это под три сотни
+  // картинок в разметке, и браузер при резком переходе (возврат из
+  // товара на прежнее место) начинал тянуть почти все — десятки
+  // мегабайт. Остальные кадры добавляем, когда карточка подъезжает.
+  const [галереяГотова, setГалереяГотова] = useState(индекс < СРАЗУ_ВИДНО);
+
+  useEffect(() => {
+    if (галереяГотова) return undefined;
+
+    const элемент = карточкаRef.current;
+    if (!элемент || typeof IntersectionObserver === 'undefined') {
+      setГалереяГотова(true);
+      return undefined;
+    }
+
+    const наблюдатель = new IntersectionObserver(
+      (записи) => {
+        if (!записи[0].isIntersecting) return;
+        setГалереяГотова(true);
+        наблюдатель.disconnect();
+      },
+      // С запасом в пол-экрана: к свайпу галерея уже на месте
+      { rootMargin: '400px 0px' }
+    );
+    наблюдатель.observe(элемент);
+
+    return () => наблюдатель.disconnect();
+  }, [галереяГотова]);
 
   const handleScroll = () => {
     const el = scrollerRef.current;
@@ -56,11 +88,14 @@ const ProductCard = ({ product, variants, индекс, приОткрытии }
     setPhotoIndex(Math.round(el.scrollLeft / el.clientWidth));
   };
 
+  // Кадры, которые действительно лежат в разметке
+  const кадры = галереяГотова ? photos : photos.slice(0, 1);
+
   const stepPhoto = (e, delta) => {
     e.stopPropagation();
     const el = scrollerRef.current;
     if (!el) return;
-    const next = Math.min(photos.length - 1, Math.max(0, photoIndex + delta));
+    const next = Math.min(кадры.length - 1, Math.max(0, photoIndex + delta));
     el.scrollTo({ left: next * el.clientWidth, behavior: 'smooth' });
   };
 
@@ -70,21 +105,25 @@ const ProductCard = ({ product, variants, индекс, приОткрытии }
     .filter(d => d.hex);
 
   return (
-    <div className="product-card" onClick={handleCardClick} style={{cursor: 'pointer'}}>
+    <div className="product-card" onClick={handleCardClick} style={{cursor: 'pointer'}} ref={карточкаRef}>
       <div className="product-image-container">
-        {photos.length > 0 ? (
+        {кадры.length > 0 ? (
           <div className="product-photos" ref={scrollerRef} onScroll={handleScroll}>
-            {photos.map((photo, i) => (
+            {кадры.map((photo, i) => (
               <div className="product-photo" key={i}>
-                {/* Первое фото нужно сразу, остальные — только когда до них
-                    долистают: иначе каталог тянет сотни картинок разом */}
-                <img
-                  src={getImageUrl(photo)}
-                  alt={product.name}
-                  className="product-img"
-                  loading={i === 0 && индекс < СРАЗУ_ВИДНО ? 'eager' : 'lazy'}
-                  decoding="async"
-                />
+                {/* В карточке живёт вся съёмка, но загружается только
+                    показанный кадр и следующий за ним: шесть фото по
+                    четверти мегабайта на каждую карточку — это и есть
+                    те самые мегабайты при листании каталога. */}
+                {i <= photoIndex + 1 && (
+                  <img
+                    src={getImageUrl(photo)}
+                    alt={product.name}
+                    className="product-img"
+                    loading={i === 0 && индекс < СРАЗУ_ВИДНО ? 'eager' : 'lazy'}
+                    decoding="async"
+                  />
+                )}
               </div>
             ))}
           </div>
@@ -96,7 +135,7 @@ const ProductCard = ({ product, variants, индекс, приОткрытии }
           </div>
         )}
 
-        {photos.length > 1 && (
+        {кадры.length > 1 && (
           <>
             <button
               type="button"
@@ -118,8 +157,8 @@ const ProductCard = ({ product, variants, индекс, приОткрытии }
             <div className="product-progress">
               <span
                 style={{
-                  width: `${100 / photos.length}%`,
-                  left: `${(100 / photos.length) * photoIndex}%`,
+                  width: `${100 / кадры.length}%`,
+                  left: `${(100 / кадры.length) * photoIndex}%`,
                 }}
               />
             </div>
